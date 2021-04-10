@@ -1,0 +1,14 @@
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe.config
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.pdb
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csproj.CoreCompileInputs.cache
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\dcg.exe
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\dcg.pdb
+D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csprojAssemblyReference.cache
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe.config
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.pdb
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csprojAssemblyReference.cache
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csproj.CoreCompileInputs.cache
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\dcg.exe
+D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\dcg.pdb

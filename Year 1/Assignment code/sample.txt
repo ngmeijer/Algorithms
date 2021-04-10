@@ -1,0 +1,12 @@
+List<Room> roomsToSplit = new List<Room>();
+
+private void generate(){
+roomsToSplit.Add(new Room(new Rectangle(0, 0, 30, 20)));
+
+        while(roomsToSplit.Count > 0)
+        {
+            Room currentRoom = roomsToSplit.First();
+            rooms.Add(currentRoom);
+            roomsToSplit.Remove(currentRoom);
+        }
+}
