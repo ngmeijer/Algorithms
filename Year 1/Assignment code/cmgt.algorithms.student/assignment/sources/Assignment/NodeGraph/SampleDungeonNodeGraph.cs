@@ -32,8 +32,8 @@ using System.Drawing;
 
 		//We assume (bad programming practice 1-o-1) there are two rooms in the given dungeon.
 		//The getRoomCenter is a convenience method to calculate the screen space center of a room
-		nodes.Add(new Node(getRoomCenter(_dungeon.rooms[0])));
-		nodes.Add(new Node(getRoomCenter(_dungeon.rooms[1])));
+		nodes.Add(new Node(getRoomCenter(_dungeon.finishedRooms[0])));
+		nodes.Add(new Node(getRoomCenter(_dungeon.finishedRooms[1])));
 		//The getDoorCenter is a convenience method to calculate the screen space center of a door
 		nodes.Add(new Node(getDoorCenter(_dungeon.doors[0])));
 

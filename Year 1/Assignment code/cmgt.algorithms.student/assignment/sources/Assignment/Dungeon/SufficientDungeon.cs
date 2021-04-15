@@ -21,6 +21,8 @@ class SufficientDungeon : Dungeon
     private int maxRooms = 9;
     private int maxDoors = 1;
 
+    private int testInt = 0;
+
     public SufficientDungeon(Size pSize) : base(pSize)
     {
         roomsToSplit = new List<Room>();
@@ -28,69 +30,28 @@ class SufficientDungeon : Dungeon
 
     protected override void generate(int pMinimumRoomSize)
     {
-        roomsToSplit.Add(new Room(new Rectangle(xPosition1, yPosition1, roomWidth1, roomHeight1)));
+        #region Starting code
 
-        //roomWidth1 ended up being the actual width of the area the rooms can be spawned in.
-        Console.WriteLine("game width:" + roomWidth1);
+        //Room currentRoom = roomsToSplit.First();
 
-        while (roomsToSplit.Count > 0 && rooms.Count < maxRooms)
-        {
-            Room currentRoom = roomsToSplit.First();
+        //roomsToSplit.Add(currentRoom);
 
-            int randomDoorPosY = Utils.Random(currentRoom.area.Y + 1, currentRoom.area.Height - 1);
+        //if (roomWidth1 > pMinimumRoomSize)
+        //{
+        //    roomWidth1 /= 2;
+        //}
 
-            for (int currentDoors = 0; currentDoors < maxDoors; currentDoors++)
-            {
-                //Console.WriteLine("current amount of doors: " + currentDoors);
-                //Console.WriteLine("max amount of doors: " + maxDoors);
+        //if (roomHeight1 > pMinimumRoomSize)
+        //{
+        //    roomHeight1 /= 2;
+        //}
 
-                doors.Add(new Door(new Point(currentRoom.area.Width, randomDoorPosY)));
-                doors.Add(new Door(new Point(currentRoom.area.Width - 1, randomDoorPosY)));
-            }
+        //roomsToSplit.Remove(currentRoom);
+        //finishedRooms.Add(currentRoom);
 
-            if (currentRoom.area.Width <= pMinimumRoomSize || currentRoom.area.Height <= pMinimumRoomSize)
-            {
-                roomsToSplit.Remove(currentRoom);
-                rooms.Add(currentRoom);
-            }
-            else
-            {
-                roomsToSplit.Add(new Room(new Rectangle(currentRoom.area.X,
-                                                        currentRoom.area.Y,
-                                                        currentRoom.area.Width / 2,
-                                                        currentRoom.area.Height)));
+        #endregion
 
-                roomsToSplit.Add(new Room(new Rectangle(currentRoom.area.X + currentRoom.area.Width / 2,
-                                                        currentRoom.area.Y,
-                                                        currentRoom.area.Width / 2,
-                                                        currentRoom.area.Height / 2)));
-
-                roomsToSplit.Remove(currentRoom);
-            }
-
-            #region Starting code
-
-            //Room currentRoom = roomsToSplit.First();
-
-            ////roomsToSplit.Add(currentRoom);
-
-            ////if (roomWidth1 > pMinimumRoomSize)
-            ////{
-            ////    roomWidth1 /= 2;
-            ////}
-
-            ////if (roomHeight1 > pMinimumRoomSize)
-            ////{
-            ////    roomHeight1 /= 2;
-            ////}
-
-            //roomsToSplit.Remove(currentRoom);
-            //rooms.Add(currentRoom);
-
-            #endregion
-        }
-
-        Console.WriteLine("Rooms size decreased: " + rooms.Count);
+        Console.WriteLine("Rooms size decreased: " + finishedRooms.Count);
         //Console.WriteLine("Rooms yet to decrease: " + roomsToSplit.Count);
 
         #region 1st iteration
@@ -161,35 +122,33 @@ class SufficientDungeon : Dungeon
 
         #region 4th iteration
 
-        //Changing roomWidth1 to a static number removed the randomness..
-        //roomsToSplit.Add(new Room(new Rectangle(xPosition1, yPosition1, roomWidth1, roomHeight1)));
+        //Changing roomWidth1 to a static number removed the randomness..roomsToSplit.Add(new Room(new Rectangle(xPosition1, yPosition1, roomWidth1, roomHeight1)));
 
-        //while (roomsToSplit.Count > 0 && rooms.Count < maxRooms)
-        //{
-        //    Room currentRoom = roomsToSplit.First();
+        Room startingRoom = new Room(new Rectangle(0, 0, game.width, game.height));
+        roomsToSplit.Add(startingRoom);
+        Console.WriteLine(startingRoom.area);
+        while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
+        {
+            Room currentRoom = roomsToSplit.First();
 
-        //    if (currentRoom.area.Width <= pMinimumRoomSize || currentRoom.area.Height <= pMinimumRoomSize)
-        //    {
-        //        roomsToSplit.Remove(currentRoom);
-        //        rooms.Add(currentRoom);
-        //    }
-        //    else
-        //    {
-        //        roomsToSplit.Add(new Room(new Rectangle(currentRoom.area.X,
-        //                                                currentRoom.area.Y,
-        //                                                currentRoom.area.Width / 2,
-        //                                                currentRoom.area.Height)));
+            if (currentRoom.area.Width <= pMinimumRoomSize || currentRoom.area.Height <= pMinimumRoomSize)
+            {
+                roomsToSplit.Remove(currentRoom);
+                finishedRooms.Add(currentRoom);
+            }
+            else
+            {
+                Room[] roomsAfterSplitting = currentRoom.Split();
+                for (int i = 0; i < roomsAfterSplitting.Length; i++)
+                {
+                    roomsToSplit.Add(roomsAfterSplitting[i]);
+                }
 
-        //        roomsToSplit.Add(new Room(new Rectangle(currentRoom.area.X + currentRoom.area.Width / 2,
-        //                                                currentRoom.area.Y,
-        //                                                currentRoom.area.Width / 2,
-        //                                                currentRoom.area.Height)));
-        //        Console.WriteLine("current room width:" + currentRoom.area.Width);
-        //        roomsToSplit.Remove(currentRoom);
-        //    }
+                roomsToSplit.Remove(currentRoom);
+            }
 
-        //    //doors.Add(new Door(new Point(Utils.Random(currentRoom.area.X + 1, currentRoom.area.Width - 1), currentRoom.area.Height)));
-        //}
+            //doors.Add(new Door(new Point(Utils.Random(currentRoom.area.X + 1, currentRoom.area.Width - 1), currentRoom.area.Height)));
+        }
 
         #endregion
 

@@ -21,7 +21,7 @@ abstract class Dungeon : Canvas
 	public readonly Size size;
 
 	//base implementation assumes dungeon consists of rooms and doors, adapt in subclass if needed
-	public readonly List<Room> rooms = new List<Room>();
+	public readonly List<Room> finishedRooms = new List<Room>();
 	public readonly List<Door> doors = new List<Door>();
 
 	//Set this to false if you want to do all drawing yourself from the generate method.
@@ -63,7 +63,7 @@ abstract class Dungeon : Canvas
 	{
 		System.Console.WriteLine(this.GetType().Name + ".Generate:Generating dungeon...");
 
-		rooms.Clear();
+		finishedRooms.Clear();
 		doors.Clear();
 
 		generate(pMinimumRoomSize);
@@ -84,7 +84,7 @@ abstract class Dungeon : Canvas
 	protected virtual void draw()
 	{
 		graphics.Clear(Color.Transparent);
-		drawRooms(rooms, wallPen);
+		drawRooms(finishedRooms, wallPen);
 		drawDoors(doors, doorPen);
 	}
 
