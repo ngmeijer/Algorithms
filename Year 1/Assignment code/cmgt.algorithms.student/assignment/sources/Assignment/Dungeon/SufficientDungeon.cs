@@ -48,7 +48,6 @@ class SufficientDungeon : Dungeon
                 doors.Add(new Door(new Point(currentRoom.area.Width - 1, randomDoorPosY)));
             }
 
-
             if (currentRoom.area.Width <= pMinimumRoomSize || currentRoom.area.Height <= pMinimumRoomSize)
             {
                 roomsToSplit.Remove(currentRoom);
