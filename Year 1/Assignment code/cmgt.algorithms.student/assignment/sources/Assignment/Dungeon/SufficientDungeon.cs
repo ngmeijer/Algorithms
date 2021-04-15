@@ -18,14 +18,16 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit;
 
-    private int maxRooms = 9;
+    private int maxRooms = 6;
     private int maxDoors = 1;
 
     private int testInt = 0;
+    private Size startingSize;
 
     public SufficientDungeon(Size pSize) : base(pSize)
     {
         roomsToSplit = new List<Room>();
+        startingSize = pSize;
     }
 
     protected override void generate(int pMinimumRoomSize)
@@ -51,7 +53,6 @@ class SufficientDungeon : Dungeon
 
         #endregion
 
-        Console.WriteLine("Rooms size decreased: " + finishedRooms.Count);
         //Console.WriteLine("Rooms yet to decrease: " + roomsToSplit.Count);
 
         #region 1st iteration
@@ -124,13 +125,14 @@ class SufficientDungeon : Dungeon
 
         //Changing roomWidth1 to a static number removed the randomness..roomsToSplit.Add(new Room(new Rectangle(xPosition1, yPosition1, roomWidth1, roomHeight1)));
 
-        Room startingRoom = new Room(new Rectangle(0, 0, game.width, game.height));
+
+        Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
-        Console.WriteLine(startingRoom.area);
+
         while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
         {
             Room currentRoom = roomsToSplit.First();
-
+           Console.WriteLine(currentRoom.area.ToString());
             if (currentRoom.area.Width <= pMinimumRoomSize || currentRoom.area.Height <= pMinimumRoomSize)
             {
                 roomsToSplit.Remove(currentRoom);
@@ -141,7 +143,7 @@ class SufficientDungeon : Dungeon
                 Room[] roomsAfterSplitting = currentRoom.Split();
                 for (int i = 0; i < roomsAfterSplitting.Length; i++)
                 {
-                    roomsToSplit.Add(roomsAfterSplitting[i]);
+                    finishedRooms.Add(roomsAfterSplitting[i]);
                 }
 
                 roomsToSplit.Remove(currentRoom);

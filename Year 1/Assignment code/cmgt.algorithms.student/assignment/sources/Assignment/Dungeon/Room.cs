@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GXPEngine;
 
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
@@ -11,7 +12,6 @@ class Room
     public Room(Rectangle pArea)
     {
         area = pArea;
-        ToString();
     }
 
     //TODO: Implement a toString method for debugging?
@@ -27,12 +27,15 @@ class Room
     {
         Room[] newRooms = new Room[2];
 
-        Rectangle room0NewSize = new Rectangle(0, 0, area.Width / 2, area.Height);
-        Rectangle room1NewSize = new Rectangle(room0NewSize.Width, 0, area.Width / 2, area.Height);
+        Rectangle room0NewSize = new Rectangle(0, 0, (int)(area.Width / 2.5f), area.Height);
 
         newRooms[0] = new Room(room0NewSize);
+
+        Rectangle room1NewSize = new Rectangle(newRooms[0].area.Width, 0, (area.Width - newRooms[0].area.Width), area.Height);
         newRooms[1] = new Room(room1NewSize);
 
+        Console.WriteLine(newRooms[0].area.ToString());
+        Console.WriteLine(newRooms[1].area.ToString());
         return newRooms;
     }
 }
