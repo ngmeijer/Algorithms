@@ -131,6 +131,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sources\Assignment\Dungeon\Door.cs" />
     <Compile Include="sources\Assignment\Dungeon\Dungeon.cs" />
+    <Compile Include="sources\Assignment\Dungeon\RNG.cs" />
     <Compile Include="sources\Assignment\Dungeon\Room.cs" />
     <Compile Include="sources\AlgorithmsAssignment.cs" />
     <Compile Include="sources\Assignment\Dungeon\SampleDungeon.cs" />

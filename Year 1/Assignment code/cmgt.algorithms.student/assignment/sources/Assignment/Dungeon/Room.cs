@@ -25,17 +25,58 @@ class Room
 
     public Room[] Split()
     {
+        //Create returned array of (soon to be) split rooms.
         Room[] newRooms = new Room[2];
 
-        Rectangle room0NewSize = new Rectangle(0, 0, (int)(area.Width / 2.5f), area.Height);
+        //Define area for the first "new room". Set Position X equal to the previous's area X so it remains contained in the last room's boundaries.
 
-        newRooms[0] = new Room(room0NewSize);
+        RNG gen = new RNG();
+        int axis = gen.RandomInt(0, 2);
 
-        Rectangle room1NewSize = new Rectangle(newRooms[0].area.Width, 0, (area.Width - newRooms[0].area.Width), area.Height);
-        newRooms[1] = new Room(room1NewSize);
+        Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
+        newRooms[0] = new Room(newRoomSize);
 
-        Console.WriteLine(newRooms[0].area.ToString());
-        Console.WriteLine(newRooms[1].area.ToString());
+        if (axis == 0)
+        {
+            //A
+            newRooms[0].area.X = area.X;
+            newRooms[0].area.Y = area.Y;
+            newRooms[0].area.Width /= 2;
+            newRooms[0].area.Height = area.Height;
+        }
+
+        if (axis == 1)
+        {
+            newRooms[0].area.X = area.X;
+            newRooms[0].area.Y = area.Y;
+            newRooms[0].area.Width = area.Width;
+            newRooms[0].area.Height /= 2;
+        }
+
+        Console.WriteLine($"Room 1 area: {newRooms[0].area}");
+
+        Rectangle newRoom2Size = new Rectangle(0, 0, 0, 0);
+        newRooms[1] = new Room(newRoom2Size);
+        if (axis == 0)
+        {
+            //B
+            newRooms[1].area.X = newRooms[0].area.Width;
+            newRooms[1].area.Y = area.Y;
+            newRooms[1].area.Width = area.Width - newRooms[0].area.Width;
+            newRooms[1].area.Height = area.Height;
+        }
+
+        if (axis == 1)
+        {
+            newRooms[1].area.X = area.X;
+            newRooms[1].area.Y = newRooms[0].area.Height;
+            newRooms[1].area.Width = area.Width;
+            newRooms[1].area.Height = area.Height - newRooms[0].area.Height;
+        }
+
+        Console.WriteLine($"Room 2 area: {newRooms[1].area}");
+
         return newRooms;
     }
 }
+
