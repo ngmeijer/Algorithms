@@ -209,12 +209,27 @@ class SufficientDungeon : Dungeon
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
+        int iterationIndex = 0;
+
         while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
         {
             Room[] newRooms = roomsToSplit[0].Split();
+
+            roomsToSplit.Remove(startingRoom);
+
+            for (int i = 0; i < newRooms.Length; i++)
+            {
+                if (newRooms[i].ShouldSplit(newRooms[i].area, pMinimumRoomSize))
+                {
+                    Console.WriteLine($"Should split room with width {newRooms[i].area.Width}");
+                }
+            }
+
             finishedRooms.Add(newRooms[0]);
             finishedRooms.Add(newRooms[1]);
-            roomsToSplit.Remove(startingRoom);
+
+            iterationIndex++;
+            Console.WriteLine($"Iteration: {iterationIndex}");
         }
 
         #endregion

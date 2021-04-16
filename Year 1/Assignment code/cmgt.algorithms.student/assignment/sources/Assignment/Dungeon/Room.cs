@@ -78,5 +78,17 @@ class Room
 
         return newRooms;
     }
+
+    public bool ShouldSplit(Rectangle pRect, int pMinSize)
+    {
+        bool splitWorthy = false;
+
+        if (pRect.Width > pMinSize || pRect.Height > pMinSize)
+        {
+            return true;
+        }
+
+        return splitWorthy;
+    }
 }
 
