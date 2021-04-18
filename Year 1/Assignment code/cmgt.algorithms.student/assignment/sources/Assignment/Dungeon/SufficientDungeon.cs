@@ -209,27 +209,34 @@ class SufficientDungeon : Dungeon
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
-        int iterationIndex = 0;
+        int mainIteration = 0;
+        int subIteration = 0;
 
         while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
         {
-            Room[] newRooms = roomsToSplit[0].Split();
-
-            roomsToSplit.Remove(startingRoom);
-
-            for (int i = 0; i < newRooms.Length; i++)
+            for (int mainRoomsIndex = 0; mainRoomsIndex < roomsToSplit.Count; mainRoomsIndex++)
             {
-                if (newRooms[i].ShouldSplit(newRooms[i].area, pMinimumRoomSize))
+                Room[] newRooms = roomsToSplit[mainRoomsIndex].Split();
+
+                roomsToSplit.Remove(startingRoom);
+
+                for (int subRoomsIndex = 0; subRoomsIndex < newRooms.Length; subRoomsIndex++)
                 {
-                    Console.WriteLine($"Should split room with width {newRooms[i].area.Width}");
+                    if (newRooms[subRoomsIndex].ShouldSplit(newRooms[subRoomsIndex].area, pMinimumRoomSize))
+                    {
+                        Console.WriteLine($"Should split room with width {newRooms[subRoomsIndex].area.Width}");
+                    }
                 }
+
+                finishedRooms.Add(newRooms[0]);
+                finishedRooms.Add(newRooms[1]);
+
+                subIteration++;
+                Console.WriteLine($"Sub iteration: {subIteration}");
             }
 
-            finishedRooms.Add(newRooms[0]);
-            finishedRooms.Add(newRooms[1]);
-
-            iterationIndex++;
-            Console.WriteLine($"Iteration: {iterationIndex}");
+            mainIteration++;
+            Console.WriteLine($"Main iteration: {mainIteration}");
         }
 
         #endregion

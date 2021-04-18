@@ -36,12 +36,14 @@ class Room
         Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
         newRooms[0] = new Room(newRoomSize);
 
+        float randomDivision = Utils.Random(0.3f, 0.8f);
+
         if (axis == 0)
         {
             //A
             newRooms[0].area.X = area.X;
             newRooms[0].area.Y = area.Y;
-            newRooms[0].area.Width /= 2;
+            newRooms[0].area.Width = (int)(newRooms[0].area.Width * randomDivision);
             newRooms[0].area.Height = area.Height;
         }
 
@@ -50,7 +52,7 @@ class Room
             newRooms[0].area.X = area.X;
             newRooms[0].area.Y = area.Y;
             newRooms[0].area.Width = area.Width;
-            newRooms[0].area.Height /= 2;
+            newRooms[0].area.Height = (int)(newRooms[0].area.Height * randomDivision);
         }
 
         Console.WriteLine($"Room 1 area: {newRooms[0].area}");
