@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit;
 
-    private int maxRooms = 10;
+    private int maxRooms = 6;
     private int maxDoors = 1;
 
     private Size startingSize;
@@ -225,6 +225,9 @@ class SufficientDungeon : Dungeon
                     if (newRooms[subRoomsIndex].ShouldSplit(newRooms[subRoomsIndex].area, pMinimumRoomSize))
                     {
                         Console.WriteLine($"Should split room with width {newRooms[subRoomsIndex].area.Width}");
+                        Room[] newSubRooms = newRooms[subRoomsIndex].Split();
+                        finishedRooms.Add(newSubRooms[0]);
+                        finishedRooms.Add(newSubRooms[1]);
                     }
                 }
 
