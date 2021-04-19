@@ -12,6 +12,7 @@ class Room
     public Room(Rectangle pArea)
     {
         area = pArea;
+
     }
 
     //TODO: Implement a toString method for debugging?
@@ -25,14 +26,10 @@ class Room
 
     public Room[] Split()
     {
-        //Create returned array of (soon to be) split rooms.
         Room[] newRooms = new Room[2];
-
-        //Define area for the first "new room". Set Position X equal to the previous's area X so it remains contained in the last room's boundaries.
-
         Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
+        Rectangle newRoom2Size = new Rectangle(area.X, area.Y, area.Width, area.Height);
         newRooms[0] = new Room(newRoomSize);
-        Rectangle newRoom2Size = new Rectangle(0, 0, 0, 0);
         newRooms[1] = new Room(newRoom2Size);
 
         float randomDivision = Utils.Random(0.3f, 0.8f);
@@ -43,27 +40,24 @@ class Room
 
         if (splitAxis == AXIS.VERTICAL)
         {
-            newRooms[0].area.Width = (int) (newRooms[0].area.Width * randomDivision);
+            newRooms[0].area.Width = (int)(newRooms[0].area.Width * 0.5f);
             newRooms[1].area.Width = area.Width - newRooms[0].area.Width;
             newRooms[1].area.X = newRooms[0].area.Width;
         }
 
         if (splitAxis == AXIS.HORIZONTAL)
         {
-            newRooms[0].area.Height = (int) (newRooms[0].area.Height * randomDivision);
+            newRooms[0].area.Height = (int)(newRooms[0].area.Height * 0.7f);
             newRooms[1].area.Height = area.Height - newRooms[0].area.Height;
             newRooms[1].area.Y = newRooms[0].area.Height;
         }
-
-        Console.WriteLine($"Room 1 area: {newRooms[0].area}");
-        Console.WriteLine($"Room 2 area: {newRooms[1].area}");
 
         return newRooms;
     }
 
     public bool ShouldSplit(Rectangle pRect, int pMinSize)
     {
-        if (pRect.Width > pMinSize || pRect.Height > pMinSize)
+        if (pRect.Width > pMinSize && pRect.Height > pMinSize)
         {
             return true;
         }
