@@ -24,7 +24,7 @@ class Room
         return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", area.X, area.Y, area.Width, area.Height);
     }
 
-    public Room[] Split()
+    public Room[] Split(float pRandomDivision, AXIS pSplitAxis)
     {
         Room[] newRooms = new Room[2];
         Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
@@ -32,24 +32,18 @@ class Room
         newRooms[0] = new Room(newRoomSize);
         newRooms[1] = new Room(newRoom2Size);
 
-        float randomDivision = Utils.Random(0.3f, 0.8f);
-
-        newRooms[0].area = area;
-        newRooms[1].area = area;
-        AXIS splitAxis = checkLargerAxis(area);
-
-        if (splitAxis == AXIS.VERTICAL)
+        if (pSplitAxis == AXIS.VERTICAL)
         {
-            newRooms[0].area.Width = (int)(newRooms[0].area.Width * 0.5f);
-            newRooms[1].area.Width = area.Width - newRooms[0].area.Width;
             newRooms[1].area.X = newRooms[0].area.Width;
+            newRooms[0].area.Width = (int)(newRooms[0].area.Width * pRandomDivision);
+            newRooms[1].area.Width = area.Width - newRooms[0].area.Width;
         }
 
-        if (splitAxis == AXIS.HORIZONTAL)
+        if (pSplitAxis == AXIS.HORIZONTAL)
         {
-            newRooms[0].area.Height = (int)(newRooms[0].area.Height * 0.7f);
-            newRooms[1].area.Height = area.Height - newRooms[0].area.Height;
             newRooms[1].area.Y = newRooms[0].area.Height;
+            newRooms[0].area.Height = (int)(newRooms[0].area.Height * pRandomDivision);
+            newRooms[1].area.Height = area.Height - newRooms[0].area.Height;
         }
 
         return newRooms;
