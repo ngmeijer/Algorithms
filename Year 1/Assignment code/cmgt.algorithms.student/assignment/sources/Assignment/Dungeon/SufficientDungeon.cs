@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit;
 
-    private int maxRooms = 10;
+    private int maxRooms = 20;
     private int maxDoors = 1;
 
     private Size startingSize;

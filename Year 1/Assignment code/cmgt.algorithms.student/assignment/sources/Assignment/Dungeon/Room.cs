@@ -8,11 +8,11 @@ using GXPEngine;
  */
 class Room
 {
-    public Rectangle area;
+    public Rectangle originalSize;
 
-    public Room(Rectangle pArea)
+    public Room(Rectangle pOriginalSize)
     {
-        area = pArea;
+        originalSize = pOriginalSize;
     }
 
     //TODO: Implement a toString method for debugging?
@@ -21,37 +21,53 @@ class Room
 
     public override string ToString()
     {
-        return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", area.X, area.Y, area.Width, area.Height);
+        return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
     }
 
     public Room[] Split(float pRandomDivision)
     {
         Room[] newRooms = new Room[2];
-        Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
-        Rectangle newRoom2Size = newRoomSize;
+        Rectangle room1Size = new Rectangle(originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
+        Rectangle room2Size = room1Size;
 
         AXIS splitAxis = checkLargerAxis();
 
         switch (splitAxis)
         {
             case AXIS.HORIZONTAL:
-                newRoomSize.Height = (int)(newRoomSize.Height * pRandomDivision);
-                newRoom2Size.Height = area.Height - newRoomSize.Height;
+                {
+                    room1Size.X = originalSize.X;
+                    room1Size.Y = originalSize.Y;
+                    room1Size.Width = (int)(originalSize.Width * pRandomDivision);
+                    room1Size.Height = originalSize.Height;
+                }
 
-                newRoom2Size.Y = newRoomSize.Height;
-                newRoom2Size.X = area.X;
+                {
+                    room2Size.X = originalSize.X + room1Size.Width;
+                    room2Size.Y = originalSize.Y;
+                    room2Size.Width = originalSize.Width - room1Size.Width;
+                    room2Size.Height = originalSize.Height;
+                }
                 break;
             case AXIS.VERTICAL:
-                newRoomSize.Width = (int)(newRoomSize.Width * pRandomDivision);
-                newRoom2Size.Width = area.Width - newRoomSize.Width;
+                {
+                    room1Size.X = originalSize.X;
+                    room1Size.Y = originalSize.Y;
+                    room1Size.Width = originalSize.Width;
+                    room1Size.Height = (int)(originalSize.Height * pRandomDivision);
+                }
 
-                newRoom2Size.X = newRoomSize.Width;
-                newRoom2Size.Y = area.Y;
+                {
+                    room2Size.X = originalSize.X;
+                    room2Size.Y = originalSize.X + room2Size.Height;
+                    room2Size.Width = originalSize.Width;
+                    room2Size.Height = originalSize.Width - room1Size.Width;
+                }
                 break;
         }
 
-        newRooms[0] = new Room(newRoomSize);
-        newRooms[1] = new Room(newRoom2Size);
+        newRooms[0] = new Room(room1Size);
+        newRooms[1] = new Room(room2Size);
 
         return newRooms;
     }
@@ -59,7 +75,7 @@ class Room
     public bool ShouldSplit()
     {
         int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-        if (area.Width > minSize && area.Height > minSize)
+        if (originalSize.Width > minSize && originalSize.Height > minSize)
             return true;
 
         return false;
@@ -68,14 +84,19 @@ class Room
     private AXIS checkLargerAxis()
     {
         AXIS axis = AXIS.VERTICAL;
-        if (area.Width > area.Height)
-            //Vertical, because the width is larger than the height, meaning it has to be split vertically in order to decrease the width.
-            axis = AXIS.VERTICAL;
-        if (area.Height > area.Width)
-            //Vertical, because the width is larger than the height, meaning it has to be split vertically in order to decrease the width.
+
+        if (originalSize.Width > originalSize.Height)
             axis = AXIS.HORIZONTAL;
 
+        if (originalSize.Height > originalSize.Width)
+            axis = AXIS.VERTICAL;
+
         return axis;
+    }
+
+    private void setRoomSize(Rectangle pArea)
+    {
+
     }
 }
 
