@@ -24,48 +24,51 @@ class Room
         return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", area.X, area.Y, area.Width, area.Height);
     }
 
-    public Room[] Split(float pRandomDivision, AXIS pSplitAxis)
+    public Room[] Split(float pRandomDivision)
     {
         Room[] newRooms = new Room[2];
         Rectangle newRoomSize = new Rectangle(area.X, area.Y, area.Width, area.Height);
-        Rectangle newRoom2Size = new Rectangle(area.X, area.Y, area.Width, area.Height);
+        Rectangle newRoom2Size = newRoomSize;
+
+        AXIS splitAxis = checkLargerAxis();
+
+        switch (splitAxis)
+        {
+            case AXIS.HORIZONTAL:
+                newRoomSize.Height = (int)(newRoomSize.Height * pRandomDivision);
+                newRoom2Size.Y = newRoomSize.Height;
+                newRoom2Size.Height = area.Height - newRoomSize.Height;
+                break;
+            case AXIS.VERTICAL:
+                newRoomSize.Width = (int)(newRoomSize.Width * pRandomDivision);
+                newRoom2Size.X = newRoomSize.Width;
+                newRoom2Size.Width = area.Width - newRoomSize.Width;
+                break;
+        }
+
+
         newRooms[0] = new Room(newRoomSize);
         newRooms[1] = new Room(newRoom2Size);
-
-        if (pSplitAxis == AXIS.VERTICAL)
-        {
-            newRooms[1].area.X = newRooms[0].area.Width;
-            newRooms[0].area.Width = (int)(newRooms[0].area.Width * pRandomDivision);
-            newRooms[1].area.Width = area.Width - newRooms[0].area.Width;
-        }
-
-        if (pSplitAxis == AXIS.HORIZONTAL)
-        {
-            newRooms[1].area.Y = newRooms[0].area.Height;
-            newRooms[0].area.Height = (int)(newRooms[0].area.Height * pRandomDivision);
-            newRooms[1].area.Height = area.Height - newRooms[0].area.Height;
-        }
 
         return newRooms;
     }
 
-    public bool ShouldSplit(Rectangle pRect, int pMinSize)
+    public bool ShouldSplit(Rectangle pRect)
     {
-        if (pRect.Width > pMinSize && pRect.Height > pMinSize)
-        {
+        int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
+        if (pRect.Width > minSize && pRect.Height > minSize)
             return true;
-        }
 
         return false;
     }
 
-    private AXIS checkLargerAxis(Rectangle pArea)
+    private AXIS checkLargerAxis()
     {
         AXIS axis = AXIS.VERTICAL;
-        if (pArea.Width > pArea.Height)
+        if (area.Width > area.Height)
             //Vertical, because the width is larger than the height, meaning it has to be split vertically in order to decrease the width.
             axis = AXIS.VERTICAL;
-        if (pArea.Height > pArea.Width)
+        if (area.Height > area.Width)
             //Vertical, because the width is larger than the height, meaning it has to be split vertically in order to decrease the width.
             axis = AXIS.HORIZONTAL;
 

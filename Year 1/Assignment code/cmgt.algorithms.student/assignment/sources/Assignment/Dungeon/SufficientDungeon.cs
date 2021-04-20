@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Drawing;
 using GXPEngine;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit;
 
-    private int maxRooms = 6;
+    private int maxRooms = 10;
     private int maxDoors = 1;
 
     private Size startingSize;
@@ -250,58 +250,95 @@ class SufficientDungeon : Dungeon
 
         #region 7th iteration
 
+        //roomsToSplit.Clear();
+        //finishedRooms.Clear();
+
+        //Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
+        //roomsToSplit.Add(startingRoom);
+        ////int iterationIndex = 0;
+
+        //float randomDivision = Utils.Random(0.3f, 0.8f);
+
+        //while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
+        //{
+        //    //iterationIndex++;
+        //    //Console.WriteLine($"\n1A: ITERATION: {iterationIndex}");
+        //    //Console.WriteLine($"\n1B: roomsToSplit count: {roomsToSplit.Count}");
+
+        //    for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
+        //    {
+        //        Room currentRoom = roomsToSplit[roomIndex];
+        //        bool shouldRoomSplit = roomsToSplit[roomIndex].ShouldSplit(currentRoom.area, pMinimumRoomSize);
+
+        //        roomsToSplit.Remove(currentRoom);
+        //        Console.WriteLine($"\n             3A: Should room with index [ {roomIndex} ] split?::: {shouldRoomSplit}");
+
+        //        if (shouldRoomSplit)
+        //        {
+        //            Room[] newRooms = currentRoom.Split(randomDivision);
+
+        //            Console.WriteLine($"\n                    4A: newRoom index [ 0 ] has area: {newRooms[0].area}.");
+        //            Console.WriteLine($"                    4B: newRoom index [ 1 ] has area: {newRooms[1].area}.");
+
+        //            Console.WriteLine(newRooms[0].ToString());
+        //            roomsToSplit.Add(newRooms[0]);
+        //            roomsToSplit.Add(newRooms[1]);
+
+        //            Console.WriteLine($"                    4C: roomsToSplit count: {roomsToSplit.Count}");
+        //            Console.WriteLine($"                    4D: finishedRooms count: {finishedRooms.Count}");
+        //        }
+        //        else
+        //        {
+        //            finishedRooms.Add(currentRoom);
+        //        }
+        //        Console.WriteLine("             3B: Rooms were not allowed to split.");
+
+        //        Console.WriteLine($"             3C: roomsToSplit count: {roomsToSplit.Count}.");
+        //        Console.WriteLine($"             3D: finishedRooms count: {finishedRooms.Count}.");
+        //    }
+
+        //    Console.WriteLine($"        2A: roomsToSplit count: {roomsToSplit.Count}");
+        //    Console.WriteLine($"        2B: finishedRooms count: {finishedRooms.Count}");
+        //}
+
+
+        #endregion
+
+        #region 8th iteration
+        //This seems to be correct... Room class does not tho
         roomsToSplit.Clear();
         finishedRooms.Clear();
 
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
-        //int iterationIndex = 0;
-
-        float randomDivision = Utils.Random(0.3f, 0.8f);
 
         while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
         {
-            //iterationIndex++;
-            //Console.WriteLine($"\n1A: ITERATION: {iterationIndex}");
-            //Console.WriteLine($"\n1B: roomsToSplit count: {roomsToSplit.Count}");
-
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {
-                Room currentRoom = roomsToSplit[roomIndex];
-                bool shouldRoomSplit = roomsToSplit[roomIndex].ShouldSplit(currentRoom.area, pMinimumRoomSize);
+                Room currentFocusedRoom = roomsToSplit[roomIndex];
+                Room[] newRooms = currentFocusedRoom.Split(0.5f);
 
-                //roomsToSplit.Remove(currentRoom);
-                //Console.WriteLine($"\n             3A: Should room with index [ {roomIndex} ] split?::: {shouldRoomSplit}");
-
-                if (shouldRoomSplit)
+                for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {
-                    AXIS splitAxis = (AXIS)Utils.Random(0, 2);
-                    Room[] newRooms = currentRoom.Split(0.8f, splitAxis);
+                    Console.WriteLine($"\nnew first room {newRooms[0].area}");
+                    Console.WriteLine($"new second room {newRooms[1].area}");
 
-                    //Console.WriteLine($"\n                    4A: newRoom index [ 0 ] has area: {newRooms[0].area}.");
-                    //Console.WriteLine($"                    4B: newRoom index [ 1 ] has area: {newRooms[1].area}.");
+                    if (newRooms[subRoomIndex].ShouldSplit(newRooms[subRoomIndex].area))
+                    {
+                        roomsToSplit.Add(newRooms[subRoomIndex]);
+                    }
+                    else
+                    {
+                        finishedRooms.Add(newRooms[0]);
+                        finishedRooms.Add(newRooms[1]);
+                    }
 
-                    roomsToSplit.Add(newRooms[0]);
-                    roomsToSplit.Add(newRooms[1]);
-
-                    //Console.WriteLine($"                    4C: roomsToSplit count: {roomsToSplit.Count}");
-                    //Console.WriteLine($"                    4D: finishedRooms count: {finishedRooms.Count}");
-                }
-                else
-                {
-                    finishedRooms.Add(currentRoom);
+                    roomsToSplit.Remove(currentFocusedRoom);
                 }
 
-                //Console.WriteLine("             3B: Rooms were not allowed to split.");
-
-                //Console.WriteLine($"             3C: roomsToSplit count: {roomsToSplit.Count}.");
-                //Console.WriteLine($"             3D: finishedRooms count: {finishedRooms.Count}.");
             }
-
-            //Console.WriteLine($"        2A: roomsToSplit count: {roomsToSplit.Count}");
-            //Console.WriteLine($"        2B: finishedRooms count: {finishedRooms.Count}");
         }
-
 
         #endregion
     }
