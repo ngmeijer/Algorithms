@@ -14,6 +14,8 @@ class SufficientDungeon : Dungeon
     private RNG numGenerator;
 
     private List<Room> roomsToSplit = new List<Room>();
+    private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
+
 
     private const int MAX_ROOMS = 10;
     private int maxDoors = 1;
@@ -302,7 +304,6 @@ class SufficientDungeon : Dungeon
         #endregion
 
         #region 8th iteration
-        //This seems to be correct... Room class does not tho
         roomsToSplit.Clear();
         finishedRooms.Clear();
 
@@ -311,7 +312,7 @@ class SufficientDungeon : Dungeon
 
         while (roomsToSplit.Count > 0)
         {
-            float randomMultiplication = Utils.Random(0.3f, 0.7f);
+            float randomMultiplication = Utils.Random(0.35f, 0.65f);
 
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {

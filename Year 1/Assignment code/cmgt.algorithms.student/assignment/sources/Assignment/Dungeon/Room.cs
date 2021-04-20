@@ -9,11 +9,19 @@ using GXPEngine;
 class Room
 {
     public Rectangle originalSize;
-
+    public int minX;
+    public int maxX;
+    public int minY;
+    public int maxY
+        ;
     public Room(Rectangle pOriginalSize)
     {
         originalSize = pOriginalSize;
-        Console.WriteLine(originalSize);
+        minX = originalSize.X;
+        maxX = originalSize.X + originalSize.Width;
+
+        minY = originalSize.Y;
+        maxY = originalSize.Y + originalSize.Height;
     }
 
     //TODO: Implement a toString method for debugging?
@@ -38,29 +46,32 @@ class Room
             case AXIS.HORIZONTAL:
                 room1Size.Width = (int)(originalSize.Width * pRandomMultiplication);
                 room1Size.Height = originalSize.Height;
-                room1Size.X = originalSize.X;
-                room1Size.Y = originalSize.Y;
+                room1Size.X = minX;
+                room1Size.Y = minY;
 
                 room2Size.Width = originalSize.Width - room1Size.Width;
                 room2Size.Height = originalSize.Height;
-                room2Size.X = originalSize.X + room1Size.Width;
-                room2Size.Y = originalSize.Y;
+                room2Size.X = minX + room1Size.Width;
+                room2Size.Y = minY;
                 break;
             case AXIS.VERTICAL:
                 room1Size.Width = originalSize.Width;
                 room1Size.Height = (int)(originalSize.Height * pRandomMultiplication);
-                room1Size.X = originalSize.X;
-                room1Size.Y = originalSize.Y;
+                room1Size.X = minX;
+                room1Size.Y = minY;
 
                 room2Size.Width = originalSize.Width;
                 room2Size.Height = originalSize.Height - room1Size.Height;
-                room2Size.X = originalSize.X;
+                room2Size.X = minX;
                 room2Size.Y = originalSize.Y + room1Size.Height;
                 break;
         }
 
         newRooms[0] = new Room(room1Size);
         newRooms[1] = new Room(room2Size);
+
+        newRooms[0].implementDoors();
+        newRooms[1].implementDoors();
 
         return newRooms;
     }
@@ -87,7 +98,7 @@ class Room
         return axis;
     }
 
-    private void setRoomSize(Rectangle pArea)
+    private void implementDoors()
     {
 
     }
