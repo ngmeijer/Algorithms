@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using GXPEngine;
 
@@ -12,7 +13,6 @@ class Room
     public Room(Rectangle pArea)
     {
         area = pArea;
-
     }
 
     //TODO: Implement a toString method for debugging?
@@ -36,16 +36,19 @@ class Room
         {
             case AXIS.HORIZONTAL:
                 newRoomSize.Height = (int)(newRoomSize.Height * pRandomDivision);
-                newRoom2Size.Y = newRoomSize.Height;
                 newRoom2Size.Height = area.Height - newRoomSize.Height;
+
+                newRoom2Size.Y = newRoomSize.Height;
+                newRoom2Size.X = area.X;
                 break;
             case AXIS.VERTICAL:
                 newRoomSize.Width = (int)(newRoomSize.Width * pRandomDivision);
-                newRoom2Size.X = newRoomSize.Width;
                 newRoom2Size.Width = area.Width - newRoomSize.Width;
+
+                newRoom2Size.X = newRoomSize.Width;
+                newRoom2Size.Y = area.Y;
                 break;
         }
-
 
         newRooms[0] = new Room(newRoomSize);
         newRooms[1] = new Room(newRoom2Size);
@@ -53,10 +56,10 @@ class Room
         return newRooms;
     }
 
-    public bool ShouldSplit(Rectangle pRect)
+    public bool ShouldSplit()
     {
         int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-        if (pRect.Width > minSize && pRect.Height > minSize)
+        if (area.Width > minSize && area.Height > minSize)
             return true;
 
         return false;

@@ -314,24 +314,22 @@ class SufficientDungeon : Dungeon
 
         while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
         {
+            float randomDivision = Utils.Random(0.5f, 0.8f);
+
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {
                 Room currentFocusedRoom = roomsToSplit[roomIndex];
-                Room[] newRooms = currentFocusedRoom.Split(0.5f);
+                Room[] newRooms = currentFocusedRoom.Split(randomDivision);
 
                 for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {
-                    Console.WriteLine($"\nnew first room {newRooms[0].area}");
-                    Console.WriteLine($"new second room {newRooms[1].area}");
-
-                    if (newRooms[subRoomIndex].ShouldSplit(newRooms[subRoomIndex].area))
+                    if (newRooms[subRoomIndex].ShouldSplit())
                     {
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     }
                     else
                     {
-                        finishedRooms.Add(newRooms[0]);
-                        finishedRooms.Add(newRooms[1]);
+                        finishedRooms.Add(newRooms[subRoomIndex]);
                     }
 
                     roomsToSplit.Remove(currentFocusedRoom);
