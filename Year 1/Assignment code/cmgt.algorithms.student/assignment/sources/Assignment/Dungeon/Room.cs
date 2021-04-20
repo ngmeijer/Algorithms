@@ -13,6 +13,7 @@ class Room
     public Room(Rectangle pOriginalSize)
     {
         originalSize = pOriginalSize;
+        Console.WriteLine(originalSize);
     }
 
     //TODO: Implement a toString method for debugging?
@@ -24,45 +25,37 @@ class Room
         return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
     }
 
-    public Room[] Split(float pRandomDivision)
+    public Room[] Split(float pRandomMultiplication)
     {
         Room[] newRooms = new Room[2];
-        Rectangle room1Size = new Rectangle(originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
-        Rectangle room2Size = room1Size;
+        Rectangle room1Size = new Rectangle(0, 0, 0, 0);
+        Rectangle room2Size = new Rectangle(0, 0, 0, 0);
 
         AXIS splitAxis = checkLargerAxis();
 
         switch (splitAxis)
         {
             case AXIS.HORIZONTAL:
-                {
-                    room1Size.X = originalSize.X;
-                    room1Size.Y = originalSize.Y;
-                    room1Size.Width = (int)(originalSize.Width * pRandomDivision);
-                    room1Size.Height = originalSize.Height;
-                }
+                room1Size.Width = (int)(originalSize.Width * pRandomMultiplication);
+                room1Size.Height = originalSize.Height;
+                room1Size.X = originalSize.X;
+                room1Size.Y = originalSize.Y;
 
-                {
-                    room2Size.X = originalSize.X + room1Size.Width;
-                    room2Size.Y = originalSize.Y;
-                    room2Size.Width = originalSize.Width - room1Size.Width;
-                    room2Size.Height = originalSize.Height;
-                }
+                room2Size.Width = originalSize.Width - room1Size.Width;
+                room2Size.Height = originalSize.Height;
+                room2Size.X = originalSize.X + room1Size.Width;
+                room2Size.Y = originalSize.Y;
                 break;
             case AXIS.VERTICAL:
-                {
-                    room1Size.X = originalSize.X;
-                    room1Size.Y = originalSize.Y;
-                    room1Size.Width = originalSize.Width;
-                    room1Size.Height = (int)(originalSize.Height * pRandomDivision);
-                }
+                room1Size.Width = originalSize.Width;
+                room1Size.Height = (int)(originalSize.Height * pRandomMultiplication);
+                room1Size.X = originalSize.X;
+                room1Size.Y = originalSize.Y;
 
-                {
-                    room2Size.X = originalSize.X;
-                    room2Size.Y = originalSize.X + room2Size.Height;
-                    room2Size.Width = originalSize.Width;
-                    room2Size.Height = originalSize.Width - room1Size.Width;
-                }
+                room2Size.Width = originalSize.Width;
+                room2Size.Height = originalSize.Height - room1Size.Height;
+                room2Size.X = originalSize.X;
+                room2Size.Y = originalSize.Y + room1Size.Height;
                 break;
         }
 

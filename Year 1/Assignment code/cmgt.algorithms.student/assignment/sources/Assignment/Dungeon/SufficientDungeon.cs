@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit;
 
-    private int maxRooms = 20;
+    private const int MAX_ROOMS = 10;
     private int maxDoors = 1;
 
     private Size startingSize;
@@ -312,14 +312,14 @@ class SufficientDungeon : Dungeon
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
-        while (roomsToSplit.Count > 0 && finishedRooms.Count < maxRooms)
+        while (roomsToSplit.Count > 0)
         {
-            float randomDivision = Utils.Random(0.5f, 0.8f);
+            float randomMultiplication = Utils.Random(0.5f, 0.8f);
 
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {
                 Room currentFocusedRoom = roomsToSplit[roomIndex];
-                Room[] newRooms = currentFocusedRoom.Split(randomDivision);
+                Room[] newRooms = currentFocusedRoom.Split(randomMultiplication);
 
                 for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {
@@ -327,14 +327,12 @@ class SufficientDungeon : Dungeon
                     {
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     }
-                    else
+                    else if (finishedRooms.Count < MAX_ROOMS)
                     {
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
-
-                    roomsToSplit.Remove(currentFocusedRoom);
                 }
-
+                //roomsToSplit.Remove(currentFocusedRoom);
             }
         }
 
