@@ -2,8 +2,6 @@
 using System.Drawing;
 using GXPEngine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 
 enum AXIS
 {
@@ -15,7 +13,7 @@ class SufficientDungeon : Dungeon
 {
     private RNG numGenerator;
 
-    private List<Room> roomsToSplit;
+    private List<Room> roomsToSplit = new List<Room>();
 
     private const int MAX_ROOMS = 10;
     private int maxDoors = 1;
@@ -24,7 +22,6 @@ class SufficientDungeon : Dungeon
 
     public SufficientDungeon(Size pSize) : base(pSize)
     {
-        roomsToSplit = new List<Room>();
         startingSize = pSize;
     }
 
@@ -314,7 +311,7 @@ class SufficientDungeon : Dungeon
 
         while (roomsToSplit.Count > 0)
         {
-            float randomMultiplication = Utils.Random(0.5f, 0.8f);
+            float randomMultiplication = Utils.Random(0.3f, 0.7f);
 
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {
@@ -332,7 +329,8 @@ class SufficientDungeon : Dungeon
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
                 }
-                //roomsToSplit.Remove(currentFocusedRoom);
+                roomsToSplit.Remove(currentFocusedRoom);
+                finishedRooms.Add(currentFocusedRoom);
             }
         }
 

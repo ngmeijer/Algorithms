@@ -30,7 +30,7 @@ abstract class Dungeon : Canvas
 
 	//The colors for the walls and doors
 	//TODO:try changing 255 to 128 to see where the room boundaries are...
-	private Pen wallPen = new Pen(Color.FromArgb(128, Color.Black));
+	private Pen wallPen = new Pen(Color.FromArgb(255, Color.Black));
 	private Pen doorPen = Pens.Red;
 
 	/**
