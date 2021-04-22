@@ -12,8 +12,10 @@ class Room
     public int minX;
     public int maxX;
     public int minY;
-    public int maxY
-        ;
+    public int maxY;
+
+    public int Index;
+
     public Room(Rectangle pOriginalSize)
     {
         originalSize = pOriginalSize;
@@ -49,9 +51,9 @@ class Room
                 room1Size.X = minX;
                 room1Size.Y = minY;
 
-                room2Size.Width = originalSize.Width - room1Size.Width;
+                room2Size.Width = originalSize.Width - room1Size.Width + 1;
                 room2Size.Height = originalSize.Height;
-                room2Size.X = minX + room1Size.Width;
+                room2Size.X = minX + room1Size.Width - 1;
                 room2Size.Y = minY;
                 break;
             case AXIS.VERTICAL:
@@ -61,9 +63,9 @@ class Room
                 room1Size.Y = minY;
 
                 room2Size.Width = originalSize.Width;
-                room2Size.Height = originalSize.Height - room1Size.Height;
+                room2Size.Height = originalSize.Height - room1Size.Height + 1;
                 room2Size.X = minX;
-                room2Size.Y = originalSize.Y + room1Size.Height;
+                room2Size.Y = originalSize.Y + room1Size.Height - 1;
                 break;
         }
 
@@ -103,4 +105,3 @@ class Room
 
     }
 }
-

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using GXPEngine;
 using System.Collections.Generic;
+using System.Drawing;
 
 enum AXIS
 {
@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
 
 
-    private const int MAX_ROOMS = 10;
+    private const int MAX_ROOMS = 12;
     private int maxDoors = 1;
 
     private Size startingSize;
@@ -307,15 +307,17 @@ class SufficientDungeon : Dungeon
         roomsToSplit.Clear();
         finishedRooms.Clear();
 
+        float timer = 0;
+
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
         while (roomsToSplit.Count > 0)
         {
-            float randomMultiplication = Utils.Random(0.35f, 0.65f);
-
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
             {
+                float randomMultiplication = Utils.Random(0.35f, 0.65f);
+
                 Room currentFocusedRoom = roomsToSplit[roomIndex];
                 Room[] newRooms = currentFocusedRoom.Split(randomMultiplication);
 
@@ -330,6 +332,7 @@ class SufficientDungeon : Dungeon
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
                 }
+
                 roomsToSplit.Remove(currentFocusedRoom);
                 finishedRooms.Add(currentFocusedRoom);
             }
