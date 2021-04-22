@@ -29,7 +29,7 @@ class AlgorithmsAssignment : Game
 
     //common settings
     private const int SCALE = 16;               //TODO: experiment with changing this
-    public const int MIN_ROOM_SIZE = 15;        //TODO: use this setting in your dungeon generator
+    public const int MIN_ROOM_SIZE = 20;        //TODO: use this setting in your dungeon generator
 
     public AlgorithmsAssignment() : base(1200, 800, false, true, -1, -1, false)
     {

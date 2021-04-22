@@ -17,7 +17,7 @@ class SufficientDungeon : Dungeon
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
 
 
-    private const int MAX_ROOMS = 12;
+    private const int MAX_ROOMS = 20;
     private int maxDoors = 1;
 
     private Size startingSize;
@@ -327,14 +327,15 @@ class SufficientDungeon : Dungeon
                     {
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     }
-                    else if (finishedRooms.Count < MAX_ROOMS)
+                    else
                     {
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
                 }
 
                 roomsToSplit.Remove(currentFocusedRoom);
-                finishedRooms.Add(currentFocusedRoom);
+                //finishedRooms.Add(currentFocusedRoom);
+                Console.WriteLine(finishedRooms.Count);
             }
         }
 
