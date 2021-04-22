@@ -15,7 +15,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit = new List<Room>();
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
-    
+
     private Size startingSize;
 
     public SufficientDungeon(Size pSize) : base(pSize)
@@ -306,6 +306,8 @@ class SufficientDungeon : Dungeon
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
+        int roomID = 0;
+
         while (roomsToSplit.Count > 0)
         {
             for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
@@ -319,11 +321,21 @@ class SufficientDungeon : Dungeon
                 {
                     if (newRooms[subRoomIndex].ShouldSplit())
                         roomsToSplit.Add(newRooms[subRoomIndex]);
-                    else finishedRooms.Add(newRooms[subRoomIndex]);
+                    else
+                    {
+                        newRooms[subRoomIndex].ID = roomID;
+                        roomID++;
+                        finishedRooms.Add(newRooms[subRoomIndex]);
+                    }
                 }
-
                 roomsToSplit.Remove(currentFocusedRoom);
             }
+        }
+
+
+        foreach (Room room in finishedRooms)
+        {
+            room.PlaceDoors(finishedRooms);
         }
 
         #endregion

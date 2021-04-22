@@ -14,6 +14,7 @@ class Room
     public int minY;
     public int maxY;
 
+    public int ID;
     public float randomSplitValue;
 
     public Room(Rectangle pOriginalSize)
@@ -99,9 +100,17 @@ class Room
         return axis;
     }
 
-    private List<Room> findNeighbourRooms()
+    public void PlaceDoors(List<Room> pFinishedRooms)
+    {
+        Console.WriteLine($"Placed door for room ID {ID}");
+        List<Room> neighbourRooms = findNeighbourRooms(pFinishedRooms);
+    }
+
+    private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)
     {
         List<Room> neighbourRooms = new List<Room>();
+
+        //Create for/foreach loop, iterate over all rooms to check if they have an xPos or yPos that's next to this room. If it is, communicate back to that room that this room is going to place a door to prevent double doors?
 
         return neighbourRooms;
     }
