@@ -14,7 +14,7 @@ class Room
     public int minY;
     public int maxY;
 
-    public int Index;
+    public float randomSplitValue;
 
     public Room(Rectangle pOriginalSize)
     {
@@ -37,43 +37,52 @@ class Room
 
     public Room[] Split(float pRandomMultiplication)
     {
-        Room[] newRooms = new Room[2];
-        Rectangle room1Size = new Rectangle(0, 0, 0, 0);
-        Rectangle room2Size = new Rectangle(0, 0, 0, 0);
-
+        randomSplitValue = pRandomMultiplication;
         AXIS splitAxis = checkLargerAxis();
 
-        switch (splitAxis)
-        {
-            case AXIS.HORIZONTAL:
-                room1Size.Width = (int)(originalSize.Width * pRandomMultiplication);
-                room1Size.Height = originalSize.Height;
-                room1Size.X = minX;
-                room1Size.Y = minY;
-
-                room2Size.Width = originalSize.Width - room1Size.Width + 1;
-                room2Size.Height = originalSize.Height;
-                room2Size.X = minX + room1Size.Width - 1;
-                room2Size.Y = minY;
-                break;
-            case AXIS.VERTICAL:
-                room1Size.Width = originalSize.Width;
-                room1Size.Height = (int)(originalSize.Height * pRandomMultiplication);
-                room1Size.X = minX;
-                room1Size.Y = minY;
-
-                room2Size.Width = originalSize.Width;
-                room2Size.Height = originalSize.Height - room1Size.Height + 1;
-                room2Size.X = minX;
-                room2Size.Y = originalSize.Y + room1Size.Height - 1;
-                break;
-        }
-
-        newRooms[0] = new Room(room1Size);
-        newRooms[1] = new Room(room2Size);
+        Room[] newRooms = defineRooms(splitAxis);
 
         newRooms[0].implementDoors();
         newRooms[1].implementDoors();
+
+        return newRooms;
+    }
+
+    private Room[] defineRooms(AXIS pSplitAxis)
+    {
+        Room[] newRooms = new Room[2];
+        Rectangle[] roomSizes = new Rectangle[2];
+        roomSizes[0] = new Rectangle(0, 0, 0, 0);
+        roomSizes[1] = new Rectangle(0, 0, 0, 0);
+
+        switch (pSplitAxis)
+        {
+            case AXIS.HORIZONTAL:
+                roomSizes[0].Width = (int)(originalSize.Width * randomSplitValue);
+                roomSizes[0].Height = originalSize.Height;
+                roomSizes[0].X = minX;
+                roomSizes[0].Y = minY;
+
+                roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
+                roomSizes[1].Height = originalSize.Height;
+                roomSizes[1].X = minX + roomSizes[0].Width - 1;
+                roomSizes[1].Y = minY;
+                break;
+            case AXIS.VERTICAL:
+                roomSizes[0].Width = originalSize.Width;
+                roomSizes[0].Height = (int)(originalSize.Height * randomSplitValue);
+                roomSizes[0].X = minX;
+                roomSizes[0].Y = minY;
+
+                roomSizes[1].Width = originalSize.Width;
+                roomSizes[1].Height = originalSize.Height - roomSizes[0].Height + 1;
+                roomSizes[1].X = minX;
+                roomSizes[1].Y = originalSize.Y + roomSizes[0].Height - 1;
+                break;
+        }
+
+        newRooms[0] = new Room(roomSizes[0]);
+        newRooms[1] = new Room(roomSizes[1]);
 
         return newRooms;
     }
@@ -93,9 +102,6 @@ class Room
 
         if (originalSize.Width > originalSize.Height)
             axis = AXIS.HORIZONTAL;
-
-        if (originalSize.Height > originalSize.Width)
-            axis = AXIS.VERTICAL;
 
         return axis;
     }
