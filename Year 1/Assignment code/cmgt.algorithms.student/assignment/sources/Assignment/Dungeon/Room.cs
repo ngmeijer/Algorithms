@@ -39,11 +39,7 @@ class Room
     {
         randomSplitValue = pRandomMultiplication;
         AXIS splitAxis = checkLargerAxis();
-
         Room[] newRooms = defineRooms(splitAxis);
-
-        newRooms[0].implementDoors();
-        newRooms[1].implementDoors();
 
         return newRooms;
     }
@@ -51,32 +47,20 @@ class Room
     private Room[] defineRooms(AXIS pSplitAxis)
     {
         Room[] newRooms = new Room[2];
-        Rectangle[] roomSizes = new Rectangle[2];
-        roomSizes[0] = new Rectangle(0, 0, 0, 0);
-        roomSizes[1] = new Rectangle(0, 0, 0, 0);
+        Rectangle[] roomSizes = defineSizes();
 
         switch (pSplitAxis)
         {
             case AXIS.HORIZONTAL:
                 roomSizes[0].Width = (int)(originalSize.Width * randomSplitValue);
-                roomSizes[0].Height = originalSize.Height;
-                roomSizes[0].X = minX;
-                roomSizes[0].Y = minY;
 
                 roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
-                roomSizes[1].Height = originalSize.Height;
                 roomSizes[1].X = minX + roomSizes[0].Width - 1;
-                roomSizes[1].Y = minY;
                 break;
             case AXIS.VERTICAL:
-                roomSizes[0].Width = originalSize.Width;
                 roomSizes[0].Height = (int)(originalSize.Height * randomSplitValue);
-                roomSizes[0].X = minX;
-                roomSizes[0].Y = minY;
 
-                roomSizes[1].Width = originalSize.Width;
                 roomSizes[1].Height = originalSize.Height - roomSizes[0].Height + 1;
-                roomSizes[1].X = minX;
                 roomSizes[1].Y = originalSize.Y + roomSizes[0].Height - 1;
                 break;
         }
@@ -85,6 +69,15 @@ class Room
         newRooms[1] = new Room(roomSizes[1]);
 
         return newRooms;
+    }
+
+    private Rectangle[] defineSizes()
+    {
+        Rectangle[] roomSizes = new Rectangle[2];
+        roomSizes[0] = new Rectangle(minX, minY, originalSize.Width, originalSize.Height);
+        roomSizes[1] = new Rectangle(minX, minY, originalSize.Width, originalSize.Height);
+
+        return roomSizes;
     }
 
     public bool ShouldSplit()
@@ -106,8 +99,10 @@ class Room
         return axis;
     }
 
-    private void implementDoors()
+    private List<Room> findNeighbourRooms()
     {
+        List<Room> neighbourRooms = new List<Room>();
 
+        return neighbourRooms;
     }
 }

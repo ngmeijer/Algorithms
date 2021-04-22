@@ -15,11 +15,7 @@ class SufficientDungeon : Dungeon
 
     private List<Room> roomsToSplit = new List<Room>();
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
-
-
-    private const int MAX_ROOMS = 20;
-    private int maxDoors = 1;
-
+    
     private Size startingSize;
 
     public SufficientDungeon(Size pSize) : base(pSize)
