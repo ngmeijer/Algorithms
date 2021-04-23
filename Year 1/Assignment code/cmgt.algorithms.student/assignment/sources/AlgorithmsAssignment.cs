@@ -31,6 +31,9 @@ class AlgorithmsAssignment : Game
     private const int SCALE = 16;               //TODO: experiment with changing this
     public const int MIN_ROOM_SIZE = 20;        //TODO: use this setting in your dungeon generator
 
+    private Canvas canvas;
+    private EasyDraw[] testingTextArray;
+
     public AlgorithmsAssignment() : base(1200, 800, false, true, -1, -1, false)
     {
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +216,9 @@ class AlgorithmsAssignment : Game
 
         /////////////////////////////////////////////////
         //The end!
-        ////
+
+        canvas = new Canvas(game.width, game.height);
+        AddChild(canvas);
     }
 
     private void Update()
@@ -221,6 +226,17 @@ class AlgorithmsAssignment : Game
         if (Input.GetMouseButtonDown(0))
         {
             _sufficientDungeon.Generate(MIN_ROOM_SIZE);
+            int roomCount = _sufficientDungeon.finishedRooms.Count;
+            testingTextArray = new EasyDraw[roomCount];
+
+            for (int i = 0; i < roomCount; i++)
+            {
+                testingTextArray[i] = new EasyDraw(canvas.width, canvas.height);
+                AddChild(testingTextArray[i]);
+                testingTextArray[i].SetColor(0, 0, 255);
+                testingTextArray[i].SetXY(500, 600);
+                testingTextArray[i].Text($"ID: {_sufficientDungeon.finishedRooms[i].ID}", 0, 20);
+            }
         }
     }
 }

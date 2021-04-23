@@ -6,13 +6,14 @@ using GXPEngine;
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
-class Room
+class Room : GameObject
 {
+    private Vec2 originOfRoom;
     public Rectangle originalSize;
-    public int minX;
-    public int maxX;
-    public int minY;
-    public int maxY;
+    public int leftSide;
+    public int rightSide;
+    public int topSide;
+    public int bottomSide;
 
     public int ID;
     public float randomSplitValue;
@@ -20,11 +21,12 @@ class Room
     public Room(Rectangle pOriginalSize)
     {
         originalSize = pOriginalSize;
-        minX = originalSize.X;
-        maxX = originalSize.X + originalSize.Width;
+        originOfRoom = new Vec2(originalSize.Width / 2, originalSize.Height / 2);
 
-        minY = originalSize.Y;
-        maxY = originalSize.Y + originalSize.Height;
+        leftSide = originalSize.X;
+        rightSide = originalSize.X + originalSize.Width;
+        topSide = originalSize.Y;
+        bottomSide = originalSize.Y + originalSize.Height;
     }
 
     //TODO: Implement a toString method for debugging?
@@ -56,7 +58,7 @@ class Room
                 roomSizes[0].Width = (int)(originalSize.Width * randomSplitValue);
 
                 roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
-                roomSizes[1].X = minX + roomSizes[0].Width - 1;
+                roomSizes[1].X = leftSide + roomSizes[0].Width - 1;
                 break;
             case AXIS.VERTICAL:
                 roomSizes[0].Height = (int)(originalSize.Height * randomSplitValue);
@@ -75,8 +77,8 @@ class Room
     private Rectangle[] defineSizes()
     {
         Rectangle[] roomSizes = new Rectangle[2];
-        roomSizes[0] = new Rectangle(minX, minY, originalSize.Width, originalSize.Height);
-        roomSizes[1] = new Rectangle(minX, minY, originalSize.Width, originalSize.Height);
+        roomSizes[0] = new Rectangle(leftSide, topSide, originalSize.Width, originalSize.Height);
+        roomSizes[1] = new Rectangle(leftSide, topSide, originalSize.Width, originalSize.Height);
 
         return roomSizes;
     }
@@ -102,8 +104,12 @@ class Room
 
     public void PlaceDoors(List<Room> pFinishedRooms)
     {
-        Console.WriteLine($"Placed door for room ID {ID}");
         List<Room> neighbourRooms = findNeighbourRooms(pFinishedRooms);
+
+        foreach (Room room in neighbourRooms)
+        {
+            Console.WriteLine($"Neighbour room ID: {room.ID}");
+        }
     }
 
     private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)
@@ -112,6 +118,28 @@ class Room
 
         //Create for/foreach loop, iterate over all rooms to check if they have an xPos or yPos that's next to this room. If it is, communicate back to that room that this room is going to place a door to prevent double doors?
 
+        foreach (Room room in pFinishedRooms)
+        {
+            bool horizontallyAligned = false;
+            bool verticallyAligned = false;
+
+            //Right side room
+            if (room.leftSide == this.rightSide || room.rightSide == this.leftSide)
+            {
+                horizontallyAligned = true;
+            }
+
+            if (room.topSide == this.bottomSide || room.bottomSide == this.topSide)
+            {
+                verticallyAligned = true;
+            }
+
+            if (horizontallyAligned && verticallyAligned)
+            {
+                neighbourRooms.Add(room);
+                Console.WriteLine($"Neighbour rooms found: {neighbourRooms.Count}");
+            }
+        }
         return neighbourRooms;
     }
 }

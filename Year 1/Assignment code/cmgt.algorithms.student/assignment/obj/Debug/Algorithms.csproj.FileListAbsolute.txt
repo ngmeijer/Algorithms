@@ -15,7 +15,6 @@ D:\Downloads\GitHub\Repositories\Algorithms\Assignment code\cmgt.algorithms.stud
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe.config
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\bin\Debug\dcg.pdb
-D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csprojAssemblyReference.cache
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csproj.CoreCompileInputs.cache
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\dcg.exe
 D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\obj\Debug\dcg.pdb

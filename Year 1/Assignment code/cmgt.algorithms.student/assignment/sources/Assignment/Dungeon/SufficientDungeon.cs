@@ -323,8 +323,8 @@ class SufficientDungeon : Dungeon
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     else
                     {
-                        newRooms[subRoomIndex].ID = roomID;
                         roomID++;
+                        newRooms[subRoomIndex].ID = roomID;
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
                 }
@@ -332,9 +332,9 @@ class SufficientDungeon : Dungeon
             }
         }
 
-
         foreach (Room room in finishedRooms)
         {
+            AddChild(room);
             room.PlaceDoors(finishedRooms);
         }
 
