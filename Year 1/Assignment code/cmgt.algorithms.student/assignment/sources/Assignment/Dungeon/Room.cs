@@ -18,6 +18,8 @@ class Room : GameObject
     public int ID;
     public float randomSplitValue;
 
+    public Canvas canvas;
+
     public Room(Rectangle pOriginalSize)
     {
         originalSize = pOriginalSize;
@@ -27,6 +29,13 @@ class Room : GameObject
         rightSide = originalSize.X + originalSize.Width;
         topSide = originalSize.Y;
         bottomSide = originalSize.Y + originalSize.Height;
+
+        canvas = new Canvas(300, 300);
+        AddChild(canvas);
+        EasyDraw text = new EasyDraw(300, 300);
+        AddChild(text);
+        text.Text($"ID: {ID}", this.x,50);
+        text.SetScaleXY(0.1f,0.1f);
     }
 
     //TODO: Implement a toString method for debugging?
@@ -70,6 +79,12 @@ class Room : GameObject
 
         newRooms[0] = new Room(roomSizes[0]);
         newRooms[1] = new Room(roomSizes[1]);
+
+        newRooms[0].x = this.x * randomSplitValue;
+        newRooms[0].y = this.y * randomSplitValue;
+
+        newRooms[1].x = this.x * randomSplitValue;
+        newRooms[1].y = this.y * randomSplitValue;
 
         return newRooms;
     }

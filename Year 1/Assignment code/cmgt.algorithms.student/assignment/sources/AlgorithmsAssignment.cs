@@ -218,7 +218,7 @@ class AlgorithmsAssignment : Game
         //The end!
 
         canvas = new Canvas(game.width, game.height);
-        AddChild(canvas);
+        //AddChild(canvas);
     }
 
     private void Update()
@@ -231,11 +231,11 @@ class AlgorithmsAssignment : Game
 
             for (int i = 0; i < roomCount; i++)
             {
-                testingTextArray[i] = new EasyDraw(canvas.width, canvas.height);
-                AddChild(testingTextArray[i]);
-                testingTextArray[i].SetColor(0, 0, 255);
-                testingTextArray[i].SetXY(500, 600);
-                testingTextArray[i].Text($"ID: {_sufficientDungeon.finishedRooms[i].ID}", 0, 20);
+                Console.WriteLine($"Room pos: {_sufficientDungeon.finishedRooms[i].x}, {_sufficientDungeon.finishedRooms[i].y}");
+                //testingTextArray[i] = new EasyDraw(1000, 1000);
+                //AddChild(testingTextArray[i]);
+                //testingTextArray[i].SetColor(0, 0, 255);
+                //testingTextArray[i].Text($"ID: {_sufficientDungeon.finishedRooms[i].ID}", _sufficientDungeon.finishedRooms[i].x, 50);
             }
         }
     }
