@@ -18,8 +18,6 @@ class Room : GameObject
     public int ID;
     public float randomSplitValue;
 
-    public Canvas canvas;
-
     //"Worldspace" coordinates
     private Vec2 screenPosition;
 
@@ -34,17 +32,16 @@ class Room : GameObject
         topSide = originalSize.Y;
         bottomSide = originalSize.Y + originalSize.Height;
 
-        screenPosition.x = (leftSide * AlgorithmsAssignment.SCALE);
-        screenPosition.y = (topSide * AlgorithmsAssignment.SCALE);
+        screenPosition.x = leftSide * AlgorithmsAssignment.SCALE;
+        screenPosition.y = topSide * (AlgorithmsAssignment.SCALE + 1);
 
         ID = pID;
 
         Console.WriteLine($"Screen pos: {screenPosition} for room {ID}");
 
-        canvas = new Canvas(game.width, game.height);
-        AddChild(canvas);
-        EasyDraw text = new EasyDraw(canvas.width, canvas.height);
+        EasyDraw text = new EasyDraw(game.width, game.height);
         AddChild(text);
+
         text.Text($"ID: {ID}", screenPosition.x, screenPosition.y);
         text.SetColor(0, 255, 0);
         text.SetScaleXY(0.1f, 0.1f);
