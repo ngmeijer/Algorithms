@@ -28,11 +28,12 @@ class AlgorithmsAssignment : Game
     PathFinder _pathFinder = null;
 
     //common settings
-    private const int SCALE = 16;               //TODO: experiment with changing this
+    public const int SCALE = 16;               //TODO: experiment with changing this
     public const int MIN_ROOM_SIZE = 20;        //TODO: use this setting in your dungeon generator
 
-    private Canvas canvas;
-    private EasyDraw[] testingTextArray;
+    public delegate void OnGenerateRooms();
+
+    public static event OnGenerateRooms OnGenerateDestroyPrevious;
 
     public AlgorithmsAssignment() : base(1200, 800, false, true, -1, -1, false)
     {
@@ -216,27 +217,14 @@ class AlgorithmsAssignment : Game
 
         /////////////////////////////////////////////////
         //The end!
-
-        canvas = new Canvas(game.width, game.height);
-        //AddChild(canvas);
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            OnGenerateDestroyPrevious?.Invoke();
             _sufficientDungeon.Generate(MIN_ROOM_SIZE);
-            int roomCount = _sufficientDungeon.finishedRooms.Count;
-            testingTextArray = new EasyDraw[roomCount];
-
-            for (int i = 0; i < roomCount; i++)
-            {
-                Console.WriteLine($"Room pos: {_sufficientDungeon.finishedRooms[i].x}, {_sufficientDungeon.finishedRooms[i].y}");
-                //testingTextArray[i] = new EasyDraw(1000, 1000);
-                //AddChild(testingTextArray[i]);
-                //testingTextArray[i].SetColor(0, 0, 255);
-                //testingTextArray[i].Text($"ID: {_sufficientDungeon.finishedRooms[i].ID}", _sufficientDungeon.finishedRooms[i].x, 50);
-            }
         }
     }
 }

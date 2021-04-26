@@ -303,10 +303,10 @@ class SufficientDungeon : Dungeon
         roomsToSplit.Clear();
         finishedRooms.Clear();
 
-        Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
-        roomsToSplit.Add(startingRoom);
-
         int roomID = 0;
+
+        Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height), roomID);
+        roomsToSplit.Add(startingRoom);
 
         while (roomsToSplit.Count > 0)
         {
@@ -315,7 +315,8 @@ class SufficientDungeon : Dungeon
                 float randomMultiplication = Utils.Random(0.35f, 0.65f);
 
                 Room currentFocusedRoom = roomsToSplit[roomIndex];
-                Room[] newRooms = currentFocusedRoom.Split(randomMultiplication);
+                roomID++;
+                Room[] newRooms = currentFocusedRoom.Split(randomMultiplication, roomID);
 
                 for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {
@@ -323,8 +324,6 @@ class SufficientDungeon : Dungeon
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     else
                     {
-                        roomID++;
-                        newRooms[subRoomIndex].ID = roomID;
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
                 }

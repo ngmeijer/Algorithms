@@ -20,8 +20,12 @@ class Room : GameObject
 
     public Canvas canvas;
 
-    public Room(Rectangle pOriginalSize)
+    //"Worldspace" coordinates
+    private Vec2 screenPosition;
+
+    public Room(Rectangle pOriginalSize, int pID)
     {
+        AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
         originalSize = pOriginalSize;
         originOfRoom = new Vec2(originalSize.Width / 2, originalSize.Height / 2);
 
@@ -30,12 +34,20 @@ class Room : GameObject
         topSide = originalSize.Y;
         bottomSide = originalSize.Y + originalSize.Height;
 
-        canvas = new Canvas(300, 300);
+        screenPosition.x = (leftSide * AlgorithmsAssignment.SCALE);
+        screenPosition.y = (topSide * AlgorithmsAssignment.SCALE);
+
+        ID = pID;
+
+        Console.WriteLine($"Screen pos: {screenPosition} for room {ID}");
+
+        canvas = new Canvas(game.width, game.height);
         AddChild(canvas);
-        EasyDraw text = new EasyDraw(300, 300);
+        EasyDraw text = new EasyDraw(canvas.width, canvas.height);
         AddChild(text);
-        text.Text($"ID: {ID}", this.x,50);
-        text.SetScaleXY(0.1f,0.1f);
+        text.Text($"ID: {ID}", screenPosition.x, screenPosition.y);
+        text.SetColor(0, 255, 0);
+        text.SetScaleXY(0.1f, 0.1f);
     }
 
     //TODO: Implement a toString method for debugging?
@@ -47,16 +59,22 @@ class Room : GameObject
         return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
     }
 
-    public Room[] Split(float pRandomMultiplication)
+    private void handleDestroy()
+    {
+        AlgorithmsAssignment.OnGenerateDestroyPrevious -= handleDestroy;
+        Destroy();
+    }
+
+    public Room[] Split(float pRandomMultiplication, int pID)
     {
         randomSplitValue = pRandomMultiplication;
         AXIS splitAxis = checkLargerAxis();
-        Room[] newRooms = defineRooms(splitAxis);
+        Room[] newRooms = defineRooms(splitAxis, pID);
 
         return newRooms;
     }
 
-    private Room[] defineRooms(AXIS pSplitAxis)
+    private Room[] defineRooms(AXIS pSplitAxis, int pID)
     {
         Room[] newRooms = new Room[2];
         Rectangle[] roomSizes = defineSizes();
@@ -77,8 +95,8 @@ class Room : GameObject
                 break;
         }
 
-        newRooms[0] = new Room(roomSizes[0]);
-        newRooms[1] = new Room(roomSizes[1]);
+        newRooms[0] = new Room(roomSizes[0], pID);
+        newRooms[1] = new Room(roomSizes[1], pID);
 
         newRooms[0].x = this.x * randomSplitValue;
         newRooms[0].y = this.y * randomSplitValue;
