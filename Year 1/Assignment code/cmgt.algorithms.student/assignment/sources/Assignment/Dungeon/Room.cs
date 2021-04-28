@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using GXPEngine;
 
+public struct RoomArea
+{
+    public int leftSide;
+    public int rightSide;
+    public int topSide;
+    public int bottomSide;
+}
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
 class Room : GameObject
 {
-    private Vec2 originOfRoom;
     public Rectangle originalSize;
-    public int leftSide;
-    public int rightSide;
-    public int topSide;
-    public int bottomSide;
+
+    public RoomArea roomArea;
 
     public int ID;
     public float randomSplitValue;
@@ -26,15 +30,14 @@ class Room : GameObject
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
         originalSize = pOriginalSize;
-        originOfRoom = new Vec2(originalSize.Width / 2, originalSize.Height / 2);
 
-        leftSide = originalSize.X;
-        rightSide = originalSize.X + originalSize.Width;
-        topSide = originalSize.Y;
-        bottomSide = originalSize.Y + originalSize.Height;
+        roomArea.leftSide = originalSize.X;
+        roomArea.rightSide = originalSize.X + originalSize.Width;
+        roomArea.topSide = originalSize.Y;
+        roomArea.bottomSide = originalSize.Y + originalSize.Height;
 
-        screenPosition.x = (leftSide + 1) * AlgorithmsAssignment.SCALE;
-        screenPosition.y = (topSide + 4) * (AlgorithmsAssignment.SCALE);
+        screenPosition.x = (roomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
+        screenPosition.y = (roomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
 
         idText = new EasyDraw(game.width, game.height);
         AddChild(idText);
@@ -48,7 +51,7 @@ class Room : GameObject
 
     public override string ToString()
     {
-        return String.Format("X-position:{0}, Y-position:{1}, width:{2}, height:{3}", originalSize.X, originalSize.Y, originalSize.Width, originalSize.Height);
+        return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID, roomArea.leftSide, roomArea.rightSide, roomArea.topSide, roomArea.bottomSide);
     }
 
     private void handleDestroy()
@@ -68,6 +71,7 @@ class Room : GameObject
 
     public void UpdateRoomID(int pID)
     {
+        ID = pID;
         idText.Text($"ID: {pID}", screenPosition.x, screenPosition.y);
     }
 
@@ -82,7 +86,7 @@ class Room : GameObject
                 roomSizes[0].Width = (int)(originalSize.Width * randomSplitValue);
 
                 roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
-                roomSizes[1].X = leftSide + roomSizes[0].Width - 1;
+                roomSizes[1].X = roomArea.leftSide + roomSizes[0].Width - 1;
                 break;
             case AXIS.VERTICAL:
                 roomSizes[0].Height = (int)(originalSize.Height * randomSplitValue);
@@ -107,8 +111,8 @@ class Room : GameObject
     private Rectangle[] defineSizes()
     {
         Rectangle[] roomSizes = new Rectangle[2];
-        roomSizes[0] = new Rectangle(leftSide, topSide, originalSize.Width, originalSize.Height);
-        roomSizes[1] = new Rectangle(leftSide, topSide, originalSize.Width, originalSize.Height);
+        roomSizes[0] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
+        roomSizes[1] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
 
         return roomSizes;
     }
@@ -138,7 +142,7 @@ class Room : GameObject
 
         foreach (Room room in neighbourRooms)
         {
-            Console.WriteLine($"Neighbour room ID: {room.ID}");
+            Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
     }
 
@@ -148,28 +152,40 @@ class Room : GameObject
 
         //Create for/foreach loop, iterate over all rooms to check if they have an xPos or yPos that's next to this room. If it is, communicate back to that room that this room is going to place a door to prevent double doors?
 
-        foreach (Room room in pFinishedRooms)
+        foreach (Room otherRoom in pFinishedRooms)
         {
             bool horizontallyAligned = false;
             bool verticallyAligned = false;
 
-            //Right side room
-            if (room.leftSide == this.rightSide || room.rightSide == this.leftSide)
+            RoomArea neighbourArea = otherRoom.roomArea;
+
+            //Horizontal alignment
             {
-                horizontallyAligned = true;
+                //Left side room
+                if (neighbourArea.leftSide >= this.roomArea.leftSide && neighbourArea.leftSide <= this.roomArea.rightSide)
+                    horizontallyAligned = true;
+
+                //Right side room
+                if (neighbourArea.rightSide <= this.roomArea.rightSide && neighbourArea.rightSide >= this.roomArea.leftSide)
+                    horizontallyAligned = true;
             }
 
-            if (room.topSide == this.bottomSide || room.bottomSide == this.topSide)
+            //Vertical alignment
             {
-                verticallyAligned = true;
+                //Top side
+                if (neighbourArea.topSide >= this.roomArea.topSide && neighbourArea.topSide <= this.roomArea.bottomSide)
+                    verticallyAligned = true;
+
+                if (neighbourArea.bottomSide <= this.roomArea.bottomSide && neighbourArea.bottomSide >= this.roomArea.topSide)
+                    verticallyAligned = true;
             }
 
             if (horizontallyAligned && verticallyAligned)
-            {
-                neighbourRooms.Add(room);
-                Console.WriteLine($"Neighbour rooms found: {neighbourRooms.Count}");
-            }
+                if (otherRoom != this)
+                    if (!neighbourRooms.Contains(otherRoom))
+                        neighbourRooms.Add(otherRoom);
         }
+
         return neighbourRooms;
     }
 }

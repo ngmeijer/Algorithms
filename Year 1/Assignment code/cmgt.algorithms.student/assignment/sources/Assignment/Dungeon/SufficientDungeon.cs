@@ -10,9 +10,7 @@ enum AXIS
 };
 
 class SufficientDungeon : Dungeon
-{
-    private RNG numGenerator;
-
+{ 
     private List<Room> roomsToSplit = new List<Room>();
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
 
@@ -302,7 +300,7 @@ class SufficientDungeon : Dungeon
         #region 8th iteration
         roomsToSplit.Clear();
         finishedRooms.Clear();
-        Console.WriteLine($"Starting size: {startingSize}");
+
         int roomID = 0;
 
         Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
@@ -321,7 +319,7 @@ class SufficientDungeon : Dungeon
                 {
                     if (newRooms[subRoomIndex].ShouldSplit())
                         roomsToSplit.Add(newRooms[subRoomIndex]);
-                    else
+                    else if(!finishedRooms.Contains(newRooms[subRoomIndex]))
                     {
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }
