@@ -157,26 +157,27 @@ class Room : GameObject
             bool horizontallyAligned = false;
             bool verticallyAligned = false;
 
-            RoomArea neighbourArea = otherRoom.roomArea;
+            RoomArea other = otherRoom.roomArea;
+            RoomArea main = this.roomArea;
 
             //Horizontal alignment
             {
                 //Left side room
-                if (neighbourArea.leftSide >= this.roomArea.leftSide && neighbourArea.leftSide <= this.roomArea.rightSide)
+                if (other.leftSide >= main.leftSide && other.leftSide <= main.rightSide)
                     horizontallyAligned = true;
 
                 //Right side room
-                if (neighbourArea.rightSide <= this.roomArea.rightSide && neighbourArea.rightSide >= this.roomArea.leftSide)
+                if (other.rightSide <= main.rightSide && other.rightSide >= main.leftSide)
                     horizontallyAligned = true;
             }
 
             //Vertical alignment
             {
                 //Top side
-                if (neighbourArea.topSide >= this.roomArea.topSide && neighbourArea.topSide <= this.roomArea.bottomSide)
+                if (other.topSide >= main.topSide && other.topSide <= main.bottomSide)
                     verticallyAligned = true;
 
-                if (neighbourArea.bottomSide <= this.roomArea.bottomSide && neighbourArea.bottomSide >= this.roomArea.topSide)
+                if (other.bottomSide <= main.bottomSide && other.bottomSide >= main.topSide)
                     verticallyAligned = true;
             }
 

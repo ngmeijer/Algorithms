@@ -333,6 +333,10 @@ class SufficientDungeon : Dungeon
             AddChild(room);
             room.UpdateRoomID(roomID);
             roomID++;
+        }
+
+        foreach (Room room in finishedRooms)
+        {
             room.PlaceDoors(finishedRooms);
         }
 
