@@ -10,17 +10,27 @@ public struct RoomArea
     public int topSide;
     public int bottomSide;
 }
+
+public enum DoorMaster
+{
+    THIS_ROOM,
+    NEIGHBOUR_ROOM,
+    UNDEFINED,
+};
+
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
 class Room : GameObject
 {
-    public Rectangle originalSize;
+    public Rectangle OriginalSize;
 
-    public RoomArea roomArea;
+    public RoomArea RoomArea;
 
+    public int DoorCount;
+    private const int MAX_DOOR_COUNT = 2;
     public int ID;
-    public float randomSplitValue;
+    public float RandomSplitValue;
 
     //"Worldspace" coordinates
     private Vec2 screenPosition;
@@ -29,15 +39,15 @@ class Room : GameObject
     public Room(Rectangle pOriginalSize)
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
-        originalSize = pOriginalSize;
+        OriginalSize = pOriginalSize;
 
-        roomArea.leftSide = originalSize.X;
-        roomArea.rightSide = originalSize.X + originalSize.Width;
-        roomArea.topSide = originalSize.Y;
-        roomArea.bottomSide = originalSize.Y + originalSize.Height;
+        RoomArea.leftSide = OriginalSize.X;
+        RoomArea.rightSide = OriginalSize.X + OriginalSize.Width;
+        RoomArea.topSide = OriginalSize.Y;
+        RoomArea.bottomSide = OriginalSize.Y + OriginalSize.Height;
 
-        screenPosition.x = (roomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
-        screenPosition.y = (roomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
+        screenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
+        screenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
 
         idText = new EasyDraw(game.width, game.height);
         AddChild(idText);
@@ -51,7 +61,7 @@ class Room : GameObject
 
     public override string ToString()
     {
-        return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID, roomArea.leftSide, roomArea.rightSide, roomArea.topSide, roomArea.bottomSide);
+        return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID, RoomArea.leftSide, RoomArea.rightSide, RoomArea.topSide, RoomArea.bottomSide);
     }
 
     private void handleDestroy()
@@ -62,7 +72,7 @@ class Room : GameObject
 
     public Room[] Split(float pRandomMultiplication)
     {
-        randomSplitValue = pRandomMultiplication;
+        RandomSplitValue = pRandomMultiplication;
         AXIS splitAxis = checkLargerAxis();
         Room[] newRooms = defineRooms(splitAxis);
 
@@ -83,27 +93,27 @@ class Room : GameObject
         switch (pSplitAxis)
         {
             case AXIS.HORIZONTAL:
-                roomSizes[0].Width = (int)(originalSize.Width * randomSplitValue);
+                roomSizes[0].Width = (int)(OriginalSize.Width * RandomSplitValue);
 
-                roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
-                roomSizes[1].X = roomArea.leftSide + roomSizes[0].Width - 1;
+                roomSizes[1].Width = OriginalSize.Width - roomSizes[0].Width + 1;
+                roomSizes[1].X = RoomArea.leftSide + roomSizes[0].Width - 1;
                 break;
             case AXIS.VERTICAL:
-                roomSizes[0].Height = (int)(originalSize.Height * randomSplitValue);
+                roomSizes[0].Height = (int)(OriginalSize.Height * RandomSplitValue);
 
-                roomSizes[1].Height = originalSize.Height - roomSizes[0].Height + 1;
-                roomSizes[1].Y = originalSize.Y + roomSizes[0].Height - 1;
+                roomSizes[1].Height = OriginalSize.Height - roomSizes[0].Height + 1;
+                roomSizes[1].Y = OriginalSize.Y + roomSizes[0].Height - 1;
                 break;
         }
 
         newRooms[0] = new Room(roomSizes[0]);
         newRooms[1] = new Room(roomSizes[1]);
 
-        newRooms[0].x = this.x * randomSplitValue;
-        newRooms[0].y = this.y * randomSplitValue;
+        newRooms[0].x = this.x * RandomSplitValue;
+        newRooms[0].y = this.y * RandomSplitValue;
 
-        newRooms[1].x = this.x * randomSplitValue;
-        newRooms[1].y = this.y * randomSplitValue;
+        newRooms[1].x = this.x * RandomSplitValue;
+        newRooms[1].y = this.y * RandomSplitValue;
 
         return newRooms;
     }
@@ -111,8 +121,8 @@ class Room : GameObject
     private Rectangle[] defineSizes()
     {
         Rectangle[] roomSizes = new Rectangle[2];
-        roomSizes[0] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
-        roomSizes[1] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
+        roomSizes[0] = new Rectangle(RoomArea.leftSide, RoomArea.topSide, OriginalSize.Width, OriginalSize.Height);
+        roomSizes[1] = new Rectangle(RoomArea.leftSide, RoomArea.topSide, OriginalSize.Width, OriginalSize.Height);
 
         return roomSizes;
     }
@@ -120,7 +130,7 @@ class Room : GameObject
     public bool ShouldSplit()
     {
         int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-        if (originalSize.Width > minSize && originalSize.Height > minSize)
+        if (OriginalSize.Width > minSize && OriginalSize.Height > minSize)
             return true;
 
         return false;
@@ -130,63 +140,127 @@ class Room : GameObject
     {
         AXIS axis = AXIS.VERTICAL;
 
-        if (originalSize.Width > originalSize.Height)
+        if (OriginalSize.Width > OriginalSize.Height)
             axis = AXIS.HORIZONTAL;
 
         return axis;
     }
 
-    public void PlaceDoors(List<Room> pFinishedRooms)
+    public void InitiateDoorHandling(List<Room> pFinishedRooms)
     {
         List<Room> neighbourRooms = findNeighbourRooms(pFinishedRooms);
 
         foreach (Room room in neighbourRooms)
         {
+            communicateDoorResposibility(room);
             Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
+    }
+
+    private void communicateDoorResposibility(Room pOtherRoom)
+    {
+        int thisRoomDoorCount = DoorCount;
+        int otherRoomDoorCount = pOtherRoom.DoorCount;
+
+        DoorMaster responsibleRoomIndex = DoorMaster.THIS_ROOM;
+
+        //Both rooms have max amount of doors
+        if (thisRoomDoorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
+            return;
+
+        //This room has not reached the max yet, the other one has.
+        if (thisRoomDoorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
+            responsibleRoomIndex = DoorMaster.THIS_ROOM;
+
+        //This room has reached the max, the other one has not.
+        if (thisRoomDoorCount >= MAX_DOOR_COUNT && otherRoomDoorCount < MAX_DOOR_COUNT)
+            responsibleRoomIndex = DoorMaster.NEIGHBOUR_ROOM;
+
+        if (thisRoomDoorCount < otherRoomDoorCount)
+            responsibleRoomIndex = DoorMaster.THIS_ROOM;
+
+        if (thisRoomDoorCount > otherRoomDoorCount)
+            responsibleRoomIndex = DoorMaster.NEIGHBOUR_ROOM;
+
+        if (thisRoomDoorCount == otherRoomDoorCount)
+            responsibleRoomIndex = (DoorMaster)Utils.Random((int)DoorMaster.THIS_ROOM, (int)DoorMaster.UNDEFINED);
+
+        if (responsibleRoomIndex == DoorMaster.NEIGHBOUR_ROOM)
+            validateDoorMaster(DoorMaster.NEIGHBOUR_ROOM, pOtherRoom);
+
+        if (responsibleRoomIndex == DoorMaster.THIS_ROOM)
+            validateDoorMaster(DoorMaster.THIS_ROOM, pOtherRoom);
+    }
+
+    private void validateDoorMaster(DoorMaster pMaster, Room pOtherRoom)
+    {
+        if (pMaster == DoorMaster.THIS_ROOM)
+        {
+            DoorCount++;
+            return;
+        }
+
+        if (pMaster == DoorMaster.NEIGHBOUR_ROOM)
+        {
+            DoorCount++;
+            placeDoor(pOtherRoom.RoomArea);
+        }
+    }
+
+    private void placeDoor(RoomArea pOtherRoomArea)
+    {
+        Point newDoorLocation = new Point();
+
+        int widthOverlap = 0;
+        int heightOverlap = 0;
+
+        int leftSide = 0;
+        int rightSide = 0;
+
+        if (checkBorderPos(pOtherRoomArea.leftSide, this.RoomArea.leftSide, this.RoomArea.rightSide))
+        {
+            widthOverlap = this.RoomArea.rightSide - pOtherRoomArea.leftSide;
+            leftSide = this.RoomArea.rightSide;
+            rightSide = pOtherRoomArea.leftSide;
+
+            newDoorLocation.X = Utils.Random(leftSide, rightSide + 1);
+        }
+
+        Door doorInstance = new Door(newDoorLocation);
     }
 
     private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)
     {
         List<Room> neighbourRooms = new List<Room>();
 
-        //Create for/foreach loop, iterate over all rooms to check if they have an xPos or yPos that's next to this room. If it is, communicate back to that room that this room is going to place a door to prevent double doors?
-
         foreach (Room otherRoom in pFinishedRooms)
         {
+            if (otherRoom == this)
+                break;
+            if (neighbourRooms.Contains(otherRoom))
+                break;
+
             bool horizontallyAligned = false;
             bool verticallyAligned = false;
 
-            RoomArea other = otherRoom.roomArea;
-            RoomArea main = this.roomArea;
+            //Readability purposes
+            RoomArea other = otherRoom.RoomArea;
+            RoomArea main = this.RoomArea;
 
-            //Horizontal alignment
-            {
-                //Left side room
-                if (other.leftSide >= main.leftSide && other.leftSide <= main.rightSide)
-                    horizontallyAligned = true;
+            if (checkBorderPos(other.leftSide, main.leftSide, main.rightSide)
+                || checkBorderPos(other.rightSide, main.leftSide, main.rightSide))
+                horizontallyAligned = true;
 
-                //Right side room
-                if (other.rightSide <= main.rightSide && other.rightSide >= main.leftSide)
-                    horizontallyAligned = true;
-            }
-
-            //Vertical alignment
-            {
-                //Top side
-                if (other.topSide >= main.topSide && other.topSide <= main.bottomSide)
-                    verticallyAligned = true;
-
-                if (other.bottomSide <= main.bottomSide && other.bottomSide >= main.topSide)
-                    verticallyAligned = true;
-            }
+            if (checkBorderPos(other.topSide, main.topSide, main.bottomSide)
+                || checkBorderPos(other.bottomSide, main.topSide, main.bottomSide))
+                verticallyAligned = true;
 
             if (horizontallyAligned && verticallyAligned)
-                if (otherRoom != this)
-                    if (!neighbourRooms.Contains(otherRoom))
-                        neighbourRooms.Add(otherRoom);
+                neighbourRooms.Add(otherRoom);
         }
-
         return neighbourRooms;
     }
+
+    private bool checkBorderPos(int pOtherSide, int pMainSide0, int pMainSide1) =>
+        pOtherSide >= pMainSide0 && pOtherSide <= pMainSide1;
 }

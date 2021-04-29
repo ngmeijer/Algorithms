@@ -95,8 +95,7 @@ namespace GXPEngine
 			if (y2 > y1 + height1) return false;
 			return true;
 		}
-
-	}
+    }
 }
 
 

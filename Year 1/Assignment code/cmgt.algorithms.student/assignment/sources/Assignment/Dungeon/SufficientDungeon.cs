@@ -298,6 +298,7 @@ class SufficientDungeon : Dungeon
         #endregion
 
         #region 8th iteration
+        Console.Clear();
         roomsToSplit.Clear();
         finishedRooms.Clear();
 
@@ -337,7 +338,7 @@ class SufficientDungeon : Dungeon
 
         foreach (Room room in finishedRooms)
         {
-            room.PlaceDoors(finishedRooms);
+            room.InitiateDoorHandling(finishedRooms);
         }
 
         #endregion
