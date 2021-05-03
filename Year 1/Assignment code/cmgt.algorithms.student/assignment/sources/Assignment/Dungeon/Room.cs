@@ -85,7 +85,11 @@ class Room : GameObject
     public void UpdateRoomID(int pID)
     {
         ID = pID;
-        idText.Text($"ID: {pID}", screenPosition.x, screenPosition.y);
+        idText.Text($"ID: {pID}." +
+                    $"\nLeft: {RoomArea.leftSide}." +
+                    $"\nRight: {RoomArea.rightSide}." +
+                    $"\nTop: {RoomArea.topSide}." +
+                    $"\nBottom:{RoomArea.bottomSide}", screenPosition.x, screenPosition.y + 115);
     }
 
     private Room[] defineRooms(AXIS pSplitAxis)
@@ -155,9 +159,8 @@ class Room : GameObject
 
         foreach (Room room in neighbourRooms)
         {
-            //communicateDoorResposibility(room);
-            Console.WriteLine(
-                $"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
+            communicateDoorResposibility(room);
+            //Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
     }
 
@@ -198,18 +201,21 @@ class Room : GameObject
 
     private void validateDoorMaster(DoorMaster pMaster, Room pOtherRoom)
     {
-        if (pMaster == DoorMaster.THIS_ROOM)
+        switch (pMaster)
         {
-            DoorCount++;
-            return;
+            case DoorMaster.THIS_ROOM:
+                placeDoor(pOtherRoom.RoomArea);
+                break;
+            case DoorMaster.NEIGHBOUR_ROOM:
+                pOtherRoom.placeDoor(this.RoomArea);
+                break;
         }
 
-        if (pMaster == DoorMaster.NEIGHBOUR_ROOM)
-        {
-            DoorCount++;
-            //placeDoor(pOtherRoom.RoomArea);
-        }
+        incrementDoorCount();
+        pOtherRoom.incrementDoorCount();
     }
+
+    private void incrementDoorCount() => DoorCount++;
 
     private void placeDoor(RoomArea pOtherRoomArea)
     {
@@ -221,17 +227,34 @@ class Room : GameObject
         int leftSide = 0;
         int rightSide = 0;
 
-        //if (checkBorderPos(pOtherRoomArea.leftSide, this.RoomArea.leftSide, this.RoomArea.rightSide))
-        //{
-        //    widthOverlap = this.RoomArea.rightSide - pOtherRoomArea.leftSide;
-        //    leftSide = pOtherRoomArea.leftSide;
-        //    rightSide = this.RoomArea.rightSide;
-
-        //    newDoorLocation.X = Utils.Random(leftSide, rightSide + 1);
-        //    Console.WriteLine(newDoorLocation);
-        //}
+        AXIS usedAxis = determineDoorAxis(pOtherRoomArea);
+        Console.WriteLine(usedAxis);
+        switch (usedAxis)
+        {
+            case AXIS.HORIZONTAL:
+                break;
+            case AXIS.VERTICAL:
+                break;
+        }
 
         Door doorInstance = new Door(newDoorLocation);
+    }
+
+    private AXIS determineDoorAxis(RoomArea pOtherRoom)
+    {
+        AXIS usedAxis = AXIS.UNDEFINED;
+
+        if (pOtherRoom.bottomSide == this.RoomArea.topSide + 1 || pOtherRoom.topSide == this.RoomArea.bottomSide + 1)
+        {
+            usedAxis = AXIS.HORIZONTAL;
+        }
+
+        if (pOtherRoom.leftSide == this.RoomArea.rightSide + 1 || pOtherRoom.rightSide == this.RoomArea.leftSide + 1)
+        {
+            usedAxis = AXIS.VERTICAL;
+        }
+
+        return usedAxis;
     }
 
     private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)

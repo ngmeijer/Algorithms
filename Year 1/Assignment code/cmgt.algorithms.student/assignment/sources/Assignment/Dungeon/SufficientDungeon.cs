@@ -7,10 +7,11 @@ enum AXIS
 {
     HORIZONTAL,
     VERTICAL,
+    UNDEFINED,
 };
 
 class SufficientDungeon : Dungeon
-{ 
+{
     private List<Room> roomsToSplit = new List<Room>();
     private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
 
@@ -320,7 +321,7 @@ class SufficientDungeon : Dungeon
                 {
                     if (newRooms[subRoomIndex].ShouldSplit())
                         roomsToSplit.Add(newRooms[subRoomIndex]);
-                    else if(!finishedRooms.Contains(newRooms[subRoomIndex]))
+                    else if (!finishedRooms.Contains(newRooms[subRoomIndex]))
                     {
                         finishedRooms.Add(newRooms[subRoomIndex]);
                     }

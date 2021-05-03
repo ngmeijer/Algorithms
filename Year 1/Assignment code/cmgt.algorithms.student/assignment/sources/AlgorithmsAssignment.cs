@@ -29,13 +29,13 @@ class AlgorithmsAssignment : Game
 
     //common settings
     public const int SCALE = 10;               //TODO: experiment with changing this
-    public const int MIN_ROOM_SIZE = 20;        //TODO: use this setting in your dungeon generator
+    public const int MIN_ROOM_SIZE = 30;        //TODO: use this setting in your dungeon generator
 
     public delegate void OnGenerateRooms();
 
     public static event OnGenerateRooms OnGenerateDestroyPrevious;
 
-    public AlgorithmsAssignment() : base(1200, 800, false, true, -1, -1, false)
+    public AlgorithmsAssignment() : base(1920, 1080, false, true, -1, -1, false)
     {
         /////////////////////////////////////////////////////////////////////////////////////////
         ///	BASE SETUP - FEEL FREE TO SKIP
@@ -203,7 +203,7 @@ class AlgorithmsAssignment : Game
         /// REQUIRED BLOCK OF CODE TO ADD ALL OBJECTS YOU CREATED TO THE SCREEN IN THE CORRECT ORDER
         /// LOOK BUT DON'T TOUCH :)
 
-        if (grid != null) AddChild(grid);
+        //if (grid != null) AddChild(grid);
         if (_dungeon != null) AddChild(_dungeon);
 
         //I HAD to add _sufficientDungeon in order to show it.
