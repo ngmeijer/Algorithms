@@ -338,7 +338,7 @@ class SufficientDungeon : Dungeon
 
         foreach (RoomContainer room in finishedRooms)
         {
-            room.InitiateDoorHandling(finishedRooms);
+            room.DoorCreator.InitiateDoorHandling(finishedRooms);
         }
 
         #endregion
