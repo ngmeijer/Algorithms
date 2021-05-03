@@ -244,12 +244,12 @@ class Room : GameObject
     {
         AXIS usedAxis = AXIS.UNDEFINED;
 
-        if (pOtherRoom.bottomSide == this.RoomArea.topSide + 1 || pOtherRoom.topSide == this.RoomArea.bottomSide + 1)
+        if (pOtherRoom.bottomSide == this.RoomArea.topSide + 1 || pOtherRoom.topSide == this.RoomArea.bottomSide - 1)
         {
             usedAxis = AXIS.HORIZONTAL;
         }
 
-        if (pOtherRoom.leftSide == this.RoomArea.rightSide + 1 || pOtherRoom.rightSide == this.RoomArea.leftSide + 1)
+        if (pOtherRoom.leftSide == this.RoomArea.rightSide - 1 || pOtherRoom.rightSide == this.RoomArea.leftSide + 1)
         {
             usedAxis = AXIS.VERTICAL;
         }
