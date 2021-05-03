@@ -32,6 +32,8 @@ class Room : GameObject
     public int ID;
     public float RandomSplitValue;
 
+    private const int OFFSET = 4;
+
     //"Worldspace" coordinates
     private Vec2 screenPosition;
     private EasyDraw idText;
@@ -61,7 +63,8 @@ class Room : GameObject
 
     public override string ToString()
     {
-        return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID, RoomArea.leftSide, RoomArea.rightSide, RoomArea.topSide, RoomArea.bottomSide);
+        return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID,
+            RoomArea.leftSide, RoomArea.rightSide, RoomArea.topSide, RoomArea.bottomSide);
     }
 
     private void handleDestroy()
@@ -152,8 +155,9 @@ class Room : GameObject
 
         foreach (Room room in neighbourRooms)
         {
-            communicateDoorResposibility(room);
-            Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
+            //communicateDoorResposibility(room);
+            Console.WriteLine(
+                $"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
     }
 
@@ -203,7 +207,7 @@ class Room : GameObject
         if (pMaster == DoorMaster.NEIGHBOUR_ROOM)
         {
             DoorCount++;
-            placeDoor(pOtherRoom.RoomArea);
+            //placeDoor(pOtherRoom.RoomArea);
         }
     }
 
@@ -217,14 +221,15 @@ class Room : GameObject
         int leftSide = 0;
         int rightSide = 0;
 
-        if (checkBorderPos(pOtherRoomArea.leftSide, this.RoomArea.leftSide, this.RoomArea.rightSide))
-        {
-            widthOverlap = this.RoomArea.rightSide - pOtherRoomArea.leftSide;
-            leftSide = this.RoomArea.rightSide;
-            rightSide = pOtherRoomArea.leftSide;
+        //if (checkBorderPos(pOtherRoomArea.leftSide, this.RoomArea.leftSide, this.RoomArea.rightSide))
+        //{
+        //    widthOverlap = this.RoomArea.rightSide - pOtherRoomArea.leftSide;
+        //    leftSide = pOtherRoomArea.leftSide;
+        //    rightSide = this.RoomArea.rightSide;
 
-            newDoorLocation.X = Utils.Random(leftSide, rightSide + 1);
-        }
+        //    newDoorLocation.X = Utils.Random(leftSide, rightSide + 1);
+        //    Console.WriteLine(newDoorLocation);
+        //}
 
         Door doorInstance = new Door(newDoorLocation);
     }
@@ -247,20 +252,28 @@ class Room : GameObject
             RoomArea other = otherRoom.RoomArea;
             RoomArea main = this.RoomArea;
 
-            if (checkBorderPos(other.leftSide, main.leftSide, main.rightSide)
-                || checkBorderPos(other.rightSide, main.leftSide, main.rightSide))
+            if (checkNeighbourRoomBoundaryConditions(other.leftSide, main.leftSide, main.rightSide)
+                || checkNeighbourRoomBoundaryConditions(other.rightSide, main.leftSide, main.rightSide))
                 horizontallyAligned = true;
 
-            if (checkBorderPos(other.topSide, main.topSide, main.bottomSide)
-                || checkBorderPos(other.bottomSide, main.topSide, main.bottomSide))
+            if (checkNeighbourRoomBoundaryConditions(other.topSide, main.topSide, main.bottomSide)
+                || checkNeighbourRoomBoundaryConditions(other.bottomSide, main.topSide, main.bottomSide))
                 verticallyAligned = true;
 
             if (horizontallyAligned && verticallyAligned)
                 neighbourRooms.Add(otherRoom);
         }
+
         return neighbourRooms;
     }
 
-    private bool checkBorderPos(int pOtherSide, int pMainSide0, int pMainSide1) =>
-        pOtherSide >= pMainSide0 && pOtherSide <= pMainSide1;
+    private bool checkNeighbourRoomBoundaryConditions(int pOtherSide, int pMainSide0, int pMainSide1)
+        => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) ||
+          checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
+
+    private bool checkIfOnExactBorder(int pOtherSide, int pMainSide0, int pMainSide1)
+        => pOtherSide == pMainSide0 || pOtherSide == pMainSide1;
+
+    private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
+        => pOtherSide > (pMainSide0) && pOtherSide < (pMainSide1);
 }
