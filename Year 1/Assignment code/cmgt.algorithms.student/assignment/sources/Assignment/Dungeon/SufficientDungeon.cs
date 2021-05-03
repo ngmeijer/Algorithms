@@ -12,7 +12,7 @@ enum AXIS
 
 class SufficientDungeon : Dungeon
 {
-    private List<Room> roomsToSplit = new List<Room>();
+    private List<RoomContainer> roomsToSplit = new List<RoomContainer>();
 
     private Size startingSize;
 
@@ -304,7 +304,7 @@ class SufficientDungeon : Dungeon
 
         int roomID = 0;
 
-        Room startingRoom = new Room(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
+        RoomContainer startingRoom = new RoomContainer(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
         roomsToSplit.Add(startingRoom);
 
         while (roomsToSplit.Count > 0)
@@ -313,12 +313,12 @@ class SufficientDungeon : Dungeon
             {
                 float randomMultiplication = Utils.Random(0.35f, 0.65f);
 
-                Room currentFocusedRoom = roomsToSplit[roomIndex];
-                Room[] newRooms = currentFocusedRoom.roomCreator.Split(randomMultiplication);
+                RoomContainer currentFocusedRoom = roomsToSplit[roomIndex];
+                RoomContainer[] newRooms = currentFocusedRoom.RoomCreator.Split(randomMultiplication);
 
                 for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {
-                    if (newRooms[subRoomIndex].ShouldSplit())
+                    if (newRooms[subRoomIndex].RoomCreator.ShouldSplit())
                         roomsToSplit.Add(newRooms[subRoomIndex]);
                     else if (!finishedRooms.Contains(newRooms[subRoomIndex]))
                     {
@@ -329,14 +329,14 @@ class SufficientDungeon : Dungeon
             }
         }
 
-        foreach (Room room in finishedRooms)
+        foreach (RoomContainer room in finishedRooms)
         {
             AddChild(room);
-            room.UpdateRoomID(roomID);
+            room.debugInfo.UpdateRoomID(roomID);
             roomID++;
         }
 
-        foreach (Room room in finishedRooms)
+        foreach (RoomContainer room in finishedRooms)
         {
             room.InitiateDoorHandling(finishedRooms);
         }

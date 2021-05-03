@@ -21,7 +21,7 @@ abstract class Dungeon : Canvas
 	public readonly Size size;
 
 	//base implementation assumes dungeon consists of rooms and doors, adapt in subclass if needed
-	public readonly List<Room> finishedRooms = new List<Room>();
+	public readonly List<RoomContainer> finishedRooms = new List<RoomContainer>();
 	public readonly List<Door> doors = new List<Door>();
 
 	//Set this to false if you want to do all drawing yourself from the generate method.
@@ -94,9 +94,9 @@ abstract class Dungeon : Canvas
 	 * @param pWallColor	the color of the walls
 	 * @param pFillColor	if not null, the color of the inside of the room, if null insides will be transparent
 	 */
-	protected virtual void drawRooms(IEnumerable<Room> pRooms, Pen pWallColor, Brush pFillColor = null)
+	protected virtual void drawRooms(IEnumerable<RoomContainer> pRooms, Pen pWallColor, Brush pFillColor = null)
 	{
-		foreach (Room room in pRooms)
+		foreach (RoomContainer room in pRooms)
 		{
 			drawRoom(room, pWallColor, pFillColor);
 		}
@@ -108,13 +108,13 @@ abstract class Dungeon : Canvas
 	 * @param pWallColor	the color of the walls
 	 * @param pFillColor	if not null, the color of the inside of the room, if null insides will be transparent
 	 */
-	protected virtual void drawRoom (Room pRoom, Pen pWallColor, Brush pFillColor = null)
+	protected virtual void drawRoom (RoomContainer pRoomContainer, Pen pWallColor, Brush pFillColor = null)
 	{
 		//the -0.5 has two reasons:
 		//- Doing it this way actually makes sure that an area of 0,0,4,4 (x,y,width,height) is draw as an area of 0,0,4,4
 		//- Doing it this way makes sure that an area of 0,0,1,1 is ALSO drawn (which it wouldn't if you used -1 instead 0.5f)
-		if (pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.OriginalSize.Left, pRoom.OriginalSize.Top, pRoom.OriginalSize.Width - 0.5f, pRoom.OriginalSize.Height - 0.5f);
-		graphics.DrawRectangle(pWallColor, pRoom.OriginalSize.Left, pRoom.OriginalSize.Top, pRoom.OriginalSize.Width - 0.5f, pRoom.OriginalSize.Height - 0.5f);
+		if (pFillColor != null) graphics.FillRectangle(pFillColor, pRoomContainer.OriginalSize.Left, pRoomContainer.OriginalSize.Top, pRoomContainer.OriginalSize.Width - 0.5f, pRoomContainer.OriginalSize.Height - 0.5f);
+		graphics.DrawRectangle(pWallColor, pRoomContainer.OriginalSize.Left, pRoomContainer.OriginalSize.Top, pRoomContainer.OriginalSize.Width - 0.5f, pRoomContainer.OriginalSize.Height - 0.5f);
 	}
 
 	protected virtual void drawDoors(IEnumerable<Door> pDoors, Pen pColor)

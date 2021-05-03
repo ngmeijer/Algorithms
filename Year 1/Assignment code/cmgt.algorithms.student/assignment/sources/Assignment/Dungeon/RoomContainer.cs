@@ -21,9 +21,10 @@ public enum DoorMaster
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
-public class Room : GameObject
+public class RoomContainer : GameObject
 {
-    public RoomCreator roomCreator;
+    public RoomCreationHandler RoomCreator;
+    public RoomDebugInfo debugInfo;
     public Rectangle OriginalSize;
     public RoomArea RoomArea;
 
@@ -34,24 +35,21 @@ public class Room : GameObject
     private const int MAX_DOOR_COUNT = 2;
     private const int OFFSET = 3;
 
-    //"Worldspace" coordinates
-    private Vec2 screenPosition;
-    private EasyDraw idText;
-
     private delegate Door OnDoorPlacing(RoomArea pOtherArea);
-    private OnDoorPlacing onDoor;
+    private OnDoorPlacing onDoorPlace;
 
-    public Room(Rectangle pOriginalSize)
+    public RoomContainer(Rectangle pOriginalSize)
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
         OriginalSize = pOriginalSize;
 
-        defineRoomArea();
-        handleDebugTextInitalization();
+        debugInfo = new RoomDebugInfo(ID, RoomArea);
+        AddChild(debugInfo);
+        RoomCreator = new RoomCreationHandler(this, RoomArea, OriginalSize, RandomSplitValue);
 
-        roomCreator = new RoomCreator(this, RoomArea, OriginalSize, RandomSplitValue);
+        debugInfo.UpdateRoomArea(RoomCreator.ThisRoomAreaProps);
 
-        onDoor += placeDoor;
+        onDoorPlace += placeDoor;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -81,83 +79,17 @@ public class Room : GameObject
     }
 
     //------------------------------------------------------------------------------------------------------------------------
-    //										       void defineRoomArea()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>String</returns>
-    private void defineRoomArea()
-    {
-        RoomArea.leftSide = OriginalSize.X;
-        RoomArea.rightSide = OriginalSize.X + OriginalSize.Width;
-        RoomArea.topSide = OriginalSize.Y;
-        RoomArea.bottomSide = OriginalSize.Y + OriginalSize.Height;
-
-        screenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
-        screenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //									    void handleDebugTextInitalization()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>String</returns>
-    private void handleDebugTextInitalization()
-    {
-        idText = new EasyDraw(game.width, game.height);
-        AddChild(idText);
-        idText.SetColor(0, 255, 0);
-        idText.SetScaleXY(0.1f, 0.1f);
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //								                void UpdateRoomID(int pID)
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>String</returns>
-    public void UpdateRoomID(int pID)
-    {
-        ID = pID;
-        idText.Text($"ID: {pID}." +
-                    $"\nLeft: {RoomArea.leftSide}." +
-                    $"\nRight: {RoomArea.rightSide}." +
-                    $"\nTop: {RoomArea.topSide}." +
-                    $"\nBottom:{RoomArea.bottomSide}", screenPosition.x, screenPosition.y + 115);
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //										         bool ShouldSplit()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>String</returns>
-    public bool ShouldSplit()
-    {
-        int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-        if (OriginalSize.Width > minSize && OriginalSize.Height > minSize)
-            return true;
-
-        return false;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
     //			                                   void InitiateDoorHandling()
     //------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 
     /// </summary>
     /// <returns>String</returns>
-    public void InitiateDoorHandling(List<Room> pFinishedRooms)
+    public void InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
     {
-        List<Room> neighbourRooms = findNeighbourRooms(pFinishedRooms);
+        List<RoomContainer> neighbourRooms = findNeighbourRooms(pFinishedRooms);
 
-        foreach (Room room in neighbourRooms)
+        foreach (RoomContainer room in neighbourRooms)
         {
             DoorMaster master = defineDoorResponsibility(room);
             communicateDoorResponsibility(master, room);
@@ -172,7 +104,7 @@ public class Room : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private DoorMaster defineDoorResponsibility(Room pOtherRoom)
+    private DoorMaster defineDoorResponsibility(RoomContainer pOtherRoom)
     {
         int thisRoomDoorCount = doorCount;
         int otherRoomDoorCount = pOtherRoom.doorCount;
@@ -210,7 +142,7 @@ public class Room : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private void communicateDoorResponsibility(DoorMaster pResponsibleRoom, Room pOtherRoom)
+    private void communicateDoorResponsibility(DoorMaster pResponsibleRoom, RoomContainer pOtherRoom)
     {
         if (pResponsibleRoom == DoorMaster.NEIGHBOUR_ROOM)
             validateDoorMaster(DoorMaster.NEIGHBOUR_ROOM, pOtherRoom);
@@ -226,7 +158,7 @@ public class Room : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private void validateDoorMaster(DoorMaster pMaster, Room pOtherRoom)
+    private void validateDoorMaster(DoorMaster pMaster, RoomContainer pOtherRoom)
     {
         switch (pMaster)
         {
@@ -305,11 +237,11 @@ public class Room : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)
+    private List<RoomContainer> findNeighbourRooms(List<RoomContainer> pFinishedRooms)
     {
-        List<Room> neighbourRooms = new List<Room>();
+        List<RoomContainer> neighbourRooms = new List<RoomContainer>();
 
-        foreach (Room otherRoom in pFinishedRooms)
+        foreach (RoomContainer otherRoom in pFinishedRooms)
         {
             if (otherRoom == this)
                 break;
@@ -368,4 +300,59 @@ public class Room : GameObject
     /// <returns>String</returns>
     private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
         => pOtherSide > (pMainSide0 + OFFSET) && pOtherSide < (pMainSide1 - OFFSET);
+}
+
+public class RoomDebugInfo : GameObject
+{
+    //"Worldspace" coordinates
+    public Vec2 ScreenPosition;
+    private EasyDraw idText;
+    public int ID { get; private set; }
+    private RoomArea roomArea;
+
+    public RoomDebugInfo(int pID, RoomArea pRoomArea)
+    {
+        ID = pID;
+        roomArea = pRoomArea;
+
+        handleDebugTextInitalization();
+        UpdateRoomID(pID);
+    }
+
+    public void UpdateRoomArea(RoomArea pArea)
+    {
+        roomArea = pArea;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //									    void handleDebugTextInitalization()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    private void handleDebugTextInitalization()
+    {
+        idText = new EasyDraw(game.width, game.height);
+        AddChild(idText);
+        idText.SetColor(0, 255, 0);
+        idText.SetScaleXY(0.1f, 0.1f);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //								                void UpdateRoomID(int pID)
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    public void UpdateRoomID(int pID)
+    {
+        ID = pID;
+        idText.Text($"ID: {pID}." +
+                    $"\nLeft: {roomArea.leftSide}." +
+                    $"\nRight: {roomArea.rightSide}." +
+                    $"\nTop: {roomArea.topSide}." +
+                    $"\nBottom:{roomArea.bottomSide}", ScreenPosition.x, ScreenPosition.y + 115);
+    }
 }

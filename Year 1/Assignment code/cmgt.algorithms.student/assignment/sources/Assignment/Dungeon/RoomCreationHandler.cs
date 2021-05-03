@@ -1,19 +1,45 @@
 ﻿using System.Drawing;
 using GXPEngine;
 
-public class RoomCreator
+public class RoomCreationHandler
 {
     private Rectangle originalSize;
     private RoomArea roomArea;
-    private float randomSplitValue;
-    private Transformable parent;
+    public RoomArea ThisRoomAreaProps
+    {
+        get => roomArea;
+        private set => roomArea = value;
+    }
 
-    public RoomCreator(Transformable pParent, RoomArea pRoomArea, Rectangle pOriginalSize, float pSplitValue)
+    private float randomSplitValue;
+    private RoomContainer parent;
+
+    public RoomCreationHandler(RoomContainer pParent, RoomArea pRoomArea, Rectangle pOriginalSize, float pSplitValue)
     {
         parent = pParent;
         roomArea = pRoomArea;
         originalSize = pOriginalSize;
         randomSplitValue = pSplitValue;
+
+        defineRoomArea();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //										       void defineRoomArea()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    private void defineRoomArea()
+    {
+        roomArea.leftSide = originalSize.X;
+        roomArea.rightSide = originalSize.X + originalSize.Width;
+        roomArea.topSide = originalSize.Y;
+        roomArea.bottomSide = originalSize.Y + originalSize.Height;
+
+        parent.debugInfo.ScreenPosition.x = (roomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
+        parent.debugInfo.ScreenPosition.y = (roomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -23,9 +49,9 @@ public class RoomCreator
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private Room[] defineRooms(AXIS pSplitAxis)
+    private RoomContainer[] defineRooms(AXIS pSplitAxis)
     {
-        Room[] newRooms = new Room[2];
+        RoomContainer[] newRooms = new RoomContainer[2];
         Rectangle[] roomSizes = defineSizes();
 
         switch (pSplitAxis)
@@ -44,8 +70,8 @@ public class RoomCreator
                 break;
         }
 
-        newRooms[0] = new Room(roomSizes[0]);
-        newRooms[1] = new Room(roomSizes[1]);
+        newRooms[0] = new RoomContainer(roomSizes[0]);
+        newRooms[1] = new RoomContainer(roomSizes[1]);
 
         newRooms[0].x = parent.x * randomSplitValue;
         newRooms[0].y = parent.y * randomSplitValue;
@@ -73,17 +99,33 @@ public class RoomCreator
     }
 
     //------------------------------------------------------------------------------------------------------------------------
+    //										         bool ShouldSplit()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    public bool ShouldSplit()
+    {
+        int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
+        if (originalSize.Width > minSize && originalSize.Height > minSize)
+            return true;
+
+        return false;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
     //								    Room[] Split(float pRandomMultiplication)
     //------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 
     /// </summary>
     /// <returns>String</returns>
-    public Room[] Split(float pRandomMultiplication)
+    public RoomContainer[] Split(float pRandomMultiplication)
     {
         randomSplitValue = pRandomMultiplication;
         AXIS splitAxis = checkLargerAxis();
-        Room[] newRooms = defineRooms(splitAxis);
+        RoomContainer[] newRooms = defineRooms(splitAxis);
 
         return newRooms;
     }

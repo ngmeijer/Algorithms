@@ -46,10 +46,10 @@ using System.Drawing;
 	 * A helper method for your convenience so you don't have to meddle with coordinate transformations.
 	 * @return the location of the center of the given room you can use for your nodes in this class
 	 */
-	protected Point getRoomCenter(Room pRoom)
+	protected Point getRoomCenter(RoomContainer pRoomContainer)
 	{
-		float centerX = ((pRoom.OriginalSize.Left + pRoom.OriginalSize.Right) / 2.0f) * _dungeon.scale;
-		float centerY = ((pRoom.OriginalSize.Top + pRoom.OriginalSize.Bottom) / 2.0f) * _dungeon.scale;
+		float centerX = ((pRoomContainer.OriginalSize.Left + pRoomContainer.OriginalSize.Right) / 2.0f) * _dungeon.scale;
+		float centerY = ((pRoomContainer.OriginalSize.Top + pRoomContainer.OriginalSize.Bottom) / 2.0f) * _dungeon.scale;
 		return new Point((int)centerX, (int)centerY);
 	}
 

@@ -10,8 +10,8 @@ class Door
 
 	//Keeping tracks of the Rooms that this door connects to,
 	//might make your life easier during some of the assignments
-	public Room roomA = null;
-	public Room roomB = null;
+	public RoomContainer RoomContainerA = null;
+	public RoomContainer RoomContainerB = null;
 
 	//You can also keep track of additional information such as whether the door connects horizontally/vertically
 	//Again, whether you need flags like this depends on how you implement the algorithm, maybe you need other flags
