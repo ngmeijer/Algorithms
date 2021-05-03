@@ -27,39 +27,31 @@ class Room : GameObject
 
     public RoomArea RoomArea;
 
-    public int DoorCount;
+    private int doorCount;
     private const int MAX_DOOR_COUNT = 2;
     public int ID;
     public float RandomSplitValue;
 
-    private const int OFFSET = 4;
+    private const int OFFSET = 3;
 
     //"Worldspace" coordinates
     private Vec2 screenPosition;
     private EasyDraw idText;
+
+    private delegate Door OnDoorPlacing(RoomArea pOtherArea);
+
+    private OnDoorPlacing onDoor;
 
     public Room(Rectangle pOriginalSize)
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
         OriginalSize = pOriginalSize;
 
-        RoomArea.leftSide = OriginalSize.X;
-        RoomArea.rightSide = OriginalSize.X + OriginalSize.Width;
-        RoomArea.topSide = OriginalSize.Y;
-        RoomArea.bottomSide = OriginalSize.Y + OriginalSize.Height;
+        defineRoomArea();
+        handleDebugTextInitalization();
 
-        screenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
-        screenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
-
-        idText = new EasyDraw(game.width, game.height);
-        AddChild(idText);
-        idText.SetColor(0, 255, 0);
-        idText.SetScaleXY(0.1f, 0.1f);
+        onDoor += placeDoor;
     }
-
-    //TODO: Implement a toString method for debugging?
-    //Return information about the type of object and it's data
-    //eg Room: (x, y, width, height)
 
     public override string ToString()
     {
@@ -71,6 +63,25 @@ class Room : GameObject
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious -= handleDestroy;
         Destroy();
+    }
+
+    private void defineRoomArea()
+    {
+        RoomArea.leftSide = OriginalSize.X;
+        RoomArea.rightSide = OriginalSize.X + OriginalSize.Width;
+        RoomArea.topSide = OriginalSize.Y;
+        RoomArea.bottomSide = OriginalSize.Y + OriginalSize.Height;
+
+        screenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
+        screenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
+    }
+
+    private void handleDebugTextInitalization()
+    {
+        idText = new EasyDraw(game.width, game.height);
+        AddChild(idText);
+        idText.SetColor(0, 255, 0);
+        idText.SetScaleXY(0.1f, 0.1f);
     }
 
     public Room[] Split(float pRandomMultiplication)
@@ -159,21 +170,22 @@ class Room : GameObject
 
         foreach (Room room in neighbourRooms)
         {
-            communicateDoorResposibility(room);
+            DoorMaster master = defineDoorResponsibility(room);
+            communicateDoorResponsiblity(master, room);
             //Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
     }
 
-    private void communicateDoorResposibility(Room pOtherRoom)
+    private DoorMaster defineDoorResponsibility(Room pOtherRoom)
     {
-        int thisRoomDoorCount = DoorCount;
-        int otherRoomDoorCount = pOtherRoom.DoorCount;
+        int thisRoomDoorCount = doorCount;
+        int otherRoomDoorCount = pOtherRoom.doorCount;
 
         DoorMaster responsibleRoomIndex = DoorMaster.THIS_ROOM;
 
         //Both rooms have max amount of doors
         if (thisRoomDoorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-            return;
+            return DoorMaster.UNDEFINED;
 
         //This room has not reached the max yet, the other one has.
         if (thisRoomDoorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
@@ -192,10 +204,15 @@ class Room : GameObject
         if (thisRoomDoorCount == otherRoomDoorCount)
             responsibleRoomIndex = (DoorMaster)Utils.Random((int)DoorMaster.THIS_ROOM, (int)DoorMaster.UNDEFINED);
 
-        if (responsibleRoomIndex == DoorMaster.NEIGHBOUR_ROOM)
+        return responsibleRoomIndex;
+    }
+
+    private void communicateDoorResponsiblity(DoorMaster pResponsibleRoom, Room pOtherRoom)
+    {
+        if (pResponsibleRoom == DoorMaster.NEIGHBOUR_ROOM)
             validateDoorMaster(DoorMaster.NEIGHBOUR_ROOM, pOtherRoom);
 
-        if (responsibleRoomIndex == DoorMaster.THIS_ROOM)
+        if (pResponsibleRoom == DoorMaster.THIS_ROOM)
             validateDoorMaster(DoorMaster.THIS_ROOM, pOtherRoom);
     }
 
@@ -215,29 +232,26 @@ class Room : GameObject
         pOtherRoom.incrementDoorCount();
     }
 
-    private void incrementDoorCount() => DoorCount++;
+    private void incrementDoorCount() => doorCount++;
 
-    private void placeDoor(RoomArea pOtherRoomArea)
+    private Door placeDoor(RoomArea pOtherRoomArea)
     {
         Point newDoorLocation = new Point();
 
-        int widthOverlap = 0;
-        int heightOverlap = 0;
-
-        int leftSide = 0;
-        int rightSide = 0;
-
         AXIS usedAxis = determineDoorAxis(pOtherRoomArea);
-        Console.WriteLine(usedAxis);
+
         switch (usedAxis)
         {
             case AXIS.HORIZONTAL:
+                newDoorLocation.X = ((pOtherRoomArea.rightSide - pOtherRoomArea.leftSide) / 2) + this.RoomArea.leftSide;
+                newDoorLocation.Y = this.RoomArea.topSide;
                 break;
             case AXIS.VERTICAL:
                 break;
         }
 
         Door doorInstance = new Door(newDoorLocation);
+        return doorInstance;
     }
 
     private AXIS determineDoorAxis(RoomArea pOtherRoom)
@@ -245,14 +259,10 @@ class Room : GameObject
         AXIS usedAxis = AXIS.UNDEFINED;
 
         if (pOtherRoom.bottomSide == this.RoomArea.topSide + 1 || pOtherRoom.topSide == this.RoomArea.bottomSide - 1)
-        {
             usedAxis = AXIS.HORIZONTAL;
-        }
 
         if (pOtherRoom.leftSide == this.RoomArea.rightSide - 1 || pOtherRoom.rightSide == this.RoomArea.leftSide + 1)
-        {
             usedAxis = AXIS.VERTICAL;
-        }
 
         return usedAxis;
     }
@@ -298,5 +308,5 @@ class Room : GameObject
         => pOtherSide == pMainSide0 || pOtherSide == pMainSide1;
 
     private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
-        => pOtherSide > (pMainSide0) && pOtherSide < (pMainSide1);
+        => pOtherSide > (pMainSide0 + OFFSET) && pOtherSide < (pMainSide1 - OFFSET);
 }

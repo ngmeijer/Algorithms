@@ -41,7 +41,7 @@ class AlgorithmsAssignment : Game
         ///	BASE SETUP - FEEL FREE TO SKIP
 
         //set our default background color and title
-        GL.ClearColor(1, 1, 1, 1);
+        GL.ClearColor(0, 0, 0, 1);
         GL.glfwSetWindowTitle("Algorithms Game");
 
         //The simplest approach to visualize a dungeon, is using black and white squares

@@ -13,7 +13,6 @@ enum AXIS
 class SufficientDungeon : Dungeon
 {
     private List<Room> roomsToSplit = new List<Room>();
-    private Dictionary<int, Room> roomSplitDictionary = new Dictionary<int, Room>();
 
     private Size startingSize;
 
