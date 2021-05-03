@@ -21,17 +21,17 @@ public enum DoorMaster
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
-class Room : GameObject
+public class Room : GameObject
 {
+    public RoomCreator roomCreator;
     public Rectangle OriginalSize;
-
     public RoomArea RoomArea;
 
     private int doorCount;
-    private const int MAX_DOOR_COUNT = 2;
     public int ID;
     public float RandomSplitValue;
 
+    private const int MAX_DOOR_COUNT = 2;
     private const int OFFSET = 3;
 
     //"Worldspace" coordinates
@@ -39,7 +39,6 @@ class Room : GameObject
     private EasyDraw idText;
 
     private delegate Door OnDoorPlacing(RoomArea pOtherArea);
-
     private OnDoorPlacing onDoor;
 
     public Room(Rectangle pOriginalSize)
@@ -50,21 +49,44 @@ class Room : GameObject
         defineRoomArea();
         handleDebugTextInitalization();
 
+        roomCreator = new RoomCreator(this, RoomArea, OriginalSize, RandomSplitValue);
+
         onDoor += placeDoor;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //										            string ToString()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     public override string ToString()
     {
         return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID,
             RoomArea.leftSide, RoomArea.rightSide, RoomArea.topSide, RoomArea.bottomSide);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //										        void handleDestroy()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private void handleDestroy()
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious -= handleDestroy;
         Destroy();
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //										       void defineRoomArea()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private void defineRoomArea()
     {
         RoomArea.leftSide = OriginalSize.X;
@@ -76,6 +98,13 @@ class Room : GameObject
         screenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //									    void handleDebugTextInitalization()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private void handleDebugTextInitalization()
     {
         idText = new EasyDraw(game.width, game.height);
@@ -84,15 +113,13 @@ class Room : GameObject
         idText.SetScaleXY(0.1f, 0.1f);
     }
 
-    public Room[] Split(float pRandomMultiplication)
-    {
-        RandomSplitValue = pRandomMultiplication;
-        AXIS splitAxis = checkLargerAxis();
-        Room[] newRooms = defineRooms(splitAxis);
-
-        return newRooms;
-    }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //								                void UpdateRoomID(int pID)
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     public void UpdateRoomID(int pID)
     {
         ID = pID;
@@ -103,48 +130,13 @@ class Room : GameObject
                     $"\nBottom:{RoomArea.bottomSide}", screenPosition.x, screenPosition.y + 115);
     }
 
-    private Room[] defineRooms(AXIS pSplitAxis)
-    {
-        Room[] newRooms = new Room[2];
-        Rectangle[] roomSizes = defineSizes();
-
-        switch (pSplitAxis)
-        {
-            case AXIS.HORIZONTAL:
-                roomSizes[0].Width = (int)(OriginalSize.Width * RandomSplitValue);
-
-                roomSizes[1].Width = OriginalSize.Width - roomSizes[0].Width + 1;
-                roomSizes[1].X = RoomArea.leftSide + roomSizes[0].Width - 1;
-                break;
-            case AXIS.VERTICAL:
-                roomSizes[0].Height = (int)(OriginalSize.Height * RandomSplitValue);
-
-                roomSizes[1].Height = OriginalSize.Height - roomSizes[0].Height + 1;
-                roomSizes[1].Y = OriginalSize.Y + roomSizes[0].Height - 1;
-                break;
-        }
-
-        newRooms[0] = new Room(roomSizes[0]);
-        newRooms[1] = new Room(roomSizes[1]);
-
-        newRooms[0].x = this.x * RandomSplitValue;
-        newRooms[0].y = this.y * RandomSplitValue;
-
-        newRooms[1].x = this.x * RandomSplitValue;
-        newRooms[1].y = this.y * RandomSplitValue;
-
-        return newRooms;
-    }
-
-    private Rectangle[] defineSizes()
-    {
-        Rectangle[] roomSizes = new Rectangle[2];
-        roomSizes[0] = new Rectangle(RoomArea.leftSide, RoomArea.topSide, OriginalSize.Width, OriginalSize.Height);
-        roomSizes[1] = new Rectangle(RoomArea.leftSide, RoomArea.topSide, OriginalSize.Width, OriginalSize.Height);
-
-        return roomSizes;
-    }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //										         bool ShouldSplit()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     public bool ShouldSplit()
     {
         int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
@@ -154,16 +146,13 @@ class Room : GameObject
         return false;
     }
 
-    private AXIS checkLargerAxis()
-    {
-        AXIS axis = AXIS.VERTICAL;
-
-        if (OriginalSize.Width > OriginalSize.Height)
-            axis = AXIS.HORIZONTAL;
-
-        return axis;
-    }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                   void InitiateDoorHandling()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     public void InitiateDoorHandling(List<Room> pFinishedRooms)
     {
         List<Room> neighbourRooms = findNeighbourRooms(pFinishedRooms);
@@ -171,11 +160,18 @@ class Room : GameObject
         foreach (Room room in neighbourRooms)
         {
             DoorMaster master = defineDoorResponsibility(room);
-            communicateDoorResponsiblity(master, room);
+            communicateDoorResponsibility(master, room);
             //Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
         }
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                             DoorMaster defineDoorResponsibility()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private DoorMaster defineDoorResponsibility(Room pOtherRoom)
     {
         int thisRoomDoorCount = doorCount;
@@ -207,7 +203,14 @@ class Room : GameObject
         return responsibleRoomIndex;
     }
 
-    private void communicateDoorResponsiblity(DoorMaster pResponsibleRoom, Room pOtherRoom)
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                              void communicateDoorResponsibility()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    private void communicateDoorResponsibility(DoorMaster pResponsibleRoom, Room pOtherRoom)
     {
         if (pResponsibleRoom == DoorMaster.NEIGHBOUR_ROOM)
             validateDoorMaster(DoorMaster.NEIGHBOUR_ROOM, pOtherRoom);
@@ -216,6 +219,13 @@ class Room : GameObject
             validateDoorMaster(DoorMaster.THIS_ROOM, pOtherRoom);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                     void validateDoorMaster()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private void validateDoorMaster(DoorMaster pMaster, Room pOtherRoom)
     {
         switch (pMaster)
@@ -232,8 +242,22 @@ class Room : GameObject
         pOtherRoom.incrementDoorCount();
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                     void incrementDoorCount()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private void incrementDoorCount() => doorCount++;
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                            Door placeDoor()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private Door placeDoor(RoomArea pOtherRoomArea)
     {
         Point newDoorLocation = new Point();
@@ -254,6 +278,13 @@ class Room : GameObject
         return doorInstance;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                      AXIS  determineDoorAxis()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private AXIS determineDoorAxis(RoomArea pOtherRoom)
     {
         AXIS usedAxis = AXIS.UNDEFINED;
@@ -267,6 +298,13 @@ class Room : GameObject
         return usedAxis;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                List<Room> findNeighbourRooms()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private List<Room> findNeighbourRooms(List<Room> pFinishedRooms)
     {
         List<Room> neighbourRooms = new List<Room>();
@@ -300,13 +338,34 @@ class Room : GameObject
         return neighbourRooms;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                           bool checkNeighbourRoomBoundaryConditions()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private bool checkNeighbourRoomBoundaryConditions(int pOtherSide, int pMainSide0, int pMainSide1)
         => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) ||
           checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                           bool checkIfOnExactBorder()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private bool checkIfOnExactBorder(int pOtherSide, int pMainSide0, int pMainSide1)
         => pOtherSide == pMainSide0 || pOtherSide == pMainSide1;
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                                      bool checkIfInsideAreaWithOffset()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
     private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
         => pOtherSide > (pMainSide0 + OFFSET) && pOtherSide < (pMainSide1 - OFFSET);
 }

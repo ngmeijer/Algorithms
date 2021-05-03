@@ -314,7 +314,7 @@ class SufficientDungeon : Dungeon
                 float randomMultiplication = Utils.Random(0.35f, 0.65f);
 
                 Room currentFocusedRoom = roomsToSplit[roomIndex];
-                Room[] newRooms = currentFocusedRoom.Split(randomMultiplication);
+                Room[] newRooms = currentFocusedRoom.roomCreator.Split(randomMultiplication);
 
                 for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                 {

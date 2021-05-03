@@ -133,6 +133,7 @@
     <Compile Include="sources\Assignment\Dungeon\Dungeon.cs" />
     <Compile Include="sources\Assignment\Dungeon\Room.cs" />
     <Compile Include="sources\AlgorithmsAssignment.cs" />
+    <Compile Include="sources\Assignment\Dungeon\RoomCreator.cs" />
     <Compile Include="sources\Assignment\Dungeon\SampleDungeon.cs" />
     <Compile Include="sources\Assignment\Dungeon\SufficientDungeon.cs" />
     <Compile Include="sources\Assignment\NodeGraph\SampleDungeonNodeGraph.cs" />
