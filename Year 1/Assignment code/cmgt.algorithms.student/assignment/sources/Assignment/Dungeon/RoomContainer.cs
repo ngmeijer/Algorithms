@@ -11,13 +11,6 @@ public struct RoomArea
     public int bottomSide;
 }
 
-public enum DoorMaster
-{
-    THIS_ROOM,
-    NEIGHBOUR_ROOM,
-    UNDEFINED,
-};
-
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
  */
@@ -40,12 +33,19 @@ public class RoomContainer : GameObject
         AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
         OriginalSize = pOriginalSize;
 
+        initializeSubsystems();
+
+        debugInfo.UpdateRoomArea(RoomCreator.ThisRoomAreaProps);
+        debugInfo.onGenerated += updateRoomProperties;
+    }
+
+    private void initializeSubsystems()
+    {
         debugInfo = new RoomDebugInfo(ID, RoomArea);
         AddChild(debugInfo);
         RoomCreator = new RoomCreationHandler(this, RoomArea, OriginalSize, RandomSplitValue);
+        RoomArea = RoomCreator.ThisRoomAreaProps;
         DoorCreator = new DoorCreationHandler(this, RoomArea);
-
-        debugInfo.UpdateRoomArea(RoomCreator.ThisRoomAreaProps);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -72,5 +72,11 @@ public class RoomContainer : GameObject
     {
         AlgorithmsAssignment.OnGenerateDestroyPrevious -= handleDestroy;
         Destroy();
+    }
+
+    private void updateRoomProperties(int pID, RoomArea pRoomArea)
+    {
+        ID = pID;
+        RoomArea = pRoomArea;
     }
 }

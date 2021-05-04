@@ -16,10 +16,7 @@ class SufficientDungeon : Dungeon
 
     private Size startingSize;
 
-    public SufficientDungeon(Size pSize) : base(pSize)
-    {
-        startingSize = pSize;
-    }
+    public SufficientDungeon(Size pSize) : base(pSize) => startingSize = pSize;
 
     protected override void generate(int pMinimumRoomSize)
     {

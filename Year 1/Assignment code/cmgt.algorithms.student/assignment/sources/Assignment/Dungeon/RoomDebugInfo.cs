@@ -8,13 +8,15 @@ public class RoomDebugInfo : GameObject
     public int ID { get; private set; }
     private RoomArea roomArea;
 
+    public delegate void OnRoomPropertiesGenerated(int pID, RoomArea pRoomArea);
+    public event OnRoomPropertiesGenerated onGenerated;
+
     public RoomDebugInfo(int pID, RoomArea pRoomArea)
     {
         ID = pID;
         roomArea = pRoomArea;
 
         handleDebugTextInitalization();
-        UpdateRoomID(pID);
     }
 
     public void UpdateRoomArea(RoomArea pArea)
@@ -52,5 +54,7 @@ public class RoomDebugInfo : GameObject
                     $"\nRight: {roomArea.rightSide}." +
                     $"\nTop: {roomArea.topSide}." +
                     $"\nBottom:{roomArea.bottomSide}", ScreenPosition.x, ScreenPosition.y + 115);
+
+        onGenerated?.Invoke(pID, roomArea);
     }
 }

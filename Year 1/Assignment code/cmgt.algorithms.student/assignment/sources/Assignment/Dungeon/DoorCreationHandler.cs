@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using GXPEngine;
 
 public class DoorCreationHandler
 {
+    public enum DoorMaster
+    {
+        THIS_ROOM = 0,
+        NEIGHBOUR_ROOM = 1,
+        UNDEFINED = 2,
+    };
+
     private const int MAX_DOOR_COUNT = 2;
     private const int OFFSET = 3;
 
@@ -23,43 +31,28 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
     public void InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
     {
         List<RoomContainer> neighbourRooms = findNeighbourRooms(pFinishedRooms);
 
         foreach (RoomContainer room in neighbourRooms)
         {
-            DoorMaster master = defineDoorResponsibility(room);
-            communicateDoorResponsibility(master, room);
-            //Console.WriteLine($"\n\nNeighbour room ID: {room.ID} \nThis ID: {ID}.\nFound neighbours: {neighbourRooms.Count}");
+            Console.WriteLine($"This Room's ID: {parent.ID}. Neighbour Room's ID: {room.ID}");
+            //DoorMaster master = defineDoorResponsibility(room);
+            //if (master == DoorMaster.UNDEFINED)
+            //    return;
+
+            //checkDoorResponsibility(master, room);
         }
     }
 
     //------------------------------------------------------------------------------------------------------------------------
-    //			                              void communicateDoorResponsibility()
+    //			                                   void checkDoorResponsibility()
     //------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
-    private void communicateDoorResponsibility(DoorMaster pResponsibleRoom, RoomContainer pOtherRoom)
-    {
-        if (pResponsibleRoom == DoorMaster.NEIGHBOUR_ROOM)
-            validateDoorMaster(DoorMaster.NEIGHBOUR_ROOM, pOtherRoom);
-
-        if (pResponsibleRoom == DoorMaster.THIS_ROOM)
-            validateDoorMaster(DoorMaster.THIS_ROOM, pOtherRoom);
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                                     void validateDoorMaster()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>String</returns>
-    private void validateDoorMaster(DoorMaster pMaster, RoomContainer pOtherRoom)
+    private void checkDoorResponsibility(DoorMaster pMaster, RoomContainer pOtherRoom)
     {
         switch (pMaster)
         {
@@ -81,7 +74,7 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>Door</returns>
     private Door placeDoor(RoomArea pOtherRoomArea)
     {
         Point newDoorLocation = new Point();
@@ -97,9 +90,7 @@ public class DoorCreationHandler
             case AXIS.VERTICAL:
                 break;
         }
-
-        Door doorInstance = new Door(newDoorLocation);
-        return doorInstance;
+        return new Door(newDoorLocation);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -108,7 +99,7 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>AXIS</returns>
     private AXIS determineDoorAxis(RoomArea pOtherRoom)
     {
         AXIS usedAxis = AXIS.UNDEFINED;
@@ -128,7 +119,6 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
     private void incrementDoorCount() => doorCount++;
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -137,7 +127,7 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>List<RoomContainer></returns>
     private List<RoomContainer> findNeighbourRooms(List<RoomContainer> pFinishedRooms)
     {
         List<RoomContainer> neighbourRooms = new List<RoomContainer>();
@@ -149,23 +139,21 @@ public class DoorCreationHandler
             if (neighbourRooms.Contains(otherRoom))
                 break;
 
-            bool horizontallyAligned = false;
-            bool verticallyAligned = false;
-
             //Readability purposes
             RoomArea other = otherRoom.RoomArea;
             RoomArea main = roomArea;
 
-            if (checkNeighbourRoomBoundaryConditions(other.leftSide, main.leftSide, main.rightSide)
-                || checkNeighbourRoomBoundaryConditions(other.rightSide, main.leftSide, main.rightSide))
-                horizontallyAligned = true;
+            //Horizontal
+            if (!checkNeighbourRoomBoundaryConditions(other.leftSide, main.leftSide, main.rightSide)
+                || !checkNeighbourRoomBoundaryConditions(other.rightSide, main.leftSide, main.rightSide))
+                break;
 
-            if (checkNeighbourRoomBoundaryConditions(other.topSide, main.topSide, main.bottomSide)
-                || checkNeighbourRoomBoundaryConditions(other.bottomSide, main.topSide, main.bottomSide))
-                verticallyAligned = true;
+            //Vertical
+            if (!checkNeighbourRoomBoundaryConditions(other.topSide, main.topSide, main.bottomSide)
+                || !checkNeighbourRoomBoundaryConditions(other.bottomSide, main.topSide, main.bottomSide))
+                break;
 
-            if (horizontallyAligned && verticallyAligned)
-                neighbourRooms.Add(otherRoom);
+            neighbourRooms.Add(otherRoom);
         }
 
         return neighbourRooms;
@@ -177,36 +165,33 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>DoorMaster</returns>
     private DoorMaster defineDoorResponsibility(RoomContainer pOtherRoom)
     {
-        int thisRoomDoorCount = doorCount;
         int otherRoomDoorCount = pOtherRoom.DoorCreator.doorCount;
 
-        DoorMaster responsibleRoomIndex = DoorMaster.THIS_ROOM;
-
         //Both rooms have max amount of doors
-        if (thisRoomDoorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
+        if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
             return DoorMaster.UNDEFINED;
 
         //This room has not reached the max yet, the other one has.
-        if (thisRoomDoorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-            responsibleRoomIndex = DoorMaster.THIS_ROOM;
+        if (doorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
+            return DoorMaster.THIS_ROOM;
 
         //This room has reached the max, the other one has not.
-        if (thisRoomDoorCount >= MAX_DOOR_COUNT && otherRoomDoorCount < MAX_DOOR_COUNT)
-            responsibleRoomIndex = DoorMaster.NEIGHBOUR_ROOM;
+        if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount < MAX_DOOR_COUNT)
+            return DoorMaster.NEIGHBOUR_ROOM;
 
-        if (thisRoomDoorCount < otherRoomDoorCount)
-            responsibleRoomIndex = DoorMaster.THIS_ROOM;
+        if (doorCount == otherRoomDoorCount)
+            return (DoorMaster)Utils.Random(0, 2);
 
-        if (thisRoomDoorCount > otherRoomDoorCount)
-            responsibleRoomIndex = DoorMaster.NEIGHBOUR_ROOM;
+        if (doorCount < otherRoomDoorCount)
+            return DoorMaster.THIS_ROOM;
 
-        if (thisRoomDoorCount == otherRoomDoorCount)
-            responsibleRoomIndex = (DoorMaster)Utils.Random((int)DoorMaster.THIS_ROOM, (int)DoorMaster.UNDEFINED);
+        if (doorCount > otherRoomDoorCount)
+            return DoorMaster.NEIGHBOUR_ROOM;
 
-        return responsibleRoomIndex;
+        return DoorMaster.UNDEFINED;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -215,10 +200,11 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>Bool</returns>
     private bool checkNeighbourRoomBoundaryConditions(int pOtherSide, int pMainSide0, int pMainSide1)
         => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) ||
            checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
+
 
     //------------------------------------------------------------------------------------------------------------------------
     //			                                           bool checkIfOnExactBorder()
@@ -226,7 +212,7 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>Bool</returns>
     private bool checkIfOnExactBorder(int pOtherSide, int pMainSide0, int pMainSide1)
         => pOtherSide == pMainSide0 || pOtherSide == pMainSide1;
 
@@ -236,7 +222,7 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    /// <returns>String</returns>
+    /// <returns>Bool</returns>
     private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
         => pOtherSide > (pMainSide0 + OFFSET) && pOtherSide < (pMainSide1 - OFFSET);
 }
