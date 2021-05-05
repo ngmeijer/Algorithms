@@ -91,10 +91,10 @@ public class DoorCreationHandler
         {
             case AXIS.HORIZONTAL:
                 newPosition.X = ((pOtherRoomArea.rightSide - pOtherRoomArea.leftSide) / 2) + roomArea.leftSide;
-                newPosition.Y = roomArea.bottomSide;
+                newPosition.Y = roomArea.topSide;
                 break;
             case AXIS.VERTICAL:
-                newPosition.X = roomArea.rightSide;
+                newPosition.X = roomArea.rightSide - 1;
                 newPosition.Y = ((pOtherRoomArea.bottomSide - pOtherRoomArea.topSide) / 2) + roomArea.topSide;
                 break;
         }
