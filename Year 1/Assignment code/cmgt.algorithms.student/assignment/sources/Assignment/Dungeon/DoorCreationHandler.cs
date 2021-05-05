@@ -143,6 +143,8 @@ public class DoorCreationHandler
             RoomArea other = otherRoom.RoomArea;
             RoomArea main = roomArea;
 
+            Console.WriteLine($"\nOther room ID: {otherRoom.ID}. \nOther right side: {other.rightSide}");
+
             //Horizontal
             if (!checkNeighbourRoomBoundaryConditions(other.leftSide, main.leftSide, main.rightSide)
                 || !checkNeighbourRoomBoundaryConditions(other.rightSide, main.leftSide, main.rightSide))
@@ -202,8 +204,7 @@ public class DoorCreationHandler
     /// </summary>
     /// <returns>Bool</returns>
     private bool checkNeighbourRoomBoundaryConditions(int pOtherSide, int pMainSide0, int pMainSide1)
-        => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) ||
-           checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
+        => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) || checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
 
 
     //------------------------------------------------------------------------------------------------------------------------

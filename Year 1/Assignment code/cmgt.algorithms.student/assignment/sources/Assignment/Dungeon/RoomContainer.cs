@@ -22,7 +22,7 @@ public class RoomContainer : GameObject
     public Rectangle OriginalSize;
     public RoomArea RoomArea;
 
-    public int ID;
+    public int ID { get; private set; }
     public float RandomSplitValue;
 
     private delegate Door OnDoorPlacing(RoomArea pOtherArea);
@@ -35,8 +35,8 @@ public class RoomContainer : GameObject
 
         initializeSubsystems();
 
-        debugInfo.UpdateRoomArea(RoomCreator.ThisRoomAreaProps);
         debugInfo.onGenerated += updateRoomProperties;
+        debugInfo.UpdateRoomArea(RoomArea);
     }
 
     private void initializeSubsystems()
