@@ -335,8 +335,15 @@ class SufficientDungeon : Dungeon
 
         foreach (RoomContainer room in finishedRooms)
         {
-            room.DoorCreator.InitiateDoorHandling(finishedRooms);
+            Door[] newDoors = room.DoorCreator.InitiateDoorHandling(finishedRooms);
+            Console.WriteLine($"New doors count: {newDoors.Length}");
+            for (int i = 0; i < newDoors.Length; i++)
+            {
+                doors.Add(newDoors[i]);
+            }
         }
+
+        Console.WriteLine($"Door count: {doors.Count}");
 
         #endregion
     }

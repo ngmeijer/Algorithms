@@ -31,19 +31,23 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    public void InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
+    public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
     {
+        List<Door> newDoors = new List<Door>();
         List<RoomContainer> neighbourRooms = findNeighbourRooms(pFinishedRooms);
 
         foreach (RoomContainer neighbour in neighbourRooms)
         {
-            Console.WriteLine($"This room ID: {parentRoom.ID}. Other ID: {neighbour.ID}");
-            //DoorMaster master = defineDoorResponsibility(room);
-            //if (master == DoorMaster.UNDEFINED)
-            //    continue;
+            DoorMaster master = defineDoorResponsibility(neighbour);
+            if (master == DoorMaster.UNDEFINED)
+                continue;
 
-            //checkDoorResponsibility(master, room);
+            Console.WriteLine(master);
+            Door newDoor = createNewDoor(master, neighbour);
+            newDoors.Add(newDoor);
         }
+
+        return newDoors.ToArray();
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -52,20 +56,23 @@ public class DoorCreationHandler
     /// <summary>
     /// 
     /// </summary>
-    private void checkDoorResponsibility(DoorMaster pMaster, RoomContainer pOtherRoom)
+    private Door createNewDoor(DoorMaster pMaster, RoomContainer pOtherRoom)
     {
+        Point newDoorPosition = new Point();
         switch (pMaster)
         {
             case DoorMaster.THIS_ROOM:
-                placeDoor(pOtherRoom.RoomArea);
+                newDoorPosition = defineDoorPosition(pOtherRoom.RoomArea);
                 break;
             case DoorMaster.NEIGHBOUR_ROOM:
-                pOtherRoom.DoorCreator.placeDoor(roomArea);
+                newDoorPosition = pOtherRoom.DoorCreator.defineDoorPosition(roomArea);
                 break;
         }
 
         incrementDoorCount();
         pOtherRoom.DoorCreator.incrementDoorCount();
+
+        return new Door(newDoorPosition);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -75,22 +82,24 @@ public class DoorCreationHandler
     /// 
     /// </summary>
     /// <returns>Door</returns>
-    private Door placeDoor(RoomArea pOtherRoomArea)
+    private Point defineDoorPosition(RoomArea pOtherRoomArea)
     {
-        Point newDoorLocation = new Point();
-
+        Point newPosition = new Point();
         AXIS usedAxis = determineDoorAxis(pOtherRoomArea);
 
         switch (usedAxis)
         {
             case AXIS.HORIZONTAL:
-                newDoorLocation.X = ((pOtherRoomArea.rightSide - pOtherRoomArea.leftSide) / 2) + roomArea.leftSide;
-                newDoorLocation.Y = roomArea.topSide;
+                newPosition.X = ((pOtherRoomArea.rightSide - pOtherRoomArea.leftSide) / 2) + roomArea.leftSide;
+                newPosition.Y = roomArea.bottomSide;
                 break;
             case AXIS.VERTICAL:
+                newPosition.X = roomArea.rightSide;
+                newPosition.Y = ((pOtherRoomArea.bottomSide - pOtherRoomArea.topSide) / 2) + roomArea.topSide;
                 break;
         }
-        return new Door(newDoorLocation);
+
+        return newPosition;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -131,7 +140,6 @@ public class DoorCreationHandler
     private List<RoomContainer> findNeighbourRooms(List<RoomContainer> pFinishedRooms)
     {
         List<RoomContainer> neighbourRooms = new List<RoomContainer>();
-        //neighbourRooms.Remove(parentRoom);
 
         foreach (RoomContainer otherRoom in pFinishedRooms)
         {
