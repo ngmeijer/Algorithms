@@ -13,15 +13,15 @@ public class DoorCreationHandler
     };
 
     private const int MAX_DOOR_COUNT = 2;
-    private const int OFFSET = 3;
+    private const int OFFSET = 0;
 
     private int doorCount;
     private RoomArea roomArea;
-    private RoomContainer parent;
+    private RoomContainer parentRoom;
 
-    public DoorCreationHandler(RoomContainer pParent, RoomArea pRoomArea)
+    public DoorCreationHandler(RoomContainer pParentRoom, RoomArea pRoomArea)
     {
-        parent = pParent;
+        parentRoom = pParentRoom;
         roomArea = pRoomArea;
     }
 
@@ -35,12 +35,12 @@ public class DoorCreationHandler
     {
         List<RoomContainer> neighbourRooms = findNeighbourRooms(pFinishedRooms);
 
-        foreach (RoomContainer room in neighbourRooms)
+        foreach (RoomContainer neighbour in neighbourRooms)
         {
-            Console.WriteLine($"This Room's ID: {parent.ID}. Neighbour Room's ID: {room.ID}");
+            Console.WriteLine($"This room ID: {parentRoom.ID}. Other ID: {neighbour.ID}");
             //DoorMaster master = defineDoorResponsibility(room);
             //if (master == DoorMaster.UNDEFINED)
-            //    return;
+            //    continue;
 
             //checkDoorResponsibility(master, room);
         }
@@ -131,31 +131,23 @@ public class DoorCreationHandler
     private List<RoomContainer> findNeighbourRooms(List<RoomContainer> pFinishedRooms)
     {
         List<RoomContainer> neighbourRooms = new List<RoomContainer>();
+        //neighbourRooms.Remove(parentRoom);
 
         foreach (RoomContainer otherRoom in pFinishedRooms)
         {
-            if (otherRoom == parent)
-                break;
-            if (neighbourRooms.Contains(otherRoom))
-                break;
-
-            //Readability purposes
+            //Learned something new: break is for completely exiting the loop, continue is used to skip this iteration!
+            if (neighbourRooms.Contains(otherRoom)) continue;
+            if (otherRoom.ID == parentRoom.ID) continue;
             RoomArea other = otherRoom.RoomArea;
-            RoomArea main = roomArea;
 
-            Console.WriteLine($"\nOther room ID: {otherRoom.ID}. \nOther right side: {other.rightSide}");
+            bool leftSideAligned = checkHorizontalNeighbourAlignment(other.leftSide + 1);
+            bool rightSideAligned = checkHorizontalNeighbourAlignment(other.rightSide - 1);
 
-            //Horizontal
-            if (!checkNeighbourRoomBoundaryConditions(other.leftSide, main.leftSide, main.rightSide)
-                || !checkNeighbourRoomBoundaryConditions(other.rightSide, main.leftSide, main.rightSide))
-                break;
+            bool topSideAligned = checkVerticalNeighbourAlignment(other.topSide + 1);
+            bool bottomSideAligned = checkVerticalNeighbourAlignment(other.bottomSide - 1);
 
-            //Vertical
-            if (!checkNeighbourRoomBoundaryConditions(other.topSide, main.topSide, main.bottomSide)
-                || !checkNeighbourRoomBoundaryConditions(other.bottomSide, main.topSide, main.bottomSide))
-                break;
-
-            neighbourRooms.Add(otherRoom);
+            if ((leftSideAligned || rightSideAligned) && (topSideAligned || bottomSideAligned))
+                neighbourRooms.Add(otherRoom);
         }
 
         return neighbourRooms;
@@ -203,9 +195,28 @@ public class DoorCreationHandler
     /// 
     /// </summary>
     /// <returns>Bool</returns>
-    private bool checkNeighbourRoomBoundaryConditions(int pOtherSide, int pMainSide0, int pMainSide1)
-        => checkIfOnExactBorder(pOtherSide, pMainSide0, pMainSide1) || checkIfInsideAreaWithOffset(pOtherSide, pMainSide0, pMainSide1);
+    private bool checkVerticalNeighbourAlignment(int pOtherSide)
+    {
+        if (checkIfOnExactBorder(pOtherSide, roomArea.topSide, roomArea.bottomSide) ||
+            checkIfInsideAreaWithOffset(pOtherSide, roomArea.topSide, roomArea.bottomSide))
+            return true;
+        return false;
+    }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //			                           bool checkNeighbourRoomBoundaryConditions()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Bool</returns>
+    private bool checkHorizontalNeighbourAlignment(int pOtherSide)
+    {
+        if (checkIfOnExactBorder(pOtherSide, roomArea.leftSide, roomArea.rightSide) ||
+            checkIfInsideAreaWithOffset(pOtherSide, roomArea.leftSide, roomArea.rightSide))
+            return true;
+        return false;
+    }
 
     //------------------------------------------------------------------------------------------------------------------------
     //			                                           bool checkIfOnExactBorder()

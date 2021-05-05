@@ -53,7 +53,7 @@ public class RoomDebugInfo : GameObject
                     $"\nLeft: {roomArea.leftSide}." +
                     $"\nRight: {roomArea.rightSide}." +
                     $"\nTop: {roomArea.topSide}." +
-                    $"\nBottom:{roomArea.bottomSide}", ScreenPosition.x, ScreenPosition.y + 115);
+                    $"\nBottom:{roomArea.bottomSide}", ScreenPosition.x, ScreenPosition.y + 105);
 
         onGenerated?.Invoke(pID, roomArea);
     }
