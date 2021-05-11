@@ -4,9 +4,10 @@ public class RoomDebugInfo : GameObject
 {
     //"Worldspace" coordinates
     public Vec2 ScreenPosition;
-    private EasyDraw idText;
+    private EasyDraw debugText;
     public int ID { get; private set; }
-    private RoomArea roomArea;
+    public int DoorCount { get; private set; }
+    public RoomArea RoomArea { get; private set; }
 
     public delegate void OnRoomPropertiesGenerated(int pID, RoomArea pRoomArea);
     public event OnRoomPropertiesGenerated onGenerated;
@@ -14,14 +15,9 @@ public class RoomDebugInfo : GameObject
     public RoomDebugInfo(int pID, RoomArea pRoomArea)
     {
         ID = pID;
-        roomArea = pRoomArea;
+        RoomArea = pRoomArea;
 
         handleDebugTextInitalization();
-    }
-
-    public void UpdateRoomArea(RoomArea pArea)
-    {
-        roomArea = pArea;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -33,10 +29,28 @@ public class RoomDebugInfo : GameObject
     /// <returns>String</returns>
     private void handleDebugTextInitalization()
     {
-        idText = new EasyDraw(game.width, game.height);
-        AddChild(idText);
-        idText.SetColor(0, 255, 0);
-        idText.SetScaleXY(0.1f, 0.1f);
+        debugText = new EasyDraw(game.width, game.height);
+        AddChild(debugText);
+        debugText.SetColor(0, 255, 0);
+        debugText.SetScaleXY(0.1f, 0.1f);
+    }
+
+    public void UpdateDebugInformation(int pID, RoomArea pRoomArea)
+    {
+        updateRoomID(pID);
+        UpdateRoomArea(pRoomArea);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //								     void updateRoomArea(RoomArea pArea)
+    //------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>String</returns>
+    public void UpdateRoomArea(RoomArea pArea)
+    {
+        RoomArea = pArea;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -46,15 +60,21 @@ public class RoomDebugInfo : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    public void UpdateRoomID(int pID)
+    private void updateRoomID(int pID)
     {
         ID = pID;
-        idText.Text($"ID: {pID}." +
-                    $"\nLeft: {roomArea.leftSide}." +
-                    $"\nRight: {roomArea.rightSide}." +
-                    $"\nTop: {roomArea.topSide}." +
-                    $"\nBottom:{roomArea.bottomSide}", ScreenPosition.x, ScreenPosition.y + 105);
+        debugText.Text($"ID: {pID}." +
+                    $"\nLeft: {RoomArea.leftSide}." +
+                    $"\nRight: {RoomArea.rightSide}." +
+                    $"\nTop: {RoomArea.topSide}." +
+                    $"\nBottom:{RoomArea.bottomSide}" +
+                    $"\nDoor count: {DoorCount}", ScreenPosition.x, ScreenPosition.y + 135);
 
-        onGenerated?.Invoke(pID, roomArea);
+        onGenerated?.Invoke(pID, RoomArea);
+    }
+
+    public void UpdateDoorCount(int pDoorCount)
+    {
+        DoorCount = pDoorCount;
     }
 }

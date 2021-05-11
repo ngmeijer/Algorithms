@@ -42,7 +42,6 @@ public class DoorCreationHandler
             if (master == DoorMaster.UNDEFINED)
                 continue;
 
-            Console.WriteLine(master);
             Door newDoor = createNewDoor(master, neighbour);
             newDoors.Add(newDoor);
         }
@@ -65,14 +64,20 @@ public class DoorCreationHandler
                 newDoorPosition = defineDoorPosition(pOtherRoom.RoomArea);
                 break;
             case DoorMaster.NEIGHBOUR_ROOM:
-                newDoorPosition = pOtherRoom.DoorCreator.defineDoorPosition(roomArea);
+                newDoorPosition = pOtherRoom.DoorCreator.defineDoorPosition(parentRoom.RoomArea);
                 break;
         }
 
         incrementDoorCount();
         pOtherRoom.DoorCreator.incrementDoorCount();
 
-        return new Door(newDoorPosition);
+        Door newDoor = new Door(newDoorPosition)
+        {
+            RoomContainerA = parentRoom,
+            RoomContainerB = pOtherRoom
+        };
+
+        return newDoor;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -84,22 +89,68 @@ public class DoorCreationHandler
     /// <returns>Door</returns>
     private Point defineDoorPosition(RoomArea pOtherRoomArea)
     {
-        Point newPosition = new Point();
         AXIS usedAxis = determineDoorAxis(pOtherRoomArea);
+
+        int xPos = 0, yPos = 0;
 
         switch (usedAxis)
         {
             case AXIS.HORIZONTAL:
-                newPosition.X = ((pOtherRoomArea.rightSide - pOtherRoomArea.leftSide) / 2) + roomArea.leftSide;
-                newPosition.Y = roomArea.topSide;
+                if (this.roomArea.rightSide == (pOtherRoomArea.leftSide + 1))
+                    xPos = this.roomArea.rightSide - 1;
+                if (this.roomArea.leftSide == (pOtherRoomArea.rightSide - 1))
+                    xPos = this.roomArea.leftSide + 1;
+
+                yPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
                 break;
             case AXIS.VERTICAL:
-                newPosition.X = roomArea.rightSide - 1;
-                newPosition.Y = ((pOtherRoomArea.bottomSide - pOtherRoomArea.topSide) / 2) + roomArea.topSide;
+                xPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
+
+                if (this.roomArea.bottomSide == (pOtherRoomArea.topSide + 1))
+                    yPos = this.roomArea.bottomSide;
+                if (this.roomArea.topSide == (pOtherRoomArea.bottomSide - 1))
+                    yPos = this.roomArea.topSide;
                 break;
         }
 
-        return newPosition;
+        return new Point(xPos, yPos);
+    }
+
+    private int calculateAxisOverlap(AXIS pAxis, RoomArea pOtherRoomArea)
+    {
+        int overlap = 0;
+
+        switch (pAxis)
+        {
+            case AXIS.HORIZONTAL:
+                if ((pOtherRoomArea.leftSide + 1) >= (this.roomArea.rightSide + OFFSET))
+                    overlap = pOtherRoomArea.leftSide - (this.roomArea.rightSide + OFFSET);
+                break;
+            case AXIS.VERTICAL:
+                if ((pOtherRoomArea.topSide + 1) >= (this.roomArea.bottomSide + OFFSET))
+                    overlap = pOtherRoomArea.topSide - (this.roomArea.bottomSide + OFFSET);
+                if ((pOtherRoomArea.bottomSide - 1) <= (this.roomArea.topSide - OFFSET))
+                    overlap = (this.roomArea.topSide - OFFSET) - pOtherRoomArea.bottomSide;
+
+                if (pOtherRoomArea.bottomSide < this.roomArea.bottomSide &&
+                    pOtherRoomArea.topSide > this.roomArea.topSide)
+                    overlap = (this.roomArea.topSide - OFFSET) - (this.roomArea.bottomSide + OFFSET);
+                if (pOtherRoomArea.bottomSide > this.roomArea.bottomSide &&
+                    pOtherRoomArea.topSide < this.roomArea.topSide)
+                    overlap = (pOtherRoomArea.topSide - OFFSET) - (pOtherRoomArea.bottomSide + OFFSET);
+                break;
+        }
+        return overlap;
+    }
+
+    private int calculateAxisPosition(AXIS pAxis, RoomArea pRoomArea)
+    {
+        int position = 0;
+        int overlap = calculateAxisOverlap(AXIS.VERTICAL, pRoomArea);
+
+
+
+        return position;
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -113,10 +164,10 @@ public class DoorCreationHandler
     {
         AXIS usedAxis = AXIS.UNDEFINED;
 
-        if (pOtherRoom.bottomSide == roomArea.topSide + 1 || pOtherRoom.topSide == roomArea.bottomSide - 1)
+        if (pOtherRoom.leftSide == roomArea.rightSide - 1 || pOtherRoom.rightSide == roomArea.leftSide + 1)
             usedAxis = AXIS.HORIZONTAL;
 
-        if (pOtherRoom.leftSide == roomArea.rightSide - 1 || pOtherRoom.rightSide == roomArea.leftSide + 1)
+        if (pOtherRoom.bottomSide == roomArea.topSide + 1 || pOtherRoom.topSide == roomArea.bottomSide - 1)
             usedAxis = AXIS.VERTICAL;
 
         return usedAxis;
@@ -143,7 +194,6 @@ public class DoorCreationHandler
 
         foreach (RoomContainer otherRoom in pFinishedRooms)
         {
-            //Learned something new: break is for completely exiting the loop, continue is used to skip this iteration!
             if (neighbourRooms.Contains(otherRoom)) continue;
             if (otherRoom.ID == parentRoom.ID) continue;
             RoomArea other = otherRoom.RoomArea;

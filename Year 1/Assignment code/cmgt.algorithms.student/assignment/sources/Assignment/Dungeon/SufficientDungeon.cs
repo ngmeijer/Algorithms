@@ -20,7 +20,7 @@ class SufficientDungeon : Dungeon
 
     protected override void generate(int pMinimumRoomSize)
     {
-        //1st year code
+        //1s0t year code
         #region Starting code
 
         //Room currentRoom = roomsToSplit.First();
@@ -298,7 +298,6 @@ class SufficientDungeon : Dungeon
         Console.Clear();
         roomsToSplit.Clear();
         finishedRooms.Clear();
-
         int roomID = 0;
 
         RoomContainer startingRoom = new RoomContainer(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
@@ -329,7 +328,7 @@ class SufficientDungeon : Dungeon
         foreach (RoomContainer room in finishedRooms)
         {
             AddChild(room);
-            room.debugInfo.UpdateRoomID(roomID);
+            room.debugInfo.UpdateDebugInformation(roomID, room.RoomArea);
             roomID++;
         }
 
