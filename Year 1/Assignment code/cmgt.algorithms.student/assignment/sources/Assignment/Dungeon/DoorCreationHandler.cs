@@ -1,7 +1,6 @@
-﻿using System;
+﻿using GXPEngine;
 using System.Collections.Generic;
 using System.Drawing;
-using GXPEngine;
 
 public class DoorCreationHandler
 {
@@ -96,59 +95,69 @@ public class DoorCreationHandler
         switch (usedAxis)
         {
             case AXIS.HORIZONTAL:
-                if (this.roomArea.rightSide == (pOtherRoomArea.leftSide + 1))
-                    xPos = this.roomArea.rightSide - 1;
-                if (this.roomArea.leftSide == (pOtherRoomArea.rightSide - 1))
-                    xPos = this.roomArea.leftSide + 1;
-
+                xPos = 0;
                 yPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
                 break;
             case AXIS.VERTICAL:
                 xPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
-
-                if (this.roomArea.bottomSide == (pOtherRoomArea.topSide + 1))
-                    yPos = this.roomArea.bottomSide;
-                if (this.roomArea.topSide == (pOtherRoomArea.bottomSide - 1))
-                    yPos = this.roomArea.topSide;
+                yPos = 0;
                 break;
         }
 
         return new Point(xPos, yPos);
     }
 
-    private int calculateAxisOverlap(AXIS pAxis, RoomArea pOtherRoomArea)
+    private int calculateHorizontalRoomOverlap(RoomArea pOther)
     {
         int overlap = 0;
 
-        switch (pAxis)
-        {
-            case AXIS.HORIZONTAL:
-                if ((pOtherRoomArea.leftSide + 1) >= (this.roomArea.rightSide + OFFSET))
-                    overlap = pOtherRoomArea.leftSide - (this.roomArea.rightSide + OFFSET);
-                break;
-            case AXIS.VERTICAL:
-                if ((pOtherRoomArea.topSide + 1) >= (this.roomArea.bottomSide + OFFSET))
-                    overlap = pOtherRoomArea.topSide - (this.roomArea.bottomSide + OFFSET);
-                if ((pOtherRoomArea.bottomSide - 1) <= (this.roomArea.topSide - OFFSET))
-                    overlap = (this.roomArea.topSide - OFFSET) - pOtherRoomArea.bottomSide;
+        //Check if either left or right side is inside this room, horizontally.
+        if (pOther.leftSide >= this.roomArea.leftSide && pOther.leftSide <= (this.roomArea.rightSide - OFFSET))
+            overlap = this.roomArea.rightSide - pOther.leftSide;
+        if (pOther.rightSide >= (this.roomArea.leftSide + OFFSET) && pOther.rightSide <= this.roomArea.rightSide)
+            overlap = pOther.rightSide - this.roomArea.leftSide;
 
-                if (pOtherRoomArea.bottomSide < this.roomArea.bottomSide &&
-                    pOtherRoomArea.topSide > this.roomArea.topSide)
-                    overlap = (this.roomArea.topSide - OFFSET) - (this.roomArea.bottomSide + OFFSET);
-                if (pOtherRoomArea.bottomSide > this.roomArea.bottomSide &&
-                    pOtherRoomArea.topSide < this.roomArea.topSide)
-                    overlap = (pOtherRoomArea.topSide - OFFSET) - (pOtherRoomArea.bottomSide + OFFSET);
-                break;
-        }
+        //Check if both sides are inside this room, horizontally.
+        if (pOther.leftSide >= this.roomArea.leftSide && pOther.rightSide <= this.roomArea.rightSide)
+            overlap = pOther.rightSide - pOther.leftSide;
+
+        //Check if both sides are outside this room (but still overlap), horizontally.
+        if (pOther.leftSide < this.roomArea.leftSide && pOther.rightSide > this.roomArea.leftSide)
+            overlap = this.roomArea.rightSide - this.roomArea.leftSide;
+
+        return overlap;
+    }
+
+    private int calculateVerticalRoomOverlap(RoomArea pOther)
+    {
+        int overlap = 0;
+
+        //Check if either top or bottom side is inside this room, vertically.
+        if (pOther.bottomSide <= (this.roomArea.topSide - OFFSET) && pOther.bottomSide > this.roomArea.bottomSide)
+            overlap = this.roomArea.topSide - pOther.bottomSide;
+        if (pOther.topSide >= (this.roomArea.bottomSide + OFFSET) && pOther.topSide <= this.roomArea.topSide)
+            overlap = pOther.topSide - this.roomArea.bottomSide;
+
+        //Check if both sides are inside this room, vertically.
+        if (pOther.bottomSide >= this.roomArea.bottomSide && pOther.topSide <= this.roomArea.topSide)
+            overlap = pOther.topSide - pOther.bottomSide;
+
+        //Check if both sides are outside this room (but still overlap), horizontally.
+        if (pOther.bottomSide < this.roomArea.bottomSide && pOther.topSide > this.roomArea.topSide)
+            overlap = this.roomArea.topSide - this.roomArea.bottomSide;
+
         return overlap;
     }
 
     private int calculateAxisPosition(AXIS pAxis, RoomArea pRoomArea)
     {
         int position = 0;
-        int overlap = calculateAxisOverlap(AXIS.VERTICAL, pRoomArea);
+        int overlap = 0;
 
-
+        if (pAxis == AXIS.HORIZONTAL)
+            overlap = calculateHorizontalRoomOverlap(pRoomArea);
+        if (pAxis == AXIS.VERTICAL)
+            overlap = calculateVerticalRoomOverlap(pRoomArea);
 
         return position;
     }
