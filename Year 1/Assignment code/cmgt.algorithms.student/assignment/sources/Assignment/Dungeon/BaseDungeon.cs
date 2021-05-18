@@ -68,9 +68,6 @@ namespace Dungeon
         {
             System.Console.WriteLine(this.GetType().Name + ".Generate:Generating dungeon...");
 
-            finishedRooms.Clear();
-            doors.Clear();
-
             generate(pMinimumRoomSize);
 
             System.Console.WriteLine(this.GetType().Name + ".Generate:Dungeon generated.");

@@ -18,7 +18,7 @@ class AlgorithmsAssignment : Game
 {
     //Required for assignment 1
     BaseDungeon _dungeon = null;
-    SufficientBaseDungeon _sufficientBaseDungeon = null;
+    SufficientDungeon _sufficientDungeon = null;
 
     //Required for assignment 2
     NodeGraph _graph = null;
@@ -31,10 +31,6 @@ class AlgorithmsAssignment : Game
     //common settings
     public const int SCALE = 10;               //TODO: experiment with changing this
     public const int MIN_ROOM_SIZE = 30;        //TODO: use this setting in your dungeon generator
-
-    public delegate void OnGenerateRooms();
-
-    public static event OnGenerateRooms OnGenerateDestroyPrevious;
 
     public AlgorithmsAssignment() : base(1920, 1080, false, true, -1, -1, false)
     {
@@ -80,7 +76,7 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out SampleDungeon below, implement a SufficientDungeon class and uncomment it below
 
         //_dungeon = new SampleDungeon(size);
-        _sufficientBaseDungeon = new SufficientBaseDungeon(size);
+        _sufficientDungeon = new SufficientDungeon(size);
 
         /////////////////////////////////
         //Assignment 1.2 Good (optional)
@@ -105,12 +101,12 @@ class AlgorithmsAssignment : Game
         //    //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
         //    _dungeon.Generate(MIN_ROOM_SIZE);
         //}
-        if (_sufficientBaseDungeon != null)
+        if (_sufficientDungeon != null)
         {
             //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
-            _sufficientBaseDungeon.scale = SCALE;
+            _sufficientDungeon.scale = SCALE;
             //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
-            _sufficientBaseDungeon.Generate(MIN_ROOM_SIZE);
+            _sufficientDungeon.Generate(MIN_ROOM_SIZE);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -208,7 +204,7 @@ class AlgorithmsAssignment : Game
         if (_dungeon != null) AddChild(_dungeon);
 
         //I HAD to add _sufficientDungeon in order to show it.
-        if (_sufficientBaseDungeon != null) AddChild(_sufficientBaseDungeon);
+        if (_sufficientDungeon != null) AddChild(_sufficientDungeon);
 
         if (_graph != null) AddChild(_graph);
         if (_tiledView != null) AddChild(_tiledView);
@@ -224,8 +220,7 @@ class AlgorithmsAssignment : Game
     {
         if (Input.GetMouseButtonDown(0))
         {
-            OnGenerateDestroyPrevious?.Invoke();
-            _sufficientBaseDungeon.Generate(MIN_ROOM_SIZE);
+            _sufficientDungeon.Generate(MIN_ROOM_SIZE);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace RoomCreation
             };
 
             private const int MAX_DOOR_COUNT = 2;
-            public const int OFFSET = 0;
+            public const int OFFSET = 3;
 
             private int doorCount;
             private RoomArea roomArea;
@@ -117,26 +117,12 @@ namespace RoomCreation
                 return new Point(xPos, yPos);
             }
 
-            private int calculateHorizontalRoomOverlap(RoomArea pOther)
+            private int calculateHorizontalRoomOverlap(RoomArea pOther, out int pDoorSide)
             {
                 int overlap = 0;
+                int doorSide = 0;
 
-                //Check if either left or right side is inside this room, horizontally.
-                if (pOther.leftSide >= this.roomArea.leftSide && pOther.leftSide <= (this.roomArea.rightSide - OFFSET))
-                    overlap = this.roomArea.rightSide - pOther.leftSide;
-                if (pOther.rightSide >= (this.roomArea.leftSide + OFFSET) &&
-                    pOther.rightSide <= this.roomArea.rightSide)
-                    overlap = pOther.rightSide - this.roomArea.leftSide;
-
-                //Check if both sides are inside this room, horizontally.
-                if (pOther.leftSide >= this.roomArea.leftSide && pOther.rightSide <= this.roomArea.rightSide)
-                    overlap = pOther.rightSide - pOther.leftSide;
-
-                //Check if both sides are outside this room (but still overlap), horizontally.
-                if (pOther.leftSide < this.roomArea.leftSide && pOther.rightSide > this.roomArea.leftSide)
-                {
-                    overlap = this.roomArea.rightSide - this.roomArea.leftSide;
-                }
+                pDoorSide = doorSide;
 
                 return overlap;
             }
@@ -145,35 +131,6 @@ namespace RoomCreation
             {
                 int overlap = 0;
                 int doorSide = 0;
-
-                //Check if either top or bottom side is inside this room, vertically.
-                if (pOther.topSide >= (this.roomArea.topSide + OFFSET) &&
-                    pOther.topSide <= (this.roomArea.bottomSide - OFFSET))
-                {
-                    doorSide = this.roomArea.topSide;
-                    overlap = this.roomArea.topSide - pOther.bottomSide;
-                }
-
-                if (pOther.bottomSide <= (this.roomArea.bottomSide - OFFSET) &&
-                    pOther.bottomSide >= (this.roomArea.topSide + OFFSET))
-                {
-                    doorSide = pOther.topSide;
-                    overlap = pOther.topSide - this.roomArea.bottomSide;
-                }
-
-                //Check if both other sides are inside this room, vertically.
-                if (pOther.bottomSide <= this.roomArea.bottomSide && pOther.topSide >= this.roomArea.topSide)
-                {
-                    doorSide = pOther.topSide;
-                    overlap = pOther.topSide - pOther.bottomSide;
-                }
-
-                //Check if both sides are outside this room (but still overlap), horizontally.
-                if (pOther.bottomSide < this.roomArea.bottomSide && pOther.topSide > this.roomArea.topSide)
-                {
-                    doorSide = this.roomArea.topSide;
-                    overlap = this.roomArea.topSide - this.roomArea.bottomSide;
-                }
 
                 pDoorSide = doorSide;
 
@@ -186,7 +143,7 @@ namespace RoomCreation
                 int side = 0;
 
                 if (pAxis == AXIS.HORIZONTAL)
-                    overlap = calculateHorizontalRoomOverlap(pRoomArea);
+                    overlap = calculateHorizontalRoomOverlap(pRoomArea, out side);
                 if (pAxis == AXIS.VERTICAL)
                     overlap = calculateVerticalRoomOverlap(pRoomArea, out side);
 
@@ -202,15 +159,40 @@ namespace RoomCreation
             /// 
             /// </summary>
             /// <returns>AXIS</returns>
-            private AXIS determineDoorAxis(RoomArea pOtherRoom)
+            private AXIS determineDoorAxis(RoomArea pOtherRoom, out int pSharedSide)
             {
                 AXIS usedAxis = AXIS.UNDEFINED;
+                int sharedSide = 0;
 
-                if (pOtherRoom.leftSide == roomArea.rightSide - 1 || pOtherRoom.rightSide == roomArea.leftSide + 1)
-                    usedAxis = AXIS.HORIZONTAL;
+                {
+                    if (pOtherRoom.leftSide == roomArea.rightSide - 1)
+                    {
+                        usedAxis = AXIS.HORIZONTAL;
+                        sharedSide = roomArea.rightSide;
+                    }
 
-                if (pOtherRoom.bottomSide == roomArea.topSide + 1 || pOtherRoom.topSide == roomArea.bottomSide - 1)
-                    usedAxis = AXIS.VERTICAL;
+                    if (pOtherRoom.rightSide == roomArea.leftSide + 1)
+                    {
+                        usedAxis = AXIS.HORIZONTAL;
+                        sharedSide = roomArea.leftSide;
+                    }
+                }
+
+                {
+                    if (pOtherRoom.bottomSide == roomArea.topSide + 1)
+                    {
+                        usedAxis = AXIS.VERTICAL;
+                        sharedSide = roomArea.topSide;
+                    }
+
+                    if (pOtherRoom.topSide == roomArea.bottomSide - 1)
+                    {
+                        usedAxis = AXIS.VERTICAL;
+                        sharedSide = roomArea.bottomSide;
+                    }
+                }
+
+                pSharedSide = sharedSide;
 
                 return usedAxis;
             }
@@ -247,7 +229,7 @@ namespace RoomCreation
                     return DoorMaster.NEIGHBOUR_ROOM;
 
                 if (doorCount == otherRoomDoorCount)
-                    return (DoorMaster) Utils.Random(0, 2);
+                    return (DoorMaster)Utils.Random(0, 2);
 
                 if (doorCount < otherRoomDoorCount)
                     return DoorMaster.THIS_ROOM;

@@ -36,7 +36,6 @@ namespace RoomCreation
 
         public RoomContainer(Rectangle pOriginalSize)
         {
-            AlgorithmsAssignment.OnGenerateDestroyPrevious += handleDestroy;
             OriginalSize = pOriginalSize;
 
             initializeSubsystems();
@@ -74,9 +73,13 @@ namespace RoomCreation
         /// 
         /// </summary>
         /// <returns>String</returns>
-        private void handleDestroy()
+        public void HandleDestroy()
         {
-            AlgorithmsAssignment.OnGenerateDestroyPrevious -= handleDestroy;
+            RemoveChild(debugInfo);
+            debugInfo.Destroy();
+            RoomCreator = null;
+            debugInfo = null;
+            DoorCreator = null;
             Destroy();
         }
 

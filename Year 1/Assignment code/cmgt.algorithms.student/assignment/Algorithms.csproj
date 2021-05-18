@@ -137,7 +137,7 @@
     <Compile Include="sources\AlgorithmsAssignment.cs" />
     <Compile Include="sources\Assignment\Dungeon\RoomCreation\RoomCreationHandler.cs" />
     <Compile Include="sources\Assignment\Dungeon\RoomCreation\RoomDebugInfo.cs" />
-    <Compile Include="sources\Assignment\Dungeon\SufficientBaseDungeon.cs" />
+    <Compile Include="sources\Assignment\Dungeon\SufficientDungeon.cs" />
     <Compile Include="sources\Assignment\NodeGraph\SampleDungeonNodeGraph.cs" />
     <Compile Include="sources\Assignment\PathFinding\SamplePathFinder.cs" />
     <Compile Include="sources\Assignment\Agent\NodeGraphAgent.cs" />
