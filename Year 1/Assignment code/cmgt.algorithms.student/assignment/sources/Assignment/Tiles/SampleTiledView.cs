@@ -1,4 +1,5 @@
-﻿using GXPEngine;
+﻿using Dungeon;
+using GXPEngine;
 
 /**
  * This is an example subclass of the TiledView that just generates random tiles.
@@ -10,7 +11,7 @@ class SampleTiledView : TiledView
 	 * to initialize the TiledView parameters with size and scale data from the dungeon,
 	 * make sure you understand what is happening here before you continue.
 	 */
-	public SampleTiledView(Dungeon pDungeon, TileType pDefaultTileType) : base(pDungeon.size.Width, pDungeon.size.Height, (int)pDungeon.scale, pDefaultTileType)
+	public SampleTiledView(BaseDungeon pDungeon, TileType pDefaultTileType) : base(pDungeon.size.Width, pDungeon.size.Height, (int)pDungeon.scale, pDefaultTileType)
 	{
 	}
 

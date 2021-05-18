@@ -2,6 +2,7 @@ using System;
 using GXPEngine;
 using GXPEngine.OpenGL;
 using System.Drawing;
+using Dungeon;
 
 /**
  * This is the main 'game' for the Algorithms Assignment that accompanies the Algorithms course.
@@ -16,8 +17,8 @@ using System.Drawing;
 class AlgorithmsAssignment : Game
 {
     //Required for assignment 1
-    Dungeon _dungeon = null;
-    SufficientDungeon _sufficientDungeon = null;
+    BaseDungeon _dungeon = null;
+    SufficientBaseDungeon _sufficientBaseDungeon = null;
 
     //Required for assignment 2
     NodeGraph _graph = null;
@@ -79,7 +80,7 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out SampleDungeon below, implement a SufficientDungeon class and uncomment it below
 
         //_dungeon = new SampleDungeon(size);
-        _sufficientDungeon = new SufficientDungeon(size);
+        _sufficientBaseDungeon = new SufficientBaseDungeon(size);
 
         /////////////////////////////////
         //Assignment 1.2 Good (optional)
@@ -104,12 +105,12 @@ class AlgorithmsAssignment : Game
         //    //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
         //    _dungeon.Generate(MIN_ROOM_SIZE);
         //}
-        if (_sufficientDungeon != null)
+        if (_sufficientBaseDungeon != null)
         {
             //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
-            _sufficientDungeon.scale = SCALE;
+            _sufficientBaseDungeon.scale = SCALE;
             //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
-            _sufficientDungeon.Generate(MIN_ROOM_SIZE);
+            _sufficientBaseDungeon.Generate(MIN_ROOM_SIZE);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +208,7 @@ class AlgorithmsAssignment : Game
         if (_dungeon != null) AddChild(_dungeon);
 
         //I HAD to add _sufficientDungeon in order to show it.
-        if (_sufficientDungeon != null) AddChild(_sufficientDungeon);
+        if (_sufficientBaseDungeon != null) AddChild(_sufficientBaseDungeon);
 
         if (_graph != null) AddChild(_graph);
         if (_tiledView != null) AddChild(_tiledView);
@@ -224,7 +225,7 @@ class AlgorithmsAssignment : Game
         if (Input.GetMouseButtonDown(0))
         {
             OnGenerateDestroyPrevious?.Invoke();
-            _sufficientDungeon.Generate(MIN_ROOM_SIZE);
+            _sufficientBaseDungeon.Generate(MIN_ROOM_SIZE);
         }
     }
 }
