@@ -12,16 +12,19 @@ public class DoorCreationHandler
     };
 
     private const int MAX_DOOR_COUNT = 2;
-    private const int OFFSET = 0;
+    public const int OFFSET = 0;
 
     private int doorCount;
     private RoomArea roomArea;
     private RoomContainer parentRoom;
+    private NeighbourRoomFinder roomFinder;
 
     public DoorCreationHandler(RoomContainer pParentRoom, RoomArea pRoomArea)
     {
         parentRoom = pParentRoom;
         roomArea = pRoomArea;
+
+        roomFinder = new NeighbourRoomFinder(roomArea);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -33,7 +36,7 @@ public class DoorCreationHandler
     public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
     {
         List<Door> newDoors = new List<Door>();
-        List<RoomContainer> neighbourRooms = findNeighbourRooms(pFinishedRooms);
+        List<RoomContainer> neighbourRooms = roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
 
         foreach (RoomContainer neighbour in neighbourRooms)
         {
@@ -45,6 +48,8 @@ public class DoorCreationHandler
             newDoors.Add(newDoor);
         }
 
+        //To array, because in advance I do not know how many doors there will be (and if there would be a limit, if the limit would be reached.
+        //So for that reason, create a temp List, once all doors are added, convert to array
         return newDoors.ToArray();
     }
 
@@ -123,41 +128,61 @@ public class DoorCreationHandler
 
         //Check if both sides are outside this room (but still overlap), horizontally.
         if (pOther.leftSide < this.roomArea.leftSide && pOther.rightSide > this.roomArea.leftSide)
+        {
             overlap = this.roomArea.rightSide - this.roomArea.leftSide;
+        }
 
         return overlap;
     }
 
-    private int calculateVerticalRoomOverlap(RoomArea pOther)
+    private int calculateVerticalRoomOverlap(RoomArea pOther, out int pDoorSide)
     {
         int overlap = 0;
+        int doorSide = 0;
 
         //Check if either top or bottom side is inside this room, vertically.
-        if (pOther.bottomSide <= (this.roomArea.topSide - OFFSET) && pOther.bottomSide > this.roomArea.bottomSide)
+        if (pOther.topSide >= (this.roomArea.topSide + OFFSET) && pOther.topSide <= (this.roomArea.bottomSide - OFFSET))
+        {
+            doorSide = this.roomArea.topSide;
             overlap = this.roomArea.topSide - pOther.bottomSide;
-        if (pOther.topSide >= (this.roomArea.bottomSide + OFFSET) && pOther.topSide <= this.roomArea.topSide)
-            overlap = pOther.topSide - this.roomArea.bottomSide;
+        }
 
-        //Check if both sides are inside this room, vertically.
-        if (pOther.bottomSide >= this.roomArea.bottomSide && pOther.topSide <= this.roomArea.topSide)
+        if (pOther.bottomSide <= (this.roomArea.bottomSide - OFFSET) && pOther.bottomSide >= (this.roomArea.topSide + OFFSET))
+        {
+            doorSide = pOther.topSide;
+            overlap = pOther.topSide - this.roomArea.bottomSide;
+        }
+
+        //Check if both other sides are inside this room, vertically.
+        if (pOther.bottomSide <= this.roomArea.bottomSide && pOther.topSide >= this.roomArea.topSide)
+        {
+            doorSide = pOther.topSide;
             overlap = pOther.topSide - pOther.bottomSide;
+        }
 
         //Check if both sides are outside this room (but still overlap), horizontally.
         if (pOther.bottomSide < this.roomArea.bottomSide && pOther.topSide > this.roomArea.topSide)
+        {
+            doorSide = this.roomArea.topSide;
             overlap = this.roomArea.topSide - this.roomArea.bottomSide;
+        }
+
+        pDoorSide = doorSide;
 
         return overlap;
     }
 
     private int calculateAxisPosition(AXIS pAxis, RoomArea pRoomArea)
     {
-        int position = 0;
         int overlap = 0;
+        int side = 0;
 
         if (pAxis == AXIS.HORIZONTAL)
             overlap = calculateHorizontalRoomOverlap(pRoomArea);
         if (pAxis == AXIS.VERTICAL)
-            overlap = calculateVerticalRoomOverlap(pRoomArea);
+            overlap = calculateVerticalRoomOverlap(pRoomArea, out side);
+
+        int position = side + (overlap / 2);
 
         return position;
     }
@@ -189,36 +214,6 @@ public class DoorCreationHandler
     /// 
     /// </summary>
     private void incrementDoorCount() => doorCount++;
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                                List<Room> findNeighbourRooms()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>List<RoomContainer></returns>
-    private List<RoomContainer> findNeighbourRooms(List<RoomContainer> pFinishedRooms)
-    {
-        List<RoomContainer> neighbourRooms = new List<RoomContainer>();
-
-        foreach (RoomContainer otherRoom in pFinishedRooms)
-        {
-            if (neighbourRooms.Contains(otherRoom)) continue;
-            if (otherRoom.ID == parentRoom.ID) continue;
-            RoomArea other = otherRoom.RoomArea;
-
-            bool leftSideAligned = checkHorizontalNeighbourAlignment(other.leftSide + 1);
-            bool rightSideAligned = checkHorizontalNeighbourAlignment(other.rightSide - 1);
-
-            bool topSideAligned = checkVerticalNeighbourAlignment(other.topSide + 1);
-            bool bottomSideAligned = checkVerticalNeighbourAlignment(other.bottomSide - 1);
-
-            if ((leftSideAligned || rightSideAligned) && (topSideAligned || bottomSideAligned))
-                neighbourRooms.Add(otherRoom);
-        }
-
-        return neighbourRooms;
-    }
 
     //------------------------------------------------------------------------------------------------------------------------
     //			                             DoorMaster defineDoorResponsibility()
@@ -254,54 +249,4 @@ public class DoorCreationHandler
 
         return DoorMaster.UNDEFINED;
     }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                           bool checkNeighbourRoomBoundaryConditions()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Bool</returns>
-    private bool checkVerticalNeighbourAlignment(int pOtherSide)
-    {
-        if (checkIfOnExactBorder(pOtherSide, roomArea.topSide, roomArea.bottomSide) ||
-            checkIfInsideAreaWithOffset(pOtherSide, roomArea.topSide, roomArea.bottomSide))
-            return true;
-        return false;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                           bool checkNeighbourRoomBoundaryConditions()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Bool</returns>
-    private bool checkHorizontalNeighbourAlignment(int pOtherSide)
-    {
-        if (checkIfOnExactBorder(pOtherSide, roomArea.leftSide, roomArea.rightSide) ||
-            checkIfInsideAreaWithOffset(pOtherSide, roomArea.leftSide, roomArea.rightSide))
-            return true;
-        return false;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                                           bool checkIfOnExactBorder()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Bool</returns>
-    private bool checkIfOnExactBorder(int pOtherSide, int pMainSide0, int pMainSide1)
-        => pOtherSide == pMainSide0 || pOtherSide == pMainSide1;
-
-    //------------------------------------------------------------------------------------------------------------------------
-    //			                                      bool checkIfInsideAreaWithOffset()
-    //------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Bool</returns>
-    private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
-        => pOtherSide > (pMainSide0 + OFFSET) && pOtherSide < (pMainSide1 - OFFSET);
 }
