@@ -98,19 +98,19 @@ namespace RoomCreation
             /// <returns>Door</returns>
             private Point defineDoorPosition(RoomArea pOtherRoomArea)
             {
-                AXIS usedAxis = determineDoorAxis(pOtherRoomArea);
-
                 int xPos = 0, yPos = 0;
+
+                AXIS usedAxis = determineDoorAxis(pOtherRoomArea, out int sharedSide);
 
                 switch (usedAxis)
                 {
                     case AXIS.HORIZONTAL:
-                        xPos = 0;
+                        xPos = sharedSide;
                         yPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
                         break;
                     case AXIS.VERTICAL:
                         xPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
-                        yPos = 0;
+                        yPos = sharedSide;
                         break;
                 }
 
@@ -119,8 +119,7 @@ namespace RoomCreation
 
             private int calculateHorizontalRoomOverlap(RoomArea pOther, out int pDoorSide)
             {
-                int overlap = 0;
-                int doorSide = 0;
+                int overlap = 0, doorSide = 0;
 
                 pDoorSide = doorSide;
 
@@ -129,8 +128,7 @@ namespace RoomCreation
 
             private int calculateVerticalRoomOverlap(RoomArea pOther, out int pDoorSide)
             {
-                int overlap = 0;
-                int doorSide = 0;
+                int overlap = 0, doorSide = 0;
 
                 pDoorSide = doorSide;
 
@@ -168,27 +166,26 @@ namespace RoomCreation
                     if (pOtherRoom.leftSide == roomArea.rightSide - 1)
                     {
                         usedAxis = AXIS.HORIZONTAL;
-                        sharedSide = roomArea.rightSide;
+                        sharedSide = roomArea.rightSide - 1;
                     }
 
                     if (pOtherRoom.rightSide == roomArea.leftSide + 1)
                     {
                         usedAxis = AXIS.HORIZONTAL;
-                        sharedSide = roomArea.leftSide;
+                        sharedSide = roomArea.leftSide + 1;
                     }
                 }
-
                 {
                     if (pOtherRoom.bottomSide == roomArea.topSide + 1)
                     {
                         usedAxis = AXIS.VERTICAL;
-                        sharedSide = roomArea.topSide;
+                        sharedSide = roomArea.topSide + 1;
                     }
 
                     if (pOtherRoom.topSide == roomArea.bottomSide - 1)
                     {
                         usedAxis = AXIS.VERTICAL;
-                        sharedSide = roomArea.bottomSide;
+                        sharedSide = roomArea.bottomSide - 1;
                     }
                 }
 
