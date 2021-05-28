@@ -201,41 +201,6 @@ namespace RoomCreation
             /// 
             /// </summary>
             private void incrementDoorCount() => doorCount++;
-
-            //------------------------------------------------------------------------------------------------------------------------
-            //			                             DoorMaster defineDoorResponsibility()
-            //------------------------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns>DoorMaster</returns>
-            private DoorMaster defineDoorResponsibility(RoomContainer pOtherRoom)
-            {
-                int otherRoomDoorCount = pOtherRoom.DoorCreator.doorCount;
-
-                //Both rooms have max amount of doors
-                if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-                    return DoorMaster.UNDEFINED;
-
-                //This room has not reached the max yet, the other one has.
-                if (doorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-                    return DoorMaster.THIS_ROOM;
-
-                //This room has reached the max, the other one has not.
-                if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount < MAX_DOOR_COUNT)
-                    return DoorMaster.NEIGHBOUR_ROOM;
-
-                if (doorCount == otherRoomDoorCount)
-                    return (DoorMaster)Utils.Random(0, 2);
-
-                if (doorCount < otherRoomDoorCount)
-                    return DoorMaster.THIS_ROOM;
-
-                if (doorCount > otherRoomDoorCount)
-                    return DoorMaster.NEIGHBOUR_ROOM;
-
-                return DoorMaster.UNDEFINED;
-            }
         }
     }
 }
