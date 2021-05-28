@@ -8,6 +8,8 @@ namespace RoomCreation
         {
             private RoomArea roomArea;
 
+            public List<int> RoomSides = new List<int>();
+
             public NeighbourRoomFinder(RoomArea pRoomArea)
             {
                 roomArea = pRoomArea;
@@ -54,7 +56,11 @@ namespace RoomCreation
             {
                 if (checkIfOnExactBorder(pOtherSide, roomArea.topSide, roomArea.bottomSide) ||
                     checkIfInsideAreaWithOffset(pOtherSide, roomArea.topSide, roomArea.bottomSide))
+                {
+                    RoomSides.Add(pOtherSide);
                     return true;
+                }
+
                 return false;
             }
 
@@ -69,7 +75,11 @@ namespace RoomCreation
             {
                 if (checkIfOnExactBorder(pOtherSide, roomArea.leftSide, roomArea.rightSide) ||
                     checkIfInsideAreaWithOffset(pOtherSide, roomArea.leftSide, roomArea.rightSide))
+                {
+                    RoomSides.Add(pOtherSide);
                     return true;
+                }
+
                 return false;
             }
 

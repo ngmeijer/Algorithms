@@ -43,13 +43,13 @@ namespace RoomCreation
                 List<Door> newDoors = new List<Door>();
                 List<RoomContainer> neighbourRooms = roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
 
-                foreach (RoomContainer neighbour in neighbourRooms)
+                for (int i = 0; i < neighbourRooms.Count; i++)
                 {
-                    DoorMaster master = defineDoorResponsibility(neighbour);
+                    DoorMaster master = defineDoorResponsibility(neighbourRooms[i]);
                     if (master == DoorMaster.UNDEFINED)
                         continue;
 
-                    Door newDoor = createNewDoor(master, neighbour);
+                    Door newDoor = createNewDoor(master, neighbourRooms[i], roomFinder.RoomSides[i]);
                     newDoors.Add(newDoor);
                 }
 
@@ -64,16 +64,16 @@ namespace RoomCreation
             /// <summary>
             /// 
             /// </summary>
-            private Door createNewDoor(DoorMaster pMaster, RoomContainer pOtherRoom)
+            private Door createNewDoor(DoorMaster pMaster, RoomContainer pOtherRoom, int pSide)
             {
                 Point newDoorPosition = new Point();
                 switch (pMaster)
                 {
                     case DoorMaster.THIS_ROOM:
-                        newDoorPosition = defineDoorPosition(pOtherRoom.RoomArea);
+                        newDoorPosition = defineDoorPosition(pOtherRoom.RoomArea, pSide);
                         break;
                     case DoorMaster.NEIGHBOUR_ROOM:
-                        newDoorPosition = pOtherRoom.DoorCreator.defineDoorPosition(parentRoom.RoomArea);
+                        newDoorPosition = pOtherRoom.DoorCreator.defineDoorPosition(parentRoom.RoomArea, pSide);
                         break;
                 }
 
@@ -96,7 +96,7 @@ namespace RoomCreation
             /// 
             /// </summary>
             /// <returns>Door</returns>
-            private Point defineDoorPosition(RoomArea pOtherRoomArea)
+            private Point defineDoorPosition(RoomArea pOtherRoomArea, int pSide)
             {
                 int xPos = 0, yPos = 0;
 
@@ -105,12 +105,12 @@ namespace RoomCreation
                 switch (usedAxis)
                 {
                     case AXIS.HORIZONTAL:
-                        xPos = sharedSide;
+                        xPos = pSide;
                         yPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
                         break;
                     case AXIS.VERTICAL:
                         xPos = calculateAxisPosition(usedAxis, pOtherRoomArea);
-                        yPos = sharedSide;
+                        yPos = pSide;
                         break;
                 }
 
