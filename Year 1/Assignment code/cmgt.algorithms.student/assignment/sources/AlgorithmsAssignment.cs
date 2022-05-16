@@ -224,5 +224,3 @@ class AlgorithmsAssignment : Game
         }
     }
 }
-
-

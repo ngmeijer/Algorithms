@@ -323,6 +323,7 @@ namespace Dungeon
             }
 
             finishedRooms.Clear();
+            doors.Clear();
         }
 
         private void generateNewRooms()
@@ -374,10 +375,8 @@ namespace Dungeon
 
                 for (int i = 0; i < newDoors.Length; i++)
                 {
-                    doors.Add(newDoors[i]);
                 }
             }
-
         }
     }
 }

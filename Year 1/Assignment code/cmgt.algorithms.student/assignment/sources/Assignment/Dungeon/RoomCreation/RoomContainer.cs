@@ -50,7 +50,7 @@ namespace RoomCreation
             AddChild(debugInfo);
             RoomCreator = new RoomCreationHandler(this, RoomArea, OriginalSize, RandomSplitValue);
             RoomArea = RoomCreator.ThisRoomAreaProps;
-            DoorCreator = new DoorCreationHandler(this, RoomArea);
+            DoorCreator = new DoorCreationHandler(this);
         }
 
         //------------------------------------------------------------------------------------------------------------------------
