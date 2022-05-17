@@ -45,7 +45,9 @@ namespace RoomCreation
 
                 for (int i = 0; i < neighbourRooms.Count; i++)
                 {
-                    
+                    RoomContainer neighbourRoom = neighbourRooms[i];
+
+                    DoorMaster master = defineDoorResponsibility(neighbourRoom);
                 }
 
                 //To array, because in advance I do not know how many doors there will be (and if there would be a limit, if the limit would be reached.

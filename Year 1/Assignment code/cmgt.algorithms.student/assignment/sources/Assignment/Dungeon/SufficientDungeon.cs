@@ -341,7 +341,7 @@ namespace Dungeon
 
                     for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
                     {
-                        if (newRooms[subRoomIndex].RoomCreator.ShouldSplit())
+                        if (newRooms[subRoomIndex].RoomCreator.ShouldSplit(randomMultiplication))
                             roomsToSplit.Add(newRooms[subRoomIndex]);
                         else if (!finishedRooms.Contains(newRooms[subRoomIndex]))
                         {
