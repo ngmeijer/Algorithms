@@ -377,7 +377,6 @@ namespace Dungeon
                     doors.Add(newDoors[i]);
                 }
             }
-
         }
     }
 }

@@ -38,9 +38,9 @@ namespace RoomCreation
         private void defineRoomArea()
         {
             roomArea.leftSide = originalSize.X;
-            roomArea.rightSide = originalSize.X + originalSize.Width;
+            roomArea.rightSide = originalSize.X + originalSize.Width - 1;
             roomArea.topSide = originalSize.Y;
-            roomArea.bottomSide = originalSize.Y + originalSize.Height;
+            roomArea.bottomSide = originalSize.Y + originalSize.Height - 1;
 
             parent.debugInfo.ScreenPosition.x = (roomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
             parent.debugInfo.ScreenPosition.y = (roomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);

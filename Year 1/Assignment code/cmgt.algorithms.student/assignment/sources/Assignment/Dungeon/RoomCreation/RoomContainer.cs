@@ -29,11 +29,7 @@ namespace RoomCreation
 
         public int ID { get; private set; }
         public float RandomSplitValue;
-
-        private delegate Door OnDoorPlacing(RoomArea pOtherArea);
-
-        private OnDoorPlacing onDoorPlace;
-
+        
         public RoomContainer(Rectangle pOriginalSize)
         {
             OriginalSize = pOriginalSize;
@@ -51,6 +47,11 @@ namespace RoomCreation
             RoomCreator = new RoomCreationHandler(this, RoomArea, OriginalSize, RandomSplitValue);
             RoomArea = RoomCreator.ThisRoomAreaProps;
             DoorCreator = new DoorCreationHandler(this, RoomArea);
+        }
+
+        private void communicateDoorPlacing()
+        {
+            
         }
 
         //------------------------------------------------------------------------------------------------------------------------
