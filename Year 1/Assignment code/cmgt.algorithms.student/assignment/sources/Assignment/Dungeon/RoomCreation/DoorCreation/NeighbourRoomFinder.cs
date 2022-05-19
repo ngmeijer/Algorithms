@@ -70,10 +70,10 @@ namespace RoomCreation
 
                     if (otherRoomLeftOfMain || otherRoomRightOfMain)
                     {
-                        // Console.WriteLine(
-                        //     $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
-                        //     $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
-                        //     $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
+                        Console.WriteLine(
+                            $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
+                            $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
+                            $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
 
                         DoorArea newArea = new DoorArea()
                         {
@@ -93,14 +93,14 @@ namespace RoomCreation
 
                         if (otherRoomLeftOfMain)
                         {
-                            newArea.point1.X = otherRoom.RoomArea.leftSide;
-                            newArea.point2.X = otherRoom.RoomArea.leftSide;
+                            newArea.point1.X = pParentRoom.RoomArea.leftSide;
+                            newArea.point2.X = pParentRoom.RoomArea.leftSide;
                         }
 
                         if (otherRoomRightOfMain)
                         {
-                            newArea.point1.X = pParentRoom.RoomArea.leftSide;
-                            newArea.point2.X = pParentRoom.RoomArea.leftSide;
+                            newArea.point1.X = pParentRoom.RoomArea.rightSide;
+                            newArea.point2.X = pParentRoom.RoomArea.rightSide;
                         }
 
                         pDoorPositions.Add(newArea);
@@ -108,10 +108,10 @@ namespace RoomCreation
 
                     if (otherRoomAboveMain || otherRoomUnderMain)
                     {
-                        // Console.WriteLine(
-                        //     $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
-                        //     $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
-                        //     $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
+                        Console.WriteLine(
+                            $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
+                            $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
+                            $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
                         DoorArea newArea = new DoorArea()
                         {
                             point1 = new Point(),
@@ -131,8 +131,8 @@ namespace RoomCreation
                         //Y is the same for both points.
                         if (otherRoomAboveMain)
                         {
-                            newArea.point1.Y = otherRoom.RoomArea.topSide;
-                            newArea.point2.Y = otherRoom.RoomArea.topSide;
+                            newArea.point1.Y = pParentRoom.RoomArea.topSide;
+                            newArea.point2.Y = pParentRoom.RoomArea.topSide;
                         }
 
                         if (otherRoomUnderMain)
