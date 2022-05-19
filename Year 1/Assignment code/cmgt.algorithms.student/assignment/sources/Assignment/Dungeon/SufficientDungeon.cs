@@ -26,6 +26,7 @@ namespace Dungeon
         {
             {
                 //1st year code
+
                 #region Starting code
 
                 //Room currentRoom = roomsToSplit.First();
@@ -46,6 +47,7 @@ namespace Dungeon
                 //finishedRooms.Add(currentRoom);
 
                 #endregion
+
                 #region 1st iteration
 
                 //Use for-loop to generate the rooms instead of instantiating by hand
@@ -72,6 +74,7 @@ namespace Dungeon
                 ///
 
                 #endregion
+
                 #region 2nd iteration
 
                 //rooms.add(new room(new rectangle(xposition1, 0, roomwidth1, roomheight1)));
@@ -89,6 +92,7 @@ namespace Dungeon
                 //}
 
                 #endregion
+
                 #region 3rd iteration
 
                 //for (int roomcount = 0; roomcount < maxRoomCount; roomcount++)
@@ -114,6 +118,7 @@ namespace Dungeon
                 //}
 
                 #endregion
+
                 #region 4th iteration
 
                 //Changing roomWidth1 to a static number removed the randomness..roomsToSplit.Add(new Room(new Rectangle(xPosition1, yPosition1, roomWidth1, roomHeight1)));
@@ -149,7 +154,9 @@ namespace Dungeon
                 //doors.Add(new Door(new Point(Utils.Random(currentRoom.area.X + 1, currentRoom.area.Width - 1), currentRoom.area.Height)));
 
                 #endregion
+
                 //2nd year code
+
                 #region 5th iteration
 
                 //roomsToSplit.Clear();
@@ -192,6 +199,7 @@ namespace Dungeon
                 //}
 
                 #endregion
+
                 #region 6th iteration
 
                 //roomsToSplit.Clear();
@@ -236,6 +244,7 @@ namespace Dungeon
                 //}
 
                 #endregion
+
                 #region 7th iteration
 
                 //roomsToSplit.Clear();
@@ -289,13 +298,13 @@ namespace Dungeon
                 //    Console.WriteLine($"        2B: finishedRooms count: {finishedRooms.Count}");
                 //}
 
-
                 #endregion
             }
 
             #region 8th iteration
 
             clearPreviousRooms();
+            clearPreviousDoors();
             generateNewRooms();
 
             updateDebugInfo();
@@ -325,9 +334,20 @@ namespace Dungeon
             finishedRooms.Clear();
         }
 
+        private void clearPreviousDoors()
+        {
+            for (int i = 0; i < doors.Count; i++)
+            {
+                doors[i].HandleDestroy();
+            }
+
+            doors.Clear();
+        }
+
         private void generateNewRooms()
         {
-            RoomContainer startingRoom = new RoomContainer(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
+            RoomContainer startingRoom =
+                new RoomContainer(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
             roomsToSplit.Add(startingRoom);
 
             while (roomsToSplit.Count > 0)
@@ -375,6 +395,7 @@ namespace Dungeon
                 for (int i = 0; i < newDoors.Length; i++)
                 {
                     doors.Add(newDoors[i]);
+                    AddChild(newDoors[i]);
                 }
             }
         }

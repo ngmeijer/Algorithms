@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using GXPEngine;
 using RoomCreation;
 
 /**
@@ -7,7 +8,7 @@ using RoomCreation;
  */
 namespace DoorCreation
 {
-    public class Door
+    public class Door : DungeonComponent
     {
         public readonly Point location;
 
@@ -19,14 +20,39 @@ namespace DoorCreation
         //You can also keep track of additional information such as whether the door connects horizontally/vertically
         //Again, whether you need flags like this depends on how you implement the algorithm, maybe you need other flags
         public bool horizontal = false;
+        private EasyDraw debugText;
 
-        public Door(Point pLocation)
+        public Door(Point pLocation, RoomContainer pRoomA, RoomContainer pRoomB)
         {
             location = pLocation;
+            RoomContainerA = pRoomA;
+            RoomContainerB = pRoomB;
+            handleDebugTextInitalization();
         }
 
         //TODO: Implement a toString method for debugging
         //Return information about the type of object and it's data
         //eg Door: (x,y)
+
+        public void handleDebugTextInitalization()
+        {
+            debugText = new EasyDraw(game.width, game.height);
+            AddChild(debugText);
+            debugText.SetColor(125, 125, 0);
+            debugText.SetScaleXY(0.1f, 0.1f);
+
+            debugText.TextSize(10);
+            debugText.Text($"Point:\n{location}." +
+                           $"\nMain:{RoomContainerA.ID}." +
+                           $"\nOther:{RoomContainerB.ID}", location.X * AlgorithmsAssignment.SCALE,
+                location.Y * AlgorithmsAssignment.SCALE);
+        }
+
+        public override void HandleDestroy()
+        {
+            debugText.Destroy();
+            RemoveChild(debugText);
+            Destroy();
+        }
     }
 }

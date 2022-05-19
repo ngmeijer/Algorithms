@@ -1,4 +1,5 @@
-﻿using GXPEngine;
+﻿using System;
+using GXPEngine;
 using System.Collections.Generic;
 using System.Drawing;
 using DoorCreation;
@@ -17,7 +18,7 @@ namespace RoomCreation
             };
 
             private const int MAX_DOOR_COUNT = 2;
-            public const int OFFSET = 3;
+            public const int OFFSET = 0;
 
             private int doorCount;
             private RoomArea roomArea;
@@ -41,13 +42,24 @@ namespace RoomCreation
             public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
             {
                 List<Door> newDoors = new List<Door>();
-                List<RoomContainer> neighbourRooms = roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
-
+                List<DoorArea> newDoorPositions = new List<DoorArea>();
+                List<RoomContainer> neighbourRooms = roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms, out newDoorPositions);
+                
                 for (int i = 0; i < neighbourRooms.Count; i++)
                 {
                     RoomContainer neighbourRoom = neighbourRooms[i];
 
-                    DoorMaster master = defineDoorResponsibility(neighbourRoom);
+                    // Console.WriteLine($"Neighbour ID: {neighbourRoom.ID}");
+                }
+                
+                foreach (var overlap in newDoorPositions)
+                {
+                    int averageX = (overlap.point1.X + overlap.point2.X) / 2;
+                    int averageY = (overlap.point1.Y + overlap.point2.Y) / 2;
+
+                    Door newDoor = new Door(new Point(averageX, averageY), overlap.roomA, overlap.roomB);
+
+                    newDoors.Add(newDoor);       
                 }
 
                 //To array, because in advance I do not know how many doors there will be (and if there would be a limit, if the limit would be reached.

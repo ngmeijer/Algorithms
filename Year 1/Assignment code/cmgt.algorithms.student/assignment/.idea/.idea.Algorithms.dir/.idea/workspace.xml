@@ -10,8 +10,13 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/dcg.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,14 +27,20 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6AE177CA-1B84-43C7-9ECF-FA8539B646DB/4b/09e2f6f4/Point.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6AE177CA-1B84-43C7-9ECF-FA8539B646DB/55/07c96657/Bitmap.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/D672EF0D-95B2-4490-89B8-789A939DFAD2/6f/3db8202b/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/377D90B6-A602-46C8-B0FC-F7D6E7B8F936/6f/1e717e48/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
+      <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="29FArC89POtjwhnpIGW0lLS8O1x" />
@@ -40,7 +51,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34995207" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34997344" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -79,6 +90,8 @@
       <updated>1652698658678</updated>
       <workItem from="1652698662218" duration="3403000" />
       <workItem from="1652771245218" duration="2787000" />
+      <workItem from="1652883695523" duration="2010000" />
+      <workItem from="1652942482637" duration="12127000" />
     </task>
     <servers />
   </component>
@@ -89,5 +102,37 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs</url>
+          <line>44</line>
+          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\Door.cs" initialLine="44" containingFunctionPresentation="method 'handleDebugTextInitalization'">
+            <startOffsets>
+              <option value="1634" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1891" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs</url>
+          <line>59</line>
+          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\DoorCreationHandler.cs" initialLine="59" containingFunctionPresentation="method 'InitiateDoorHandling'">
+            <startOffsets>
+              <option value="2219" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2304" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

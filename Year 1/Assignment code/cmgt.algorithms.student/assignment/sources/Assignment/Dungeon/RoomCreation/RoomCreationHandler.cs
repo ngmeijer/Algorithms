@@ -113,12 +113,9 @@ namespace RoomCreation
         public bool ShouldSplit(float pRandomSplitValue)
         {
             int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-            Console.WriteLine($"{pRandomSplitValue}, {minSize}");
             
             if (originalSize.Width * pRandomSplitValue > minSize && originalSize.Height * pRandomSplitValue > minSize)
                 return true;
-            // if (originalSize.Width > minSize && originalSize.Height > minSize)
-            //     return true;
 
             return false;
         }

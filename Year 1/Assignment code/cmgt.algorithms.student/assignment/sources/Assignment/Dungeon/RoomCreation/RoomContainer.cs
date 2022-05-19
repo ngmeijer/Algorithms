@@ -19,13 +19,14 @@ public struct RoomArea
 
 namespace RoomCreation
 {
-    public class RoomContainer : GameObject
+    public class RoomContainer : DungeonComponent
     {
         public RoomCreationHandler RoomCreator;
         public DoorCreationHandler DoorCreator;
         public RoomDebugInfo debugInfo;
         public Rectangle OriginalSize;
         public RoomArea RoomArea;
+        public List<Door> CreatedDoors = new List<Door>();
 
         public int ID { get; private set; }
         public float RandomSplitValue;
@@ -74,7 +75,7 @@ namespace RoomCreation
         /// 
         /// </summary>
         /// <returns>String</returns>
-        public void HandleDestroy()
+        public override void HandleDestroy()
         {
             RemoveChild(debugInfo);
             debugInfo.Destroy();
@@ -89,5 +90,10 @@ namespace RoomCreation
             ID = pID;
             RoomArea = pRoomArea;
         }
+    }
+
+    public abstract class DungeonComponent : GameObject
+    {
+        public abstract void HandleDestroy();
     }
 }
