@@ -10,14 +10,6 @@ namespace RoomCreation
     {
         public class DoorCreationHandler
         {
-            public enum DoorMaster
-            {
-                THIS_ROOM = 0,
-                NEIGHBOUR_ROOM = 1,
-                UNDEFINED = 2,
-            };
-
-            private const int MAX_DOOR_COUNT = 2;
             public const int OFFSET = 0;
 
             private int doorCount;
@@ -43,15 +35,17 @@ namespace RoomCreation
             {
                 List<Door> newDoors = new List<Door>();
                 List<DoorArea> newDoorPositions = new List<DoorArea>();
-                List<RoomContainer> neighbourRooms = roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms, out newDoorPositions);
-                
-                for (int i = 0; i < neighbourRooms.Count; i++)
-                {
-                    RoomContainer neighbourRoom = neighbourRooms[i];
+                Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
+                    roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
 
-                    // Console.WriteLine($"Neighbour ID: {neighbourRoom.ID}");
+                Console.WriteLine(neighbourRooms.Count);
+
+                foreach (var neighbourRoom in neighbourRooms)
+                {
+                    DoorArea newArea = findDoorPosition(neighbourRoom.Key);
+                    newDoorPositions.Add(newArea);
                 }
-                
+
                 foreach (var overlap in newDoorPositions)
                 {
                     int averageX = (overlap.point1.X + overlap.point2.X) / 2;
@@ -59,7 +53,7 @@ namespace RoomCreation
 
                     Door newDoor = new Door(new Point(averageX, averageY), overlap.roomA, overlap.roomB);
 
-                    newDoors.Add(newDoor);       
+                    newDoors.Add(newDoor);
                 }
 
                 //To array, because in advance I do not know how many doors there will be (and if there would be a limit, if the limit would be reached.
@@ -67,52 +61,79 @@ namespace RoomCreation
                 return newDoors.ToArray();
             }
 
-            //------------------------------------------------------------------------------------------------------------------------
-            //			                                     void incrementDoorCount()
-            //------------------------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// 
-            /// </summary>
-            private void incrementDoorCount() => doorCount++;
-
-            //------------------------------------------------------------------------------------------------------------------------
-            //			                             DoorMaster defineDoorResponsibility()
-            //------------------------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns>DoorMaster</returns>
-            private DoorMaster defineDoorResponsibility(RoomContainer pOtherRoom)
+            private DoorArea findDoorPosition(RoomContainer pOtherRoom)
             {
-                int otherRoomDoorCount = pOtherRoom.DoorCreator.doorCount;
+                parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
 
-                //Both rooms have max amount of doors
-                if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-                    return DoorMaster.UNDEFINED;
-
-                //This room has not reached the max yet, the other one has.
-                if (doorCount < MAX_DOOR_COUNT && otherRoomDoorCount >= MAX_DOOR_COUNT)
-                    return DoorMaster.THIS_ROOM;
-
-                //This room has reached the max, the other one has not.
-                if (doorCount >= MAX_DOOR_COUNT && otherRoomDoorCount < MAX_DOOR_COUNT)
-                    return DoorMaster.NEIGHBOUR_ROOM;
-
-                if (doorCount == otherRoomDoorCount)
-                    return (DoorMaster)Utils.Random(0, 2);
-
-                if (doorCount < otherRoomDoorCount)
-                    return DoorMaster.THIS_ROOM;
-
-                if (doorCount > otherRoomDoorCount)
-                    return DoorMaster.NEIGHBOUR_ROOM;
-
-                return DoorMaster.UNDEFINED;
-            }
-
-            private void findDoorPosition(RoomContainer pOtherRoom)
-            {
+                DoorArea newArea = new DoorArea()
+                {
+                    point1 = new Point(),
+                    point2 = new Point(),
+                    roomA = parentRoom,
+                    roomB = pOtherRoom
+                };
                 
+                Console.WriteLine(neighbourDirection);
+
+                //This is when we start checking WHERE doors can be placed. Refactor to DoorCreationHandler.
+                if (neighbourDirection == NeighbourRoomDirection.Left ||
+                    neighbourDirection == NeighbourRoomDirection.Right)
+                {
+                    Console.WriteLine(
+                        $"\nMain room: {parentRoom.ID}. Neighbour room: {pOtherRoom.ID}. " +
+                        $"\nDirection: {neighbourDirection}");
+
+                    if (parentRoom.RoomArea.topSide >= pOtherRoom.RoomArea.topSide)
+                        newArea.point1.Y = parentRoom.RoomArea.topSide;
+                    else newArea.point1.Y = pOtherRoom.RoomArea.topSide;
+
+                    if (parentRoom.RoomArea.bottomSide <= pOtherRoom.RoomArea.bottomSide)
+                        newArea.point2.Y = parentRoom.RoomArea.bottomSide;
+                    else newArea.point2.Y = pOtherRoom.RoomArea.bottomSide;
+
+                    if (neighbourDirection == NeighbourRoomDirection.Left)
+                    {
+                        newArea.point1.X = parentRoom.RoomArea.leftSide;
+                        newArea.point2.X = parentRoom.RoomArea.leftSide;
+                    }
+
+                    if (neighbourDirection == NeighbourRoomDirection.Right)
+                    {
+                        newArea.point1.X = parentRoom.RoomArea.rightSide;
+                        newArea.point2.X = parentRoom.RoomArea.rightSide;
+                    }
+                }
+
+                if (neighbourDirection == NeighbourRoomDirection.Top ||
+                    neighbourDirection == NeighbourRoomDirection.Bottom)
+                {
+                    Console.WriteLine(
+                        $"\nMain room: {parentRoom.ID}. Neighbour room: {pOtherRoom.ID}. " +
+                        $"\nDirection: {neighbourDirection}");
+
+                    if (parentRoom.RoomArea.leftSide >= pOtherRoom.RoomArea.leftSide)
+                        newArea.point1.X = parentRoom.RoomArea.leftSide;
+                    else newArea.point1.X = pOtherRoom.RoomArea.leftSide;
+
+                    if (parentRoom.RoomArea.rightSide >= pOtherRoom.RoomArea.rightSide)
+                        newArea.point2.X = parentRoom.RoomArea.rightSide;
+                    else newArea.point2.X = pOtherRoom.RoomArea.rightSide;
+
+                    //Y is the same for both points.
+                    if (neighbourDirection == NeighbourRoomDirection.Top)
+                    {
+                        newArea.point1.Y = parentRoom.RoomArea.topSide;
+                        newArea.point2.Y = parentRoom.RoomArea.topSide;
+                    }
+
+                    if (neighbourDirection == NeighbourRoomDirection.Bottom)
+                    {
+                        newArea.point1.Y = parentRoom.RoomArea.bottomSide;
+                        newArea.point2.Y = parentRoom.RoomArea.bottomSide;
+                    }
+                }
+
+                return newArea;
             }
         }
     }

@@ -28,9 +28,12 @@ namespace RoomCreation
         public RoomArea RoomArea;
         public List<Door> CreatedDoors = new List<Door>();
 
+        public Dictionary<RoomContainer, NeighbourRoomDirection> ConnectedRooms =
+            new Dictionary<RoomContainer, NeighbourRoomDirection>();
+
         public int ID { get; private set; }
         public float RandomSplitValue;
-        
+
         public RoomContainer(Rectangle pOriginalSize)
         {
             OriginalSize = pOriginalSize;
@@ -52,7 +55,6 @@ namespace RoomCreation
 
         private void communicateDoorPlacing()
         {
-            
         }
 
         //------------------------------------------------------------------------------------------------------------------------

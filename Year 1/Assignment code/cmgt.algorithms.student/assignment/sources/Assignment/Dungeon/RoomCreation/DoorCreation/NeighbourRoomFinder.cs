@@ -6,12 +6,20 @@ namespace RoomCreation
 {
     namespace DoorCreation
     {
-        public struct DoorArea
+        public class DoorArea
         {
             public Point point1;
             public Point point2;
             public RoomContainer roomA;
             public RoomContainer roomB;
+        }
+
+        public enum NeighbourRoomDirection
+        {
+            Top,
+            Bottom,
+            Left,
+            Right,
         }
 
         public class NeighbourRoomFinder
@@ -30,20 +38,19 @@ namespace RoomCreation
             /// 
             /// </summary>
             /// <returns>List<RoomContainer></returns>
-            public List<RoomContainer> findNeighbourRooms(RoomContainer pParentRoom, List<RoomContainer> pFinishedRooms,
-                out List<DoorArea> pDoorPositions)
+            public Dictionary<RoomContainer, NeighbourRoomDirection> findNeighbourRooms(RoomContainer pParentRoom,
+                List<RoomContainer> pFinishedRooms)
             {
                 Console.WriteLine($"\n\n");
 
-                List<RoomContainer> neighbourRooms = new List<RoomContainer>();
-                pDoorPositions = new List<DoorArea>();
-
                 foreach (RoomContainer otherRoom in pFinishedRooms)
                 {
-                    if (neighbourRooms.Contains(otherRoom)) continue;
+                    if (otherRoom.ConnectedRooms.ContainsKey(pParentRoom)) continue;
+                    if (pParentRoom.ConnectedRooms.ContainsKey(otherRoom)) continue;
                     if (otherRoom.ID == pParentRoom.ID) continue;
                     RoomArea other = otherRoom.RoomArea;
 
+                    //Checking IF rooms are neighbours.
                     bool otherRoomLeftOfMain = checkIfOnExactBorder(other.rightSide, roomArea.leftSide) &&
                                                (checkIfInsideAreaWithOffset(other.topSide, roomArea.topSide,
                                                     roomArea.bottomSide) ||
@@ -68,92 +75,32 @@ namespace RoomCreation
                                                checkIfInsideAreaWithOffset(other.rightSide, roomArea.leftSide,
                                                    roomArea.rightSide));
 
-                    if (otherRoomLeftOfMain || otherRoomRightOfMain)
+                    if (otherRoomLeftOfMain)
                     {
-                        Console.WriteLine(
-                            $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
-                            $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
-                            $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
-
-                        DoorArea newArea = new DoorArea()
-                        {
-                            point1 = new Point(),
-                            point2 = new Point(),
-                            roomA = pParentRoom,
-                            roomB = otherRoom
-                        };
-
-                        if (pParentRoom.RoomArea.topSide >= otherRoom.RoomArea.topSide)
-                            newArea.point1.Y = pParentRoom.RoomArea.topSide;
-                        else newArea.point1.Y = otherRoom.RoomArea.topSide;
-
-                        if (pParentRoom.RoomArea.bottomSide <= otherRoom.RoomArea.bottomSide)
-                            newArea.point2.Y = pParentRoom.RoomArea.bottomSide;
-                        else newArea.point2.Y = otherRoom.RoomArea.bottomSide;
-
-                        if (otherRoomLeftOfMain)
-                        {
-                            newArea.point1.X = pParentRoom.RoomArea.leftSide;
-                            newArea.point2.X = pParentRoom.RoomArea.leftSide;
-                        }
-
-                        if (otherRoomRightOfMain)
-                        {
-                            newArea.point1.X = pParentRoom.RoomArea.rightSide;
-                            newArea.point2.X = pParentRoom.RoomArea.rightSide;
-                        }
-
-                        pDoorPositions.Add(newArea);
+                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Left);
+                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Right);
                     }
 
-                    if (otherRoomAboveMain || otherRoomUnderMain)
+                    if (otherRoomRightOfMain)
                     {
-                        Console.WriteLine(
-                            $"\nMain room: {pParentRoom.ID}. Neighbour room: {otherRoom.ID}. " +
-                            $"\nTop aligned: {otherRoomAboveMain}. Bot aligned: {otherRoomUnderMain}" +
-                            $"\nLeft aligned: {otherRoomLeftOfMain}. Right aligned: {otherRoomRightOfMain}");
-                        DoorArea newArea = new DoorArea()
-                        {
-                            point1 = new Point(),
-                            point2 = new Point(),
-                            roomA = pParentRoom,
-                            roomB = otherRoom
-                        };
-
-                        if (pParentRoom.RoomArea.leftSide >= otherRoom.RoomArea.leftSide)
-                            newArea.point1.X = pParentRoom.RoomArea.leftSide;
-                        else newArea.point1.X = otherRoom.RoomArea.leftSide;
-
-                        if (pParentRoom.RoomArea.rightSide >= otherRoom.RoomArea.rightSide)
-                            newArea.point2.X = pParentRoom.RoomArea.rightSide;
-                        else newArea.point2.X = otherRoom.RoomArea.rightSide;
-
-                        //Y is the same for both points.
-                        if (otherRoomAboveMain)
-                        {
-                            newArea.point1.Y = pParentRoom.RoomArea.topSide;
-                            newArea.point2.Y = pParentRoom.RoomArea.topSide;
-                        }
-
-                        if (otherRoomUnderMain)
-                        {
-                            newArea.point1.Y = pParentRoom.RoomArea.bottomSide;
-                            newArea.point2.Y = pParentRoom.RoomArea.bottomSide;
-                        }
-
-                        pDoorPositions.Add(newArea);
-
-                        // Console.WriteLine(
-                        //     $"\nRoom ID: {pParentRoom.ID}. \nPoint 1: {newArea.point1}. Point 2: {newArea.point2}");
+                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Right);
+                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Left);
                     }
 
-                    if ((otherRoomLeftOfMain || otherRoomRightOfMain) && (otherRoomAboveMain || otherRoomUnderMain))
+                    if (otherRoomAboveMain)
                     {
-                        neighbourRooms.Add(otherRoom);
+                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Top);
+                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Bottom);
+                    }
+
+                    if (otherRoomUnderMain)
+                    {
+                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Bottom);
+                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Top);
                     }
                 }
 
-                return neighbourRooms;
+                return pParentRoom.ConnectedRooms;
             }
 
             //------------------------------------------------------------------------------------------------------------------------

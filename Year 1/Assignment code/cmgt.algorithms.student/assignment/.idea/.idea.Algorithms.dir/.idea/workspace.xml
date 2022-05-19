@@ -10,7 +10,9 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/dcg.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,15 +26,15 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6AE177CA-1B84-43C7-9ECF-FA8539B646DB/4b/09e2f6f4/Point.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6AE177CA-1B84-43C7-9ECF-FA8539B646DB/55/07c96657/Bitmap.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/D672EF0D-95B2-4490-89B8-789A939DFAD2/6f/3db8202b/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/377D90B6-A602-46C8-B0FC-F7D6E7B8F936/6f/1e717e48/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/377D90B6-A602-46C8-B0FC-F7D6E7B8F936/6f/1e717e48/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
       <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
     </changedPaths>
@@ -86,6 +88,7 @@
       <workItem from="1652771245218" duration="2787000" />
       <workItem from="1652883695523" duration="2010000" />
       <workItem from="1652942482637" duration="13125000" />
+      <workItem from="1652982364046" duration="3280000" />
     </task>
     <servers />
   </component>
@@ -96,5 +99,50 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs</url>
+          <line>102</line>
+          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\NeighbourRoomFinder.cs" initialLine="102" containingFunctionPresentation="method 'findNeighbourRooms'">
+            <startOffsets>
+              <option value="4899" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4933" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs</url>
+          <line>40</line>
+          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\DoorCreationHandler.cs" initialLine="40" containingFunctionPresentation="method 'InitiateDoorHandling'">
+            <startOffsets>
+              <option value="1516" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1556" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs</url>
+          <line>45</line>
+          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\DoorCreationHandler.cs" initialLine="45" containingFunctionPresentation="method 'InitiateDoorHandling'">
+            <startOffsets>
+              <option value="1734" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1764" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
