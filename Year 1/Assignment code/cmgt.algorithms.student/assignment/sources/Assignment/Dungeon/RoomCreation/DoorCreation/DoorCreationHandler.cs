@@ -34,25 +34,25 @@ namespace RoomCreation
             public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
             {
                 List<Door> newDoors = new List<Door>();
-                List<DoorArea> newDoorPositions = new List<DoorArea>();
+                Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
                     roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
-
-                Console.WriteLine(neighbourRooms.Count);
-
+                
                 foreach (var neighbourRoom in neighbourRooms)
                 {
+                    if (neighbourRoom.Key.CreatedDoors.ContainsKey(this.parentRoom)) continue;
                     DoorArea newArea = findDoorPosition(neighbourRoom.Key);
-                    newDoorPositions.Add(newArea);
+                    newDoorPositions.Add(neighbourRoom.Key,newArea);
                 }
 
                 foreach (var overlap in newDoorPositions)
                 {
-                    int averageX = (overlap.point1.X + overlap.point2.X) / 2;
-                    int averageY = (overlap.point1.Y + overlap.point2.Y) / 2;
+                    int averageX = (overlap.Value.point1.X + overlap.Value.point2.X) / 2;
+                    int averageY = (overlap.Value.point1.Y + overlap.Value.point2.Y) / 2;
 
-                    Door newDoor = new Door(new Point(averageX, averageY), overlap.roomA, overlap.roomB);
-
+                    Door newDoor = new Door(new Point(averageX, averageY), overlap.Value.roomA, overlap.Value.roomB);
+                    
+                    parentRoom.CreatedDoors.Add(overlap.Key, newDoor);
                     newDoors.Add(newDoor);
                 }
 

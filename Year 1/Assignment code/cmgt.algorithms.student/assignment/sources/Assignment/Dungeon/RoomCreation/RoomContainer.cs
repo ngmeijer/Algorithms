@@ -26,7 +26,7 @@ namespace RoomCreation
         public RoomDebugInfo debugInfo;
         public Rectangle OriginalSize;
         public RoomArea RoomArea;
-        public List<Door> CreatedDoors = new List<Door>();
+        public Dictionary<RoomContainer, Door> CreatedDoors = new Dictionary<RoomContainer, Door>();
 
         public Dictionary<RoomContainer, NeighbourRoomDirection> ConnectedRooms =
             new Dictionary<RoomContainer, NeighbourRoomDirection>();
