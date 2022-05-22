@@ -19,8 +19,9 @@
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
       <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
+      <option value="$PROJECT_DIR$/../gxpengine/gxpengine/GXPEngine/Core/Vector2.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
     </changedPaths>
   </component>
@@ -74,7 +75,7 @@
       <workItem from="1652883695523" duration="2010000" />
       <workItem from="1652942482637" duration="13125000" />
       <workItem from="1652982364046" duration="3280000" />
-      <workItem from="1653209763044" duration="1345000" />
+      <workItem from="1653209763044" duration="4947000" />
     </task>
     <servers />
   </component>

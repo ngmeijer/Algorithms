@@ -12,6 +12,8 @@ namespace RoomCreation
             public Point point2;
             public RoomContainer roomA;
             public RoomContainer roomB;
+            public NeighbourRoomDirection direction;
+            public int commonBorder;
         }
 
         public enum NeighbourRoomDirection
@@ -80,20 +82,17 @@ namespace RoomCreation
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Left);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Right);
                     }
-
-                    if (otherRoomRightOfMain)
+                    else if (otherRoomRightOfMain)
                     {
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Right);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Left);
                     }
-
-                    if (otherRoomAboveMain)
+                    else if (otherRoomAboveMain)
                     {
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Top);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Bottom);
                     }
-
-                    if (otherRoomUnderMain)
+                    else if (otherRoomUnderMain)
                     {
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Bottom);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Top);
@@ -121,8 +120,8 @@ namespace RoomCreation
             /// </summary>
             /// <returns>Bool</returns>
             private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)
-                => pOtherSide >= (pMainSide0 + DoorCreationHandler.OFFSET) &&
-                   pOtherSide <= (pMainSide1 - DoorCreationHandler.OFFSET);
+                => pOtherSide >= pMainSide0 &&
+                   pOtherSide <= pMainSide1;
         }
     }
 }

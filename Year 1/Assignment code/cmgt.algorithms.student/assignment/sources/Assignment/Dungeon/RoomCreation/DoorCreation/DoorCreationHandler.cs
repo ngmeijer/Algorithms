@@ -3,6 +3,7 @@ using GXPEngine;
 using System.Collections.Generic;
 using System.Drawing;
 using DoorCreation;
+using GXPEngine.Core;
 
 namespace RoomCreation
 {
@@ -10,7 +11,8 @@ namespace RoomCreation
     {
         public class DoorCreationHandler
         {
-            public const int OFFSET = 0;
+            public const int MINIMUM_DOOR_SPACE = 10;
+            public const int DOOR_OFFSET = 1;
 
             private int doorCount;
             private RoomArea roomArea;
@@ -37,21 +39,35 @@ namespace RoomCreation
                 Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
                     roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
-                
+
                 foreach (var neighbourRoom in neighbourRooms)
                 {
                     if (neighbourRoom.Key.CreatedDoors.ContainsKey(this.parentRoom)) continue;
                     DoorArea newArea = findDoorPosition(neighbourRoom.Key);
-                    newDoorPositions.Add(neighbourRoom.Key,newArea);
+                    if (newArea == null) continue;
+                    newDoorPositions.Add(neighbourRoom.Key, newArea);
                 }
 
                 foreach (var overlap in newDoorPositions)
                 {
-                    int averageX = (overlap.Value.point1.X + overlap.Value.point2.X) / 2;
-                    int averageY = (overlap.Value.point1.Y + overlap.Value.point2.Y) / 2;
+                    Console.WriteLine(overlap);
+                    NeighbourRoomDirection direction = overlap.Value.direction;
+                    int randomX = overlap.Value.commonBorder;
+                    int randomY = overlap.Value.commonBorder;
+                    if (direction == NeighbourRoomDirection.Left || direction == NeighbourRoomDirection.Right)
+                    {
+                        randomY = Utils.Random(overlap.Value.point1.Y + DOOR_OFFSET,
+                            overlap.Value.point2.Y - DOOR_OFFSET);
+                    }
 
-                    Door newDoor = new Door(new Point(averageX, averageY), overlap.Value.roomA, overlap.Value.roomB);
-                    
+                    if (direction == NeighbourRoomDirection.Top || direction == NeighbourRoomDirection.Bottom)
+                    {
+                        randomX = Utils.Random(overlap.Value.point1.X + DOOR_OFFSET,
+                            overlap.Value.point2.X - DOOR_OFFSET);
+                    }
+
+                    Door newDoor = new Door(new Point(randomX, randomY), overlap.Value.roomA, overlap.Value.roomB);
+
                     parentRoom.CreatedDoors.Add(overlap.Key, newDoor);
                     newDoors.Add(newDoor);
                 }
@@ -72,7 +88,7 @@ namespace RoomCreation
                     roomA = parentRoom,
                     roomB = pOtherRoom
                 };
-                
+
                 Console.WriteLine(neighbourDirection);
 
                 //This is when we start checking WHERE doors can be placed. Refactor to DoorCreationHandler.
@@ -93,14 +109,18 @@ namespace RoomCreation
 
                     if (neighbourDirection == NeighbourRoomDirection.Left)
                     {
+                        newArea.direction = NeighbourRoomDirection.Left;
                         newArea.point1.X = parentRoom.RoomArea.leftSide;
                         newArea.point2.X = parentRoom.RoomArea.leftSide;
+                        newArea.commonBorder = parentRoom.RoomArea.leftSide;
                     }
 
                     if (neighbourDirection == NeighbourRoomDirection.Right)
                     {
+                        newArea.direction = NeighbourRoomDirection.Right;
                         newArea.point1.X = parentRoom.RoomArea.rightSide;
                         newArea.point2.X = parentRoom.RoomArea.rightSide;
+                        newArea.commonBorder = parentRoom.RoomArea.rightSide;
                     }
                 }
 
@@ -122,16 +142,25 @@ namespace RoomCreation
                     //Y is the same for both points.
                     if (neighbourDirection == NeighbourRoomDirection.Top)
                     {
+                        newArea.direction = NeighbourRoomDirection.Top;
                         newArea.point1.Y = parentRoom.RoomArea.topSide;
                         newArea.point2.Y = parentRoom.RoomArea.topSide;
+                        newArea.commonBorder = parentRoom.RoomArea.topSide;
                     }
 
                     if (neighbourDirection == NeighbourRoomDirection.Bottom)
                     {
+                        newArea.direction = NeighbourRoomDirection.Bottom;
                         newArea.point1.Y = parentRoom.RoomArea.bottomSide;
                         newArea.point2.Y = parentRoom.RoomArea.bottomSide;
+                        newArea.commonBorder = parentRoom.RoomArea.bottomSide;
                     }
                 }
+
+                Vector2 differenceVector =
+                    new Vector2(newArea.point2.X - newArea.point1.X, newArea.point2.Y - newArea.point1.Y);
+
+                if (differenceVector.Length() < (MINIMUM_DOOR_SPACE + DOOR_OFFSET * 2) + 1) newArea = null;
 
                 return newArea;
             }
