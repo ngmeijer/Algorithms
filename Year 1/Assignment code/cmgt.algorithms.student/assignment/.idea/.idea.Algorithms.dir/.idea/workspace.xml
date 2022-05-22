@@ -32,7 +32,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34997344" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34994584" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -74,7 +74,7 @@
       <workItem from="1652883695523" duration="2010000" />
       <workItem from="1652942482637" duration="13125000" />
       <workItem from="1652982364046" duration="3280000" />
-      <workItem from="1653209763044" duration="326000" />
+      <workItem from="1653209763044" duration="1345000" />
     </task>
     <servers />
   </component>
@@ -85,17 +85,5 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs</url>
-          <line>102</line>
-          <properties documentPath="D:\Downloads\GitHub\Repositories\Algorithms\Year 1\Assignment code\cmgt.algorithms.student\assignment\sources\Assignment\Dungeon\RoomCreation\DoorCreation\NeighbourRoomFinder.cs" initialLine="102" containingFunctionPresentation="method 'findNeighbourRooms'" />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -116,8 +116,8 @@ namespace RoomCreation
                     else newArea.point1.X = pOtherRoom.RoomArea.leftSide;
 
                     if (parentRoom.RoomArea.rightSide >= pOtherRoom.RoomArea.rightSide)
-                        newArea.point2.X = parentRoom.RoomArea.rightSide;
-                    else newArea.point2.X = pOtherRoom.RoomArea.rightSide;
+                        newArea.point2.X = pOtherRoom.RoomArea.rightSide;
+                    else newArea.point2.X = parentRoom.RoomArea.rightSide;
 
                     //Y is the same for both points.
                     if (neighbourDirection == NeighbourRoomDirection.Top)
