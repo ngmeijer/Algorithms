@@ -10,13 +10,11 @@ public class RoomDebugInfo : GameObject
     public RoomArea RoomArea { get; private set; }
 
     public delegate void OnRoomPropertiesGenerated(int pID, RoomArea pRoomArea);
+
     public event OnRoomPropertiesGenerated onGenerated;
 
-    public RoomDebugInfo(int pID, RoomArea pRoomArea)
+    public RoomDebugInfo()
     {
-        ID = pID;
-        RoomArea = pRoomArea;
-
         handleDebugTextInitalization();
     }
 
@@ -35,10 +33,20 @@ public class RoomDebugInfo : GameObject
         debugText.SetScaleXY(0.1f, 0.1f);
     }
 
-    public void UpdateDebugInformation(int pID, RoomArea pRoomArea)
+    public void UpdateDebugInformation(int pID, RoomArea pRoomArea, int pDoorCount)
     {
         updateRoomID(pID);
-        UpdateRoomArea(pRoomArea);
+        updateRoomArea(pRoomArea);
+        updateDoorCount(pDoorCount);
+
+        debugText.Text($"ID: {ID}." +
+                       $"\nLeft: {RoomArea.leftSide}." +
+                       $"\nRight: {RoomArea.rightSide}." +
+                       $"\nTop: {RoomArea.topSide}." +
+                       $"\nBottom:{RoomArea.bottomSide}" +
+                       $"\nDoor count: {DoorCount}", ScreenPosition.x, ScreenPosition.y + 135);
+
+        onGenerated?.Invoke(pID, RoomArea);
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -48,10 +56,7 @@ public class RoomDebugInfo : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    public void UpdateRoomArea(RoomArea pArea)
-    {
-        RoomArea = pArea;
-    }
+    private void updateRoomArea(RoomArea pArea) => RoomArea = pArea;
 
     //------------------------------------------------------------------------------------------------------------------------
     //								                void UpdateRoomID(int pID)
@@ -60,21 +65,7 @@ public class RoomDebugInfo : GameObject
     /// 
     /// </summary>
     /// <returns>String</returns>
-    private void updateRoomID(int pID)
-    {
-        ID = pID;
-        debugText.Text($"ID: {pID}." +
-                    $"\nLeft: {RoomArea.leftSide}." +
-                    $"\nRight: {RoomArea.rightSide}." +
-                    $"\nTop: {RoomArea.topSide}." +
-                    $"\nBottom:{RoomArea.bottomSide}" +
-                    $"\nDoor count: {DoorCount}", ScreenPosition.x, ScreenPosition.y + 135);
+    private void updateRoomID(int pID) => ID = pID;
 
-        onGenerated?.Invoke(pID, RoomArea);
-    }
-
-    public void UpdateDoorCount(int pDoorCount)
-    {
-        DoorCount = pDoorCount;
-    }
+    private void updateDoorCount(int pDoorCount) => DoorCount = pDoorCount;
 }

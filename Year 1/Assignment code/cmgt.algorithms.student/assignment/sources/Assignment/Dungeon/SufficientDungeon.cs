@@ -2,6 +2,7 @@
 using GXPEngine;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DoorCreation;
 using RoomCreation;
 
@@ -307,8 +308,15 @@ namespace Dungeon
             clearPreviousDoors();
             generateNewRooms();
 
-            updateDebugInfo();
+            removeRooms();
+            
             generateDoors();
+
+            foreach (var roomInfo in finishedRooms)
+            {
+                AddChild(roomInfo.debugInfo);
+                roomInfo.UpdateProperties();
+            }
 
             #endregion
         }
@@ -350,6 +358,8 @@ namespace Dungeon
                 new RoomContainer(new Rectangle(0, 0, startingSize.Width, startingSize.Height));
             roomsToSplit.Add(startingRoom);
 
+            int roomID = 0;
+
             while (roomsToSplit.Count > 0)
             {
                 for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
@@ -359,13 +369,15 @@ namespace Dungeon
                     RoomContainer currentFocusedRoom = roomsToSplit[roomIndex];
                     RoomContainer[] newRooms = currentFocusedRoom.RoomCreator.Split(randomMultiplication);
 
-                    for (int subRoomIndex = 0; subRoomIndex < newRooms.Length; subRoomIndex++)
+                    foreach (RoomContainer room in newRooms)
                     {
-                        if (newRooms[subRoomIndex].RoomCreator.ShouldSplit(randomMultiplication))
-                            roomsToSplit.Add(newRooms[subRoomIndex]);
-                        else if (!finishedRooms.Contains(newRooms[subRoomIndex]))
+                        if (room.RoomCreator.ShouldSplit(randomMultiplication))
+                            roomsToSplit.Add(room);
+                        else if (!finishedRooms.Contains(room))
                         {
-                            finishedRooms.Add(newRooms[subRoomIndex]);
+                            room.ID = roomID;
+                            finishedRooms.Add(room);
+                            roomID++;
                         }
                     }
 
@@ -374,15 +386,23 @@ namespace Dungeon
             }
         }
 
-        private void updateDebugInfo()
+        private void removeRooms()
         {
-            int roomID = 0;
+            Dictionary<RoomContainer, int> areasOfRooms = new Dictionary<RoomContainer, int>();
 
             foreach (RoomContainer room in finishedRooms)
             {
-                AddChild(room);
-                room.debugInfo.UpdateDebugInformation(roomID, room.RoomArea);
-                roomID++;
+                int area = room.CalculateArea();
+                areasOfRooms.Add(room, area);
+            }
+
+            areasOfRooms.OrderBy(key => key.Value);
+
+            Console.WriteLine(areasOfRooms);
+
+            foreach (KeyValuePair<RoomContainer, int> room in areasOfRooms)
+            {
+                Console.WriteLine(room.Key.ID);
             }
         }
 
@@ -392,10 +412,10 @@ namespace Dungeon
             {
                 Door[] newDoors = room.DoorCreator.InitiateDoorHandling(finishedRooms);
 
-                for (int i = 0; i < newDoors.Length; i++)
+                foreach (Door door in newDoors)
                 {
-                    doors.Add(newDoors[i]);
-                    AddChild(newDoors[i]);
+                    doors.Add(door);
+                    AddChild(door);
                 }
             }
         }

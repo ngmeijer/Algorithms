@@ -31,7 +31,7 @@ namespace RoomCreation
         public Dictionary<RoomContainer, NeighbourRoomDirection> ConnectedRooms =
             new Dictionary<RoomContainer, NeighbourRoomDirection>();
 
-        public int ID { get; private set; }
+        public int ID { get; set; }
         public float RandomSplitValue;
 
         public RoomContainer(Rectangle pOriginalSize)
@@ -39,22 +39,30 @@ namespace RoomCreation
             OriginalSize = pOriginalSize;
 
             initializeSubsystems();
-
-            debugInfo.onGenerated += updateRoomProperties;
-            debugInfo.UpdateRoomArea(RoomArea);
         }
 
         private void initializeSubsystems()
         {
-            debugInfo = new RoomDebugInfo(ID, RoomArea);
-            AddChild(debugInfo);
-            RoomCreator = new RoomCreationHandler(this, RoomArea, OriginalSize, RandomSplitValue);
+            debugInfo = new RoomDebugInfo();
+            RoomCreator = new RoomCreationHandler(this, OriginalSize, RandomSplitValue);
             RoomArea = RoomCreator.ThisRoomAreaProps;
             DoorCreator = new DoorCreationHandler(this, RoomArea);
+
+            debugInfo.ScreenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
+            debugInfo.ScreenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
         }
 
-        private void communicateDoorPlacing()
+        public int CalculateArea()
         {
+            int width = RoomArea.rightSide - RoomArea.leftSide;
+            int height = RoomArea.bottomSide - RoomArea.topSide;
+
+            return width * height;
+        }
+
+        public void UpdateProperties()
+        {
+            debugInfo.UpdateDebugInformation(ID, RoomArea, CreatedDoors.Count);
         }
 
         //------------------------------------------------------------------------------------------------------------------------
@@ -85,12 +93,6 @@ namespace RoomCreation
             debugInfo = null;
             DoorCreator = null;
             Destroy();
-        }
-
-        private void updateRoomProperties(int pID, RoomArea pRoomArea)
-        {
-            ID = pID;
-            RoomArea = pRoomArea;
         }
     }
 

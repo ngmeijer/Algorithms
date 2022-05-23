@@ -18,14 +18,12 @@ namespace RoomCreation
         private float randomSplitValue;
         private RoomContainer parent;
 
-        public RoomCreationHandler(RoomContainer pParent, RoomArea pRoomArea, Rectangle pOriginalSize,
+        public RoomCreationHandler(RoomContainer pParent, Rectangle pOriginalSize,
             float pSplitValue)
         {
             parent = pParent;
-            roomArea = pRoomArea;
             originalSize = pOriginalSize;
             randomSplitValue = pSplitValue;
-
             defineRoomArea();
         }
 
@@ -38,13 +36,14 @@ namespace RoomCreation
         /// <returns>String</returns>
         private void defineRoomArea()
         {
-            roomArea.leftSide = originalSize.X;
-            roomArea.rightSide = originalSize.X + originalSize.Width - 1;
-            roomArea.topSide = originalSize.Y;
-            roomArea.bottomSide = originalSize.Y + originalSize.Height - 1;
+            roomArea = new RoomArea
+            {
+                leftSide = originalSize.X,
+                rightSide = originalSize.X + originalSize.Width - 1,
+                topSide = originalSize.Y,
+                bottomSide = originalSize.Y + originalSize.Height - 1
+            };
 
-            parent.debugInfo.ScreenPosition.x = (roomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
-            parent.debugInfo.ScreenPosition.y = (roomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
         }
 
         //------------------------------------------------------------------------------------------------------------------------

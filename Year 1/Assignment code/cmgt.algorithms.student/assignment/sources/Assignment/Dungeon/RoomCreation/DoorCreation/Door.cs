@@ -34,7 +34,7 @@ namespace DoorCreation
         //Return information about the type of object and it's data
         //eg Door: (x,y)
 
-        public void handleDebugTextInitalization()
+        private void handleDebugTextInitalization()
         {
             debugText = new EasyDraw(game.width, game.height);
             AddChild(debugText);

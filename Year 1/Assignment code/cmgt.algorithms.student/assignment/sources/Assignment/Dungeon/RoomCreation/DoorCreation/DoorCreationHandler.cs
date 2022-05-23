@@ -39,7 +39,7 @@ namespace RoomCreation
                 Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
                     roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
-
+                
                 foreach (var neighbourRoom in neighbourRooms)
                 {
                     if (neighbourRoom.Key.CreatedDoors.ContainsKey(this.parentRoom)) continue;
@@ -47,7 +47,7 @@ namespace RoomCreation
                     if (newArea == null) continue;
                     newDoorPositions.Add(neighbourRoom.Key, newArea);
                 }
-
+                
                 foreach (var overlap in newDoorPositions)
                 {
                     Console.WriteLine(overlap);
@@ -88,17 +88,11 @@ namespace RoomCreation
                     roomA = parentRoom,
                     roomB = pOtherRoom
                 };
-
-                Console.WriteLine(neighbourDirection);
-
+                
                 //This is when we start checking WHERE doors can be placed. Refactor to DoorCreationHandler.
                 if (neighbourDirection == NeighbourRoomDirection.Left ||
                     neighbourDirection == NeighbourRoomDirection.Right)
                 {
-                    Console.WriteLine(
-                        $"\nMain room: {parentRoom.ID}. Neighbour room: {pOtherRoom.ID}. " +
-                        $"\nDirection: {neighbourDirection}");
-
                     if (parentRoom.RoomArea.topSide >= pOtherRoom.RoomArea.topSide)
                         newArea.point1.Y = parentRoom.RoomArea.topSide;
                     else newArea.point1.Y = pOtherRoom.RoomArea.topSide;
@@ -127,10 +121,6 @@ namespace RoomCreation
                 if (neighbourDirection == NeighbourRoomDirection.Top ||
                     neighbourDirection == NeighbourRoomDirection.Bottom)
                 {
-                    Console.WriteLine(
-                        $"\nMain room: {parentRoom.ID}. Neighbour room: {pOtherRoom.ID}. " +
-                        $"\nDirection: {neighbourDirection}");
-
                     if (parentRoom.RoomArea.leftSide >= pOtherRoom.RoomArea.leftSide)
                         newArea.point1.X = parentRoom.RoomArea.leftSide;
                     else newArea.point1.X = pOtherRoom.RoomArea.leftSide;
