@@ -309,7 +309,6 @@ namespace Dungeon
             generateNewRooms();
 
             removeRooms();
-            
             generateDoors();
 
             foreach (var roomInfo in finishedRooms)
@@ -388,20 +387,29 @@ namespace Dungeon
 
         private void removeRooms()
         {
-            Dictionary<RoomContainer, int> areasOfRooms = new Dictionary<RoomContainer, int>();
-
-            foreach (RoomContainer room in finishedRooms)
+            //MaxValue, because setting an arbitrary number (10000?) could technically cause exception cases.
+            int currentSmallestArea = int.MaxValue;
+            int currentLargestArea = 0;
+            RoomContainer smallestRoom = null;
+            RoomContainer largestRoom = null;
+            foreach (var room in finishedRooms)
             {
-                int area = room.CalculateArea();
-                areasOfRooms.Add(room, area);
-            }
+                int roomArea = room.CalculateArea();
+                if (roomArea < currentSmallestArea)
+                {
+                    currentSmallestArea = roomArea;
+                    smallestRoom = room;
+                }
 
-            areasOfRooms.OrderBy(key => key.Value);
+                if (roomArea > currentLargestArea)
+                {
+                    currentLargestArea = roomArea;
+                    largestRoom = room;
+                }
+            }
             
-            foreach (KeyValuePair<RoomContainer, int> room in areasOfRooms)
-            {
-                Console.WriteLine(room.Value);
-            }
+            finishedRooms.Remove(largestRoom);
+            finishedRooms.Remove(smallestRoom);
         }
 
         private void generateDoors()

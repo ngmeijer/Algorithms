@@ -50,7 +50,6 @@ namespace RoomCreation
 
                 foreach (var overlap in newDoorPositions)
                 {
-                    Console.WriteLine(overlap);
                     NeighbourRoomDirection direction = overlap.Value.direction;
                     int randomX = overlap.Value.commonBorder;
                     int randomY = overlap.Value.commonBorder;

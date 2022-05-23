@@ -10,8 +10,6 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/dcg.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" afterDir="false" />
     </list>
@@ -30,15 +28,15 @@
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/../gxpengine/gxpengine/GXPEngine/Core/Vector2.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="29FArC89POtjwhnpIGW0lLS8O1x" />
@@ -49,7 +47,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34984025" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34997344" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -93,7 +91,7 @@
       <workItem from="1652982364046" duration="3280000" />
       <workItem from="1653209763044" duration="4947000" />
       <workItem from="1653288750085" duration="945000" />
-      <workItem from="1653289758604" duration="6389000" />
+      <workItem from="1653289758604" duration="8828000" />
     </task>
     <servers />
   </component>
