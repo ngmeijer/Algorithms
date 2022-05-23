@@ -397,9 +397,7 @@ namespace Dungeon
             }
 
             areasOfRooms.OrderBy(key => key.Value);
-
-            Console.WriteLine(areasOfRooms);
-
+            
             foreach (KeyValuePair<RoomContainer, int> room in areasOfRooms)
             {
                 Console.WriteLine(room.Key.ID);

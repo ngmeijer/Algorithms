@@ -43,17 +43,13 @@ namespace RoomCreation
             public Dictionary<RoomContainer, NeighbourRoomDirection> findNeighbourRooms(RoomContainer pParentRoom,
                 List<RoomContainer> pFinishedRooms)
             {
-                Console.WriteLine($"finished rooms count: {pFinishedRooms.Count}");
                 foreach (RoomContainer otherRoom in pFinishedRooms)
                 {
                     if (otherRoom.ConnectedRooms.ContainsKey(pParentRoom)) continue;
                     if (pParentRoom.ConnectedRooms.ContainsKey(otherRoom)) continue;
-                    Console.WriteLine($"other ID: {otherRoom.ID}. parent id: {pParentRoom.ID}");
                     if (otherRoom.ID == pParentRoom.ID) continue;
                     RoomArea other = otherRoom.RoomArea;
                     
-                    Console.WriteLine("Left side: " + other.leftSide);
-
                     //Checking IF rooms are neighbours.
                     bool otherRoomLeftOfMain = checkIfOnExactBorder(other.rightSide, roomArea.leftSide) &&
                                                (checkIfInsideAreaWithOffset(other.topSide, roomArea.topSide,

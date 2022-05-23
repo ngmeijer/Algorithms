@@ -39,7 +39,7 @@ namespace RoomCreation
                 Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
                     roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
-                
+
                 foreach (var neighbourRoom in neighbourRooms)
                 {
                     if (neighbourRoom.Key.CreatedDoors.ContainsKey(this.parentRoom)) continue;
@@ -47,7 +47,7 @@ namespace RoomCreation
                     if (newArea == null) continue;
                     newDoorPositions.Add(neighbourRoom.Key, newArea);
                 }
-                
+
                 foreach (var overlap in newDoorPositions)
                 {
                     Console.WriteLine(overlap);
@@ -68,7 +68,9 @@ namespace RoomCreation
 
                     Door newDoor = new Door(new Point(randomX, randomY), overlap.Value.roomA, overlap.Value.roomB);
 
-                    parentRoom.CreatedDoors.Add(overlap.Key, newDoor);
+                    overlap.Value.roomA.CreatedDoors.Add(overlap.Value.roomB, newDoor);
+                    overlap.Value.roomB.CreatedDoors.Add(overlap.Value.roomA, newDoor);
+
                     newDoors.Add(newDoor);
                 }
 
@@ -88,7 +90,7 @@ namespace RoomCreation
                     roomA = parentRoom,
                     roomB = pOtherRoom
                 };
-                
+
                 //This is when we start checking WHERE doors can be placed. Refactor to DoorCreationHandler.
                 if (neighbourDirection == NeighbourRoomDirection.Left ||
                     neighbourDirection == NeighbourRoomDirection.Right)
