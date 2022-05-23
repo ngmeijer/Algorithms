@@ -400,7 +400,7 @@ namespace Dungeon
             
             foreach (KeyValuePair<RoomContainer, int> room in areasOfRooms)
             {
-                Console.WriteLine(room.Key.ID);
+                Console.WriteLine(room.Value);
             }
         }
 

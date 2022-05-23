@@ -29,7 +29,7 @@ public class RoomDebugInfo : GameObject
     {
         debugText = new EasyDraw(game.width, game.height);
         AddChild(debugText);
-        debugText.SetColor(0, 255, 0);
+        debugText.SetColor(0, 0, 0);
         debugText.SetScaleXY(0.1f, 0.1f);
     }
 

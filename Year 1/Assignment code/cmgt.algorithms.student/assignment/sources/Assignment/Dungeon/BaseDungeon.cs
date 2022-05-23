@@ -1,4 +1,5 @@
-﻿using GXPEngine;
+﻿using System;
+using GXPEngine;
 using GXPEngine.OpenGL;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,6 +29,11 @@ namespace Dungeon
         //base implementation assumes dungeon consists of rooms and doors, adapt in subclass if needed
         public readonly List<RoomContainer> finishedRooms = new List<RoomContainer>();
         public readonly List<Door> doors = new List<Door>();
+
+        Brush noDoor = new SolidBrush(Color.Crimson);
+        Brush oneDoor = new SolidBrush(Color.DarkOrange);
+        Brush twoDoors = new SolidBrush(Color.Yellow);
+        Brush threeOrMoreDoors = new SolidBrush(Color.Green);
 
         //Set this to false if you want to do all drawing yourself from the generate method.
         //This might be handy while debugging your own algorithm.
@@ -82,7 +88,6 @@ namespace Dungeon
         ///	This section contains helper methods to draw all or specific doors/rooms
         ///	You can call them from your own methods to actually draw the dungeon during/after generation
         ///	These methods do not have to be changed.
-
         protected virtual void draw()
         {
             graphics.Clear(Color.Transparent);
@@ -100,7 +105,31 @@ namespace Dungeon
         {
             foreach (RoomContainer room in pRooms)
             {
-                drawRoom(room, pWallColor, pFillColor);
+                int doorCount = room.CreatedDoors.Count;
+                Brush fillBrush = new SolidBrush(Color.Black);
+                switch (doorCount)
+                {
+                    case 0:
+                        fillBrush = noDoor;
+                        break;
+                    case 1:
+                        fillBrush = oneDoor;
+                        break;
+                    case 2:
+                        fillBrush = twoDoors;
+                        break;
+                    default:
+                    {
+                        if (doorCount >= 3)
+                        {
+                            fillBrush = threeOrMoreDoors;
+                        }
+
+                        break;
+                    }
+                }
+
+                drawRoom(room, pWallColor, fillBrush);
             }
         }
 

@@ -54,16 +54,20 @@ namespace RoomCreation
                     NeighbourRoomDirection direction = overlap.Value.direction;
                     int randomX = overlap.Value.commonBorder;
                     int randomY = overlap.Value.commonBorder;
-                    if (direction == NeighbourRoomDirection.Left || direction == NeighbourRoomDirection.Right)
+                    
+                    //Not sure if this switch case looks better than a if ( || )?
+                    switch (direction)
                     {
-                        randomY = Utils.Random(overlap.Value.point1.Y + DOOR_OFFSET,
-                            overlap.Value.point2.Y - DOOR_OFFSET);
-                    }
-
-                    if (direction == NeighbourRoomDirection.Top || direction == NeighbourRoomDirection.Bottom)
-                    {
-                        randomX = Utils.Random(overlap.Value.point1.X + DOOR_OFFSET,
-                            overlap.Value.point2.X - DOOR_OFFSET);
+                        case NeighbourRoomDirection.Left:
+                        case NeighbourRoomDirection.Right:
+                            randomY = Utils.Random(overlap.Value.point1.Y + DOOR_OFFSET,
+                                overlap.Value.point2.Y - DOOR_OFFSET);
+                            break;
+                        case NeighbourRoomDirection.Top:
+                        case NeighbourRoomDirection.Bottom:
+                            randomX = Utils.Random(overlap.Value.point1.X + DOOR_OFFSET,
+                                overlap.Value.point2.X - DOOR_OFFSET);
+                            break;
                     }
 
                     Door newDoor = new Door(new Point(randomX, randomY), overlap.Value.roomA, overlap.Value.roomB);
