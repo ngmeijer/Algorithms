@@ -29,8 +29,13 @@ class AlgorithmsAssignment : Game
     PathFinder _pathFinder = null;
 
     //common settings
-    public const int SCALE = 10;               //TODO: experiment with changing this
-    public const int MIN_ROOM_SIZE = 20;        //TODO: use this setting in your dungeon generator
+    public const int SCALE = 10; //TODO: experiment with changing this
+    public const int MIN_ROOM_SIZE = 10; //TODO: use this setting in your dungeon generator
+    public const float MIN_RANDOM_MULTIPLIER = 0.35f;
+    public const float MAX_RANDOM_MULTIPLIER = 0.65f;
+    
+    public const int MIN_DOOR_SPACE = 10;
+    public const int DOOR_OFFSET = 1;
 
     public AlgorithmsAssignment() : base(1920, 1080, false, true, -1, -1, false)
     {
@@ -208,9 +213,9 @@ class AlgorithmsAssignment : Game
 
         if (_graph != null) AddChild(_graph);
         if (_tiledView != null) AddChild(_tiledView);
-        if (_pathFinder != null) AddChild(_pathFinder);             //pathfinder on top of that
-        if (_graph != null) AddChild(new NodeLabelDrawer(_graph));  //node label display on top of that
-        if (_agent != null) AddChild(_agent);                       //and last but not least the agent itself
+        if (_pathFinder != null) AddChild(_pathFinder); //pathfinder on top of that
+        if (_graph != null) AddChild(new NodeLabelDrawer(_graph)); //node label display on top of that
+        if (_agent != null) AddChild(_agent); //and last but not least the agent itself
 
         /////////////////////////////////////////////////
         //The end!
@@ -224,5 +229,3 @@ class AlgorithmsAssignment : Game
         // }
     }
 }
-
-

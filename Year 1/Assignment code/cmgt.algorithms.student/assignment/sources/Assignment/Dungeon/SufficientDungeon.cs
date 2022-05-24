@@ -304,6 +304,10 @@ namespace Dungeon
 
             #region 8th iteration
 
+            if (AlgorithmsAssignment.MIN_ROOM_SIZE < AlgorithmsAssignment.MIN_DOOR_SPACE)
+                throw new ArgumentException(
+                    $"The minimum room size ({AlgorithmsAssignment.MIN_ROOM_SIZE}) should not be larger than the minimum door space ({AlgorithmsAssignment.MIN_DOOR_SPACE})!!!");
+
             clearPreviousRooms();
             clearPreviousDoors();
             generateNewRooms();
@@ -363,7 +367,8 @@ namespace Dungeon
             {
                 for (int roomIndex = 0; roomIndex < roomsToSplit.Count; roomIndex++)
                 {
-                    float randomMultiplication = Utils.Random(0.35f, 0.65f);
+                    float randomMultiplication = Utils.Random(AlgorithmsAssignment.MIN_RANDOM_MULTIPLIER,
+                        AlgorithmsAssignment.MAX_RANDOM_MULTIPLIER);
 
                     RoomContainer currentFocusedRoom = roomsToSplit[roomIndex];
                     RoomContainer[] newRooms = currentFocusedRoom.RoomCreator.Split(randomMultiplication);
@@ -407,7 +412,7 @@ namespace Dungeon
                     largestRoom = room;
                 }
             }
-            
+
             finishedRooms.Remove(largestRoom);
             finishedRooms.Remove(smallestRoom);
         }

@@ -13,7 +13,7 @@ namespace RoomCreation
             public RoomContainer roomA;
             public RoomContainer roomB;
             public NeighbourRoomDirection direction;
-            public int commonBorder;
+            public int sharedWall;
         }
 
         public enum NeighbourRoomDirection

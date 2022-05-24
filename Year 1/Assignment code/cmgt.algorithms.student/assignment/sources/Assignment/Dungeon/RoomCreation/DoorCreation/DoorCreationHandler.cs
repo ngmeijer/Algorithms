@@ -11,9 +11,6 @@ namespace RoomCreation
     {
         public class DoorCreationHandler
         {
-            public const int MINIMUM_DOOR_SPACE = 10;
-            public const int DOOR_OFFSET = 1;
-
             private int doorCount;
             private RoomArea roomArea;
             private RoomContainer parentRoom;
@@ -35,37 +32,82 @@ namespace RoomCreation
             /// </summary>
             public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
             {
-                List<Door> newDoors = new List<Door>();
-                Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
                     roomFinder.findNeighbourRooms(parentRoom, pFinishedRooms);
+                Dictionary<RoomContainer, DoorArea> newDoorPositions = findDoorSpacesForNeighbours(neighbourRooms);
+                Door[] newDoors = createDoorsForAllNeighbours(newDoorPositions);
+                return newDoors;
+            }
 
-                foreach (var neighbourRoom in neighbourRooms)
+            private DoorArea findSingleDoorPosition(RoomContainer pOtherRoom)
+            {
+                parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
+                int sharedWall = getSharedWall(neighbourDirection);
+
+                DoorArea newArea = new DoorArea()
+                {
+                    point1 = new Point(),
+                    point2 = new Point(),
+                    roomA = parentRoom,
+                    roomB = pOtherRoom,
+                    direction = neighbourDirection,
+                    sharedWall = sharedWall
+                };
+
+                setDoorSpaceLimits(neighbourDirection, pOtherRoom.RoomArea, newArea);
+                if (checkIfDoorHasEnoughSpace(newArea) == false) return null;
+
+                return newArea;
+            }
+
+            private bool checkIfDoorHasEnoughSpace(DoorArea pNewArea)
+            {
+                Vector2 differenceVector =
+                    new Vector2(pNewArea.point2.X - pNewArea.point1.X, pNewArea.point2.Y - pNewArea.point1.Y);
+
+                if (differenceVector.Length() <
+                    (AlgorithmsAssignment.MIN_DOOR_SPACE + AlgorithmsAssignment.DOOR_OFFSET * 2) + 1) return false;
+
+                return true;
+            }
+
+            private Dictionary<RoomContainer, DoorArea> findDoorSpacesForNeighbours(
+                Dictionary<RoomContainer, NeighbourRoomDirection> pNeighbourRooms)
+            {
+                Dictionary<RoomContainer, DoorArea> newDoorPositions = new Dictionary<RoomContainer, DoorArea>();
+                foreach (var neighbourRoom in pNeighbourRooms)
                 {
                     if (neighbourRoom.Key.CreatedDoors.ContainsKey(this.parentRoom)) continue;
-                    DoorArea newArea = findDoorPosition(neighbourRoom.Key);
+                    DoorArea newArea = findSingleDoorPosition(neighbourRoom.Key);
                     if (newArea == null) continue;
                     newDoorPositions.Add(neighbourRoom.Key, newArea);
                 }
 
-                foreach (var overlap in newDoorPositions)
+                return newDoorPositions;
+            }
+
+            private Door[] createDoorsForAllNeighbours(Dictionary<RoomContainer, DoorArea> pNewDoorPositions)
+            {
+                List<Door> createdDoors = new List<Door>();
+
+                foreach (var overlap in pNewDoorPositions)
                 {
                     NeighbourRoomDirection direction = overlap.Value.direction;
-                    int randomX = overlap.Value.commonBorder;
-                    int randomY = overlap.Value.commonBorder;
-                    
-                    //Not sure if this switch case looks better than a if ( || )?
+                    int randomX = overlap.Value.sharedWall;
+                    int randomY = overlap.Value.sharedWall;
+
+                    //Not sure if this switch case looks better than an if ( || )?
                     switch (direction)
                     {
                         case NeighbourRoomDirection.Left:
                         case NeighbourRoomDirection.Right:
-                            randomY = Utils.Random(overlap.Value.point1.Y + DOOR_OFFSET,
-                                overlap.Value.point2.Y - DOOR_OFFSET);
+                            randomY = Utils.Random(overlap.Value.point1.Y + AlgorithmsAssignment.DOOR_OFFSET,
+                                overlap.Value.point2.Y - AlgorithmsAssignment.DOOR_OFFSET);
                             break;
                         case NeighbourRoomDirection.Top:
                         case NeighbourRoomDirection.Bottom:
-                            randomX = Utils.Random(overlap.Value.point1.X + DOOR_OFFSET,
-                                overlap.Value.point2.X - DOOR_OFFSET);
+                            randomX = Utils.Random(overlap.Value.point1.X + AlgorithmsAssignment.DOOR_OFFSET,
+                                overlap.Value.point2.X - AlgorithmsAssignment.DOOR_OFFSET);
                             break;
                     }
 
@@ -74,90 +116,61 @@ namespace RoomCreation
                     overlap.Value.roomA.CreatedDoors.Add(overlap.Value.roomB, newDoor);
                     overlap.Value.roomB.CreatedDoors.Add(overlap.Value.roomA, newDoor);
 
-                    newDoors.Add(newDoor);
+                    createdDoors.Add(newDoor);
                 }
 
-                //To array, because in advance I do not know how many doors there will be (and if there would be a limit, if the limit would be reached.
-                //So for that reason, create a temp List, once all doors are added, convert to array
-                return newDoors.ToArray();
+                return createdDoors.ToArray();
             }
 
-            private DoorArea findDoorPosition(RoomContainer pOtherRoom)
+            private void setDoorSpaceLimits(NeighbourRoomDirection pDirection, RoomArea pNeighbourRoomArea,
+                DoorArea pDoorArea)
             {
-                parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
-
-                DoorArea newArea = new DoorArea()
+                switch (pDirection)
                 {
-                    point1 = new Point(),
-                    point2 = new Point(),
-                    roomA = parentRoom,
-                    roomB = pOtherRoom
-                };
+                    case NeighbourRoomDirection.Top:
+                    case NeighbourRoomDirection.Bottom:
+                        if (parentRoom.RoomArea.leftSide >= pNeighbourRoomArea.leftSide)
+                            pDoorArea.point1.X = parentRoom.RoomArea.leftSide;
+                        else pDoorArea.point1.X = pNeighbourRoomArea.leftSide;
 
-                //This is when we start checking WHERE doors can be placed. Refactor to DoorCreationHandler.
-                if (neighbourDirection == NeighbourRoomDirection.Left ||
-                    neighbourDirection == NeighbourRoomDirection.Right)
+                        if (parentRoom.RoomArea.rightSide >= pNeighbourRoomArea.rightSide)
+                            pDoorArea.point2.X = pNeighbourRoomArea.rightSide;
+                        else pDoorArea.point2.X = parentRoom.RoomArea.rightSide;
+
+                        pDoorArea.point1.Y = pDoorArea.sharedWall;
+                        pDoorArea.point2.Y = pDoorArea.sharedWall;
+                        break;
+                    case NeighbourRoomDirection.Left:
+                    case NeighbourRoomDirection.Right:
+                        if (parentRoom.RoomArea.topSide >= pNeighbourRoomArea.topSide)
+                            pDoorArea.point1.Y = parentRoom.RoomArea.topSide;
+                        else pDoorArea.point1.Y = pNeighbourRoomArea.topSide;
+
+                        if (parentRoom.RoomArea.bottomSide <= pNeighbourRoomArea.bottomSide)
+                            pDoorArea.point2.Y = parentRoom.RoomArea.bottomSide;
+                        else pDoorArea.point2.Y = pNeighbourRoomArea.bottomSide;
+
+                        pDoorArea.point1.X = pDoorArea.sharedWall;
+                        pDoorArea.point2.X = pDoorArea.sharedWall;
+                        break;
+                }
+            }
+
+            private int getSharedWall(NeighbourRoomDirection pDirection)
+            {
+                switch (pDirection)
                 {
-                    if (parentRoom.RoomArea.topSide >= pOtherRoom.RoomArea.topSide)
-                        newArea.point1.Y = parentRoom.RoomArea.topSide;
-                    else newArea.point1.Y = pOtherRoom.RoomArea.topSide;
-
-                    if (parentRoom.RoomArea.bottomSide <= pOtherRoom.RoomArea.bottomSide)
-                        newArea.point2.Y = parentRoom.RoomArea.bottomSide;
-                    else newArea.point2.Y = pOtherRoom.RoomArea.bottomSide;
-
-                    if (neighbourDirection == NeighbourRoomDirection.Left)
-                    {
-                        newArea.direction = NeighbourRoomDirection.Left;
-                        newArea.point1.X = parentRoom.RoomArea.leftSide;
-                        newArea.point2.X = parentRoom.RoomArea.leftSide;
-                        newArea.commonBorder = parentRoom.RoomArea.leftSide;
-                    }
-
-                    if (neighbourDirection == NeighbourRoomDirection.Right)
-                    {
-                        newArea.direction = NeighbourRoomDirection.Right;
-                        newArea.point1.X = parentRoom.RoomArea.rightSide;
-                        newArea.point2.X = parentRoom.RoomArea.rightSide;
-                        newArea.commonBorder = parentRoom.RoomArea.rightSide;
-                    }
+                    case NeighbourRoomDirection.Top:
+                        return parentRoom.RoomArea.topSide;
+                    case NeighbourRoomDirection.Bottom:
+                        return parentRoom.RoomArea.bottomSide;
+                    case NeighbourRoomDirection.Left:
+                        return parentRoom.RoomArea.leftSide;
+                    case NeighbourRoomDirection.Right:
+                        return parentRoom.RoomArea.rightSide;
                 }
 
-                if (neighbourDirection == NeighbourRoomDirection.Top ||
-                    neighbourDirection == NeighbourRoomDirection.Bottom)
-                {
-                    if (parentRoom.RoomArea.leftSide >= pOtherRoom.RoomArea.leftSide)
-                        newArea.point1.X = parentRoom.RoomArea.leftSide;
-                    else newArea.point1.X = pOtherRoom.RoomArea.leftSide;
-
-                    if (parentRoom.RoomArea.rightSide >= pOtherRoom.RoomArea.rightSide)
-                        newArea.point2.X = pOtherRoom.RoomArea.rightSide;
-                    else newArea.point2.X = parentRoom.RoomArea.rightSide;
-
-                    //Y is the same for both points.
-                    if (neighbourDirection == NeighbourRoomDirection.Top)
-                    {
-                        newArea.direction = NeighbourRoomDirection.Top;
-                        newArea.point1.Y = parentRoom.RoomArea.topSide;
-                        newArea.point2.Y = parentRoom.RoomArea.topSide;
-                        newArea.commonBorder = parentRoom.RoomArea.topSide;
-                    }
-
-                    if (neighbourDirection == NeighbourRoomDirection.Bottom)
-                    {
-                        newArea.direction = NeighbourRoomDirection.Bottom;
-                        newArea.point1.Y = parentRoom.RoomArea.bottomSide;
-                        newArea.point2.Y = parentRoom.RoomArea.bottomSide;
-                        newArea.commonBorder = parentRoom.RoomArea.bottomSide;
-                    }
-                }
-
-                Vector2 differenceVector =
-                    new Vector2(newArea.point2.X - newArea.point1.X, newArea.point2.Y - newArea.point1.Y);
-
-                if (differenceVector.Length() < (MINIMUM_DOOR_SPACE + DOOR_OFFSET * 2) + 1) newArea = null;
-
-                return newArea;
+                return -1;
             }
         }
     }
