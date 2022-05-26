@@ -27,7 +27,7 @@ namespace DoorCreation
             location = pLocation;
             RoomContainerA = pRoomA;
             RoomContainerB = pRoomB;
-            handleDebugTextInitalization();
+            if(AlgorithmsAssignment.ENABLE_VISUAL_DEBUG) handleDebugTextInitalization();
         }
 
         //TODO: Implement a toString method for debugging

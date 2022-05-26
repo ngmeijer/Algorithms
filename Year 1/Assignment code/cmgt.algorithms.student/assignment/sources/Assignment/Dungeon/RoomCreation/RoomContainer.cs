@@ -43,13 +43,19 @@ namespace RoomCreation
 
         private void initializeSubsystems()
         {
-            debugInfo = new RoomDebugInfo();
             RoomCreator = new RoomCreationHandler(this, OriginalSize, RandomSplitValue);
             RoomArea = RoomCreator.ThisRoomAreaProps;
             DoorCreator = new DoorCreationHandler(this, RoomArea);
 
-            debugInfo.ScreenPosition.x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE;
-            debugInfo.ScreenPosition.y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE);
+            if (AlgorithmsAssignment.ENABLE_VISUAL_DEBUG)
+                debugInfo = new RoomDebugInfo
+                {
+                    ScreenPosition =
+                    {
+                        x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE,
+                        y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE)
+                    }
+                };
         }
 
         public int CalculateArea()

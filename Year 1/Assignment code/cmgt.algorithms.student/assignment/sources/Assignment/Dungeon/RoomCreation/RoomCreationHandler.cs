@@ -56,7 +56,7 @@ namespace RoomCreation
         private RoomContainer[] defineRooms(AXIS pSplitAxis)
         {
             RoomContainer[] newRooms = new RoomContainer[2];
-            Rectangle[] roomSizes = defineSizes();
+            Rectangle[] roomSizes = initializeSizeContainers();
 
             switch (pSplitAxis)
             {
@@ -91,9 +91,9 @@ namespace RoomCreation
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// 
-        /// </summary>
+        /// </summary> 
         /// <returns>String</returns>
-        private Rectangle[] defineSizes()
+        private Rectangle[] initializeSizeContainers()
         {
             Rectangle[] roomSizes = new Rectangle[2];
             roomSizes[0] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
@@ -113,7 +113,7 @@ namespace RoomCreation
         {
             int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
             
-            if (originalSize.Width * pRandomSplitValue > minSize && originalSize.Height * pRandomSplitValue > minSize)
+            if (originalSize.Width * pRandomSplitValue > minSize || originalSize.Height * pRandomSplitValue > minSize)
                 return true;
 
             return false;

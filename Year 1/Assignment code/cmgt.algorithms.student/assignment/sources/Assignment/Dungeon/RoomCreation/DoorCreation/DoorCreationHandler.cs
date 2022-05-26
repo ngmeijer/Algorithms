@@ -9,6 +9,16 @@ namespace RoomCreation
 {
     namespace DoorCreation
     {
+        public class DoorArea
+        {
+            public Point point1;
+            public Point point2;
+            public RoomContainer roomA;
+            public RoomContainer roomB;
+            public NeighbourRoomDirection direction;
+            public int sharedWall;
+        }
+
         public class DoorCreationHandler
         {
             private int doorCount;

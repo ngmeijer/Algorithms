@@ -308,51 +308,18 @@ namespace Dungeon
                 throw new ArgumentException(
                     $"The minimum room size ({AlgorithmsAssignment.MIN_ROOM_SIZE}) should not be larger than the minimum door space ({AlgorithmsAssignment.MIN_DOOR_SPACE})!!!");
 
-            clearPreviousRooms();
-            clearPreviousDoors();
             generateNewRooms();
-
             removeRooms();
             generateDoors();
 
-            foreach (var roomInfo in finishedRooms)
-            {
-                AddChild(roomInfo.debugInfo);
-                roomInfo.UpdateProperties();
-            }
+            if (AlgorithmsAssignment.ENABLE_VISUAL_DEBUG)
+                foreach (var roomInfo in finishedRooms)
+                {
+                    AddChild(roomInfo.debugInfo);
+                    roomInfo.UpdateProperties();
+                }
 
             #endregion
-        }
-
-        private void clearPreviousRooms()
-        {
-            Console.Clear();
-
-            for (int i = 0; i < roomsToSplit.Count; i++)
-            {
-                roomsToSplit[i].HandleDestroy();
-                roomsToSplit[i] = null;
-            }
-
-            doors.Clear();
-
-            for (int i = 0; i < finishedRooms.Count; i++)
-            {
-                finishedRooms[i].HandleDestroy();
-                finishedRooms[i] = null;
-            }
-
-            finishedRooms.Clear();
-        }
-
-        private void clearPreviousDoors()
-        {
-            for (int i = 0; i < doors.Count; i++)
-            {
-                doors[i].HandleDestroy();
-            }
-
-            doors.Clear();
         }
 
         private void generateNewRooms()
@@ -392,7 +359,7 @@ namespace Dungeon
 
         private void removeRooms()
         {
-            //MaxValue, because setting an arbitrary number (10000?) could technically cause exception cases.
+            //MaxValue, because setting an arbitrary number (10000?) could technically cause exception cases. (not realistically but still :))
             int currentSmallestArea = int.MaxValue;
             int currentLargestArea = 0;
             RoomContainer smallestRoom = null;
@@ -417,6 +384,7 @@ namespace Dungeon
             finishedRooms.Remove(smallestRoom);
         }
 
+        
         private void generateDoors()
         {
             foreach (RoomContainer room in finishedRooms)

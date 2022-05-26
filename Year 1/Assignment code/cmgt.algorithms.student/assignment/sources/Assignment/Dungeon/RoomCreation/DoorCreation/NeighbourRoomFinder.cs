@@ -6,16 +6,6 @@ namespace RoomCreation
 {
     namespace DoorCreation
     {
-        public class DoorArea
-        {
-            public Point point1;
-            public Point point2;
-            public RoomContainer roomA;
-            public RoomContainer roomB;
-            public NeighbourRoomDirection direction;
-            public int sharedWall;
-        }
-
         public enum NeighbourRoomDirection
         {
             Top,
@@ -37,7 +27,10 @@ namespace RoomCreation
             //			                                List<Room> findNeighbourRooms()
             //------------------------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// 
+            /// todo// clean this **** up
+            ///
+            /// Loops over all created rooms, and checks if they are valid neighbours (do they share a border (horizontal/vertical)?
+            /// And are they in range on the other axis? Refer to notes.
             /// </summary>
             /// <returns>List<RoomContainer></returns>
             public Dictionary<RoomContainer, NeighbourRoomDirection> findNeighbourRooms(RoomContainer pParentRoom,
@@ -49,7 +42,7 @@ namespace RoomCreation
                     if (pParentRoom.ConnectedRooms.ContainsKey(otherRoom)) continue;
                     if (otherRoom.ID == pParentRoom.ID) continue;
                     RoomArea other = otherRoom.RoomArea;
-                    
+
                     //Checking IF rooms are neighbours.
                     bool otherRoomLeftOfMain = checkIfOnExactBorder(other.rightSide, roomArea.leftSide) &&
                                                (checkIfInsideAreaWithOffset(other.topSide, roomArea.topSide,
