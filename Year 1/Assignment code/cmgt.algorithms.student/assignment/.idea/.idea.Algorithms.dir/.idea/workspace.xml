@@ -11,18 +11,7 @@
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Agent/SampleNodeGraphAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Agent/SampleNodeGraphAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/NodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/NodeGraph.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Util/NodeLabelDrawer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Util/NodeLabelDrawer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,12 +37,12 @@
       <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
-      <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
+      <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="29FArC89POtjwhnpIGW0lLS8O1x" />
@@ -114,7 +103,7 @@
       <workItem from="1653569459103" duration="5939000" />
       <workItem from="1653645779021" duration="2720000" />
       <workItem from="1653909245848" duration="7164000" />
-      <workItem from="1653982925481" duration="3142000" />
+      <workItem from="1653982925481" duration="6094000" />
     </task>
     <servers />
   </component>

@@ -38,7 +38,7 @@ class AlgorithmsAssignment : Game
     public const int DOOR_OFFSET = 2;
 
     public const bool ENABLE_ROOM_VISUAL_DEBUG = true;
-    public const bool ENABLE_DOOR_VISUAL_DEBUG = false;
+    public const bool ENABLE_DOOR_VISUAL_DEBUG = true;
 
     public AlgorithmsAssignment() : base(1920, 1080, false, true, -1, -1, false)
     {

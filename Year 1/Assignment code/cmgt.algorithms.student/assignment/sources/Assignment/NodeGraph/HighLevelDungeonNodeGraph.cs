@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DoorCreation;
 using Dungeon;
 using RoomCreation;
@@ -14,8 +15,10 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
     protected override void generate()
     {
         createNodes();
+
+        //Seperating the creation and connecting process, because then I can be sure I'm not trying to connect to nodes that don't exist yet.
         connectNodes();
-        
+
         _dungeon.UpdateDebugInformation();
     }
 
@@ -38,13 +41,15 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
                 {
                     doorNode = new Node(getDoorCenter(door.Value));
                     nodes.Add(door.Value, doorNode);
-                    
                 }
 
                 if (doorNode != null)
                 {
                     room.CreatedNodes.Add(door.Value, doorNode);
-                    door.Value.RoomContainerB.CreatedNodes.Add(door.Value, doorNode);
+
+                    RoomContainer neighbourRoom = door.Value.RoomContainerB;
+                    if (!neighbourRoom.CreatedNodes.ContainsKey(door.Value))
+                        neighbourRoom.CreatedNodes.Add(door.Value, doorNode);
                 }
             }
         }
@@ -52,5 +57,14 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
 
     private void connectNodes()
     {
+        foreach (RoomContainer room in _dungeon.finishedRooms)
+        {
+            room.CreatedNodes.TryGetValue(room, out Node roomCenterNode);
+            foreach (KeyValuePair<RoomContainer, Door> door in room.CreatedDoors)
+            {
+                room.CreatedNodes.TryGetValue(door.Value, out Node doorNode);
+                AddConnection(doorNode, roomCenterNode);
+            }
+        }
     }
 }
