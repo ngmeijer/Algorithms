@@ -311,15 +311,18 @@ namespace Dungeon
             generateNewRooms();
             removeRooms();
             generateDoors();
+            
+            #endregion
+        }
 
-            if (AlgorithmsAssignment.ENABLE_VISUAL_DEBUG)
+        public override void UpdateDebugInformation()
+        {
+            if (AlgorithmsAssignment.ENABLE_ROOM_VISUAL_DEBUG)
                 foreach (var roomInfo in finishedRooms)
                 {
                     AddChild(roomInfo.debugInfo);
                     roomInfo.UpdateProperties();
                 }
-
-            #endregion
         }
 
         private void generateNewRooms()
@@ -384,7 +387,7 @@ namespace Dungeon
             finishedRooms.Remove(smallestRoom);
         }
 
-        
+
         private void generateDoors()
         {
             foreach (RoomContainer room in finishedRooms)

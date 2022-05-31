@@ -74,14 +74,12 @@ namespace RoomCreation
                     break;
             }
 
-            newRooms[0] = new RoomContainer(roomSizes[0]);
-            newRooms[1] = new RoomContainer(roomSizes[1]);
-
-            newRooms[0].x = parent.x * randomSplitValue;
-            newRooms[0].y = parent.y * randomSplitValue;
-
-            newRooms[1].x = parent.x * randomSplitValue;
-            newRooms[1].y = parent.y * randomSplitValue;
+            for (int i = 0; i < newRooms.Length; i++)
+            {
+                newRooms[i] = new RoomContainer(roomSizes[i]);
+                newRooms[i].x = parent.x * randomSplitValue;
+                newRooms[i].y = parent.y * randomSplitValue;
+            }
 
             return newRooms;
         }

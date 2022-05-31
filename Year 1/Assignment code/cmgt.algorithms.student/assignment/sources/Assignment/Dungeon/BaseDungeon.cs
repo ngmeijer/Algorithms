@@ -173,5 +173,7 @@ namespace Dungeon
         {
             return "Dungeon: implement/override this method to print info about all rooms and doors";
         }
+
+        public abstract void UpdateDebugInformation();
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using RoomCreation;
 
 /**
  * Very basic implementation of a NodeGraph class that:
@@ -15,7 +16,7 @@ using System.Drawing;
 abstract class NodeGraph : Canvas
 {
 	//references to all the nodes in our nodegraph
-	public readonly List<Node> nodes = new List<Node>();
+	public readonly Dictionary<DungeonComponent, Node> nodes = new Dictionary<DungeonComponent, Node>();
 
 	//event handlers, register for any of these events if interested
 	//see SampleNodeGraphAgent for an example of a LeftClick event handler.
@@ -53,7 +54,7 @@ abstract class NodeGraph : Canvas
 	 */
 	public void AddConnection(Node pNodeA, Node pNodeB)
 	{
-		if (nodes.Contains(pNodeA) && nodes.Contains(pNodeB))
+		if (nodes.ContainsValue(pNodeA) && nodes.ContainsValue(pNodeB))
 		{
 			if (!pNodeA.connections.Contains(pNodeB)) pNodeA.connections.Add(pNodeB);
 			if (!pNodeB.connections.Contains(pNodeA)) pNodeB.connections.Add(pNodeA);
@@ -91,7 +92,7 @@ abstract class NodeGraph : Canvas
 
 	protected virtual void drawNodes()
 	{
-		foreach (Node node in nodes) drawNode(node, _defaultNodeColor);
+		foreach (KeyValuePair<DungeonComponent, Node> node in nodes) drawNode(node.Value, _defaultNodeColor);
 	}
 
 	protected virtual void drawNode(Node pNode, Brush pColor)
@@ -119,7 +120,7 @@ abstract class NodeGraph : Canvas
 	{
 		//note that this means all connections are drawn twice, once from A->B and once from B->A
 		//but since is only a debug view we don't care
-		foreach (Node node in nodes) drawNodeConnections(node);
+		foreach (KeyValuePair<DungeonComponent, Node> node in nodes) drawNodeConnections(node.Value);
 	}
 
 	protected virtual void drawNodeConnections(Node pNode)
@@ -153,11 +154,11 @@ abstract class NodeGraph : Canvas
 	{
 		//then check if one of the nodes is under the mouse and if so assign it to _nodeUnderMouse
 		Node newNodeUnderMouse = null;
-		foreach (Node node in nodes)
+		foreach (KeyValuePair<DungeonComponent, Node> node in nodes)
 		{
-			if (IsMouseOverNode(node))
+			if (IsMouseOverNode(node.Value))
 			{
-				newNodeUnderMouse = node;
+				newNodeUnderMouse = node.Value;
 
 				break;
 			}

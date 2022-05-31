@@ -1,6 +1,8 @@
 ﻿using GXPEngine;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using RoomCreation;
 
 /**
  * Helper class that draws nodelabels for a nodegraph.
@@ -43,7 +45,7 @@ class NodeLabelDrawer : Canvas
 
 	protected virtual void drawLabels()
 	{
-		foreach (Node node in _graph.nodes) drawNode(node);
+		foreach (KeyValuePair<DungeonComponent, Node> node in _graph.nodes) drawNode(node.Value);
 	}
 
 	protected virtual void drawNode(Node pNode)

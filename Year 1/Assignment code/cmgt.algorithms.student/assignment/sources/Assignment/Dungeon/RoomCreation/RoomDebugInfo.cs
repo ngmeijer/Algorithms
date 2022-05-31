@@ -7,6 +7,7 @@ public class RoomDebugInfo : GameObject
     private EasyDraw debugText;
     public int ID { get; private set; }
     public int DoorCount { get; private set; }
+    public int NodeCount { get; private set; }
     public RoomArea RoomArea { get; private set; }
 
     public delegate void OnRoomPropertiesGenerated(int pID, RoomArea pRoomArea);
@@ -33,18 +34,20 @@ public class RoomDebugInfo : GameObject
         debugText.SetScaleXY(0.1f, 0.1f);
     }
 
-    public void UpdateDebugInformation(int pID, RoomArea pRoomArea, int pDoorCount)
+    public void UpdateDebugInformation(int pID, RoomArea pRoomArea, int pDoorCount, int pNodeCount)
     {
         updateRoomID(pID);
         updateRoomArea(pRoomArea);
         updateDoorCount(pDoorCount);
+        updateNodeCount(pNodeCount);
 
         debugText.Text($"ID: {ID}." +
                        $"\nLeft: {RoomArea.leftSide}." +
                        $"\nRight: {RoomArea.rightSide}." +
                        $"\nTop: {RoomArea.topSide}." +
                        $"\nBottom:{RoomArea.bottomSide}" +
-                       $"\nDoor count: {DoorCount}", ScreenPosition.x, ScreenPosition.y + 135);
+                       $"\nDoor count: {DoorCount}" +
+                       $"\nNode count: {NodeCount}", ScreenPosition.x, ScreenPosition.y + 135);
 
         onGenerated?.Invoke(pID, RoomArea);
     }
@@ -66,6 +69,6 @@ public class RoomDebugInfo : GameObject
     /// </summary>
     /// <returns>String</returns>
     private void updateRoomID(int pID) => ID = pID;
-
     private void updateDoorCount(int pDoorCount) => DoorCount = pDoorCount;
+    private void updateNodeCount(int pNodeCount) => NodeCount = pNodeCount;
 }

@@ -15,7 +15,7 @@ public struct RoomArea
 
 /**
  * This class represents (the data for) a Room, at this moment only a rectangle in the dungeon.
- */
+ */ 
 
 namespace RoomCreation
 {
@@ -27,6 +27,7 @@ namespace RoomCreation
         public Rectangle OriginalSize;
         public RoomArea RoomArea;
         public Dictionary<RoomContainer, Door> CreatedDoors = new Dictionary<RoomContainer, Door>();
+        public Dictionary<DungeonComponent, Node> CreatedNodes = new Dictionary<DungeonComponent, Node>();
 
         public Dictionary<RoomContainer, NeighbourRoomDirection> ConnectedRooms =
             new Dictionary<RoomContainer, NeighbourRoomDirection>();
@@ -47,13 +48,13 @@ namespace RoomCreation
             RoomArea = RoomCreator.ThisRoomAreaProps;
             DoorCreator = new DoorCreationHandler(this, RoomArea);
 
-            if (AlgorithmsAssignment.ENABLE_VISUAL_DEBUG)
+            if (AlgorithmsAssignment.ENABLE_ROOM_VISUAL_DEBUG)
                 debugInfo = new RoomDebugInfo
                 {
                     ScreenPosition =
                     {
                         x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE,
-                        y = (RoomArea.topSide + 4) * (AlgorithmsAssignment.SCALE)
+                        y = (RoomArea.topSide + 7) * AlgorithmsAssignment.SCALE
                     }
                 };
         }
@@ -68,7 +69,7 @@ namespace RoomCreation
 
         public void UpdateProperties()
         {
-            debugInfo.UpdateDebugInformation(ID, RoomArea, CreatedDoors.Count);
+            debugInfo.UpdateDebugInformation(ID, RoomArea, CreatedDoors.Count, CreatedNodes.Count);
         }
 
         //------------------------------------------------------------------------------------------------------------------------

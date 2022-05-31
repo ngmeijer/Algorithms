@@ -27,7 +27,7 @@ namespace DoorCreation
             location = pLocation;
             RoomContainerA = pRoomA;
             RoomContainerB = pRoomB;
-            if(AlgorithmsAssignment.ENABLE_VISUAL_DEBUG) handleDebugTextInitalization();
+            if(AlgorithmsAssignment.ENABLE_DOOR_VISUAL_DEBUG) handleDebugTextInitalization();
         }
 
         //TODO: Implement a toString method for debugging
@@ -42,7 +42,7 @@ namespace DoorCreation
             debugText.SetScaleXY(0.1f, 0.1f);
 
             debugText.TextSize(10);
-            debugText.Text($"Point:\n{location}." +
+            debugText.Text($"{location}." +
                            $"\nMain:{RoomContainerA.ID}." +
                            $"\nOther:{RoomContainerB.ID}", location.X * AlgorithmsAssignment.SCALE,
                 location.Y * AlgorithmsAssignment.SCALE);

@@ -11,7 +11,7 @@ using System.Drawing;
  * navigation graph. A node in a boardgame for example might represent completely different data, 
  * such as the current state of the board.
  */
-class Node
+public class Node
 {
 	public readonly List<Node> connections = new List<Node>();
 

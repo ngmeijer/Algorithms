@@ -5,22 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3c7e356-9134-4d36-9d34-229ddb462487" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Algorithms.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Algorithms.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algorithms.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/dcg.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Algorithms.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Algorithms.csproj.CoreCompileInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/dcg.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/dcg.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Agent/SampleNodeGraphAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Agent/SampleNodeGraphAgent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/NodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/NodeGraph.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sources/Util/NodeLabelDrawer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/sources/Util/NodeLabelDrawer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,18 +39,21 @@
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/../gxpengine/gxpengine/GXPEngine/Core/Vector2.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/DoorCreationHandler.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/NeighbourRoomFinder.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" />
-      <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
-      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/NodeGraph.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Agent/SampleNodeGraphAgent.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/SampleDungeonNodeGraph.cs" />
+      <option value="$PROJECT_DIR$/sources/Util/NodeLabelDrawer.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/Node.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomCreationHandler.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/DoorCreation/Door.cs" />
+      <option value="$PROJECT_DIR$/sources/AlgorithmsAssignment.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/BaseDungeon.cs" />
       <option value="$PROJECT_DIR$/sources/Assignment/NodeGraph/HighLevelDungeonNodeGraph.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/SufficientDungeon.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomContainer.cs" />
+      <option value="$PROJECT_DIR$/sources/Assignment/Dungeon/RoomCreation/RoomDebugInfo.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="29FArC89POtjwhnpIGW0lLS8O1x" />
@@ -64,6 +69,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="ToolWindowBuild.ShowToolbar" value="false" />
+    <property name="ToolWindowRun.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="XThreadsFramesViewSplitterKey" value="0.31906077" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -105,7 +111,10 @@
       <workItem from="1653288750085" duration="945000" />
       <workItem from="1653289758604" duration="9005000" />
       <workItem from="1653391414444" duration="7937000" />
-      <workItem from="1653569459103" duration="4126000" />
+      <workItem from="1653569459103" duration="5939000" />
+      <workItem from="1653645779021" duration="2720000" />
+      <workItem from="1653909245848" duration="7164000" />
+      <workItem from="1653982925481" duration="3142000" />
     </task>
     <servers />
   </component>
@@ -124,6 +133,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
