@@ -35,11 +35,14 @@ namespace RoomCreation
             }
 
             //------------------------------------------------------------------------------------------------------------------------
-            //			                                   void InitiateDoorHandling()
+            //										  Door[] InitiateDoorHandling()
             //------------------------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// 
+            /// Find all neighbour rooms. Find valid "regions" (to allow for procedural door placement)
+            /// to place a door, for every neighbour room. Initialize door instances.
             /// </summary>
+            /// * @param List pFinishedRooms: a random value, ranging from (with current settings) 0.35f to 0.65f.
+            /// <returns>Door[]</returns>
             public Door[] InitiateDoorHandling(List<RoomContainer> pFinishedRooms)
             {
                 Dictionary<RoomContainer, NeighbourRoomDirection> neighbourRooms =
@@ -49,6 +52,18 @@ namespace RoomCreation
                 return newDoors;
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //								 DoorArea findSingleDoorPosition()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Find a valid space/region for a door to be placed in, for the given neighbour room.
+            /// First, request direction of the neighbour room.
+            /// Then, get the shared wall.
+            /// Finds the outer borders (overlap between rooms), between which a door can be placed.
+            /// Finally, check if there is enough space with the current settings. If not, null is returned and a door will not be placed.
+            /// </summary>
+            /// * @param List pFinishedRooms: a random value, ranging from (with current settings) 0.35f to 0.65f.
+            /// <returns>DoorArea</returns>
             private DoorArea findSingleDoorPosition(RoomContainer pOtherRoom)
             {
                 parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
@@ -70,17 +85,33 @@ namespace RoomCreation
                 return newArea;
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //								 bool checkIfDoorHasEnoughSpace()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Checks if there's still at least 1 cell of space, by comparing the length of the total overlap length between the rooms,
+            /// with the minimum amount of door space + twice (for the left/right or top/bottom side) the door offset. 
+            /// </summary>
+            /// * @param pNewarea: given available space.
+            /// <returns>bool</returns>
             private bool checkIfDoorHasEnoughSpace(DoorArea pNewArea)
             {
                 Vector2 differenceVector =
                     new Vector2(pNewArea.point2.X - pNewArea.point1.X, pNewArea.point2.Y - pNewArea.point1.Y);
 
-                if (differenceVector.Length() <
-                    (AlgorithmsAssignment.MIN_DOOR_SPACE + AlgorithmsAssignment.DOOR_OFFSET * 2) + 1) return false;
-
-                return true;
+                return differenceVector.Length() >
+                       (AlgorithmsAssignment.MIN_DOOR_SPACE + AlgorithmsAssignment.DOOR_OFFSET * 2);
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //						Dictionary<RoomContainer, DoorArea> findDoorSpacesForNeighbours()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Loops over the given neighbour rooms, and find the first iteration of
+            /// available door space for every door connecting to the neighbour room.
+            /// </summary>
+            /// * @param pNeighbourRooms: rooms that have a common border with this room.
+            /// <returns>Dictionary<RoomContainer><DoorArea></returns>
             private Dictionary<RoomContainer, DoorArea> findDoorSpacesForNeighbours(
                 Dictionary<RoomContainer, NeighbourRoomDirection> pNeighbourRooms)
             {
@@ -96,6 +127,15 @@ namespace RoomCreation
                 return newDoorPositions;
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //						        Door[] createDoorsForAllNeighbours()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Loops over all the overlap data containers. Finds a procedural exact coordinate/position for the door.
+            /// Adds door to both connected rooms. Required for node generation, later on.
+            /// </summary>
+            /// * @param pNewDoorPositions: the final available door spawnpoints.
+            /// <returns>Dictionary<RoomContainer><DoorArea></returns>
             private Door[] createDoorsForAllNeighbours(Dictionary<RoomContainer, DoorArea> pNewDoorPositions)
             {
                 List<Door> createdDoors = new List<Door>();
@@ -132,6 +172,16 @@ namespace RoomCreation
                 return createdDoors.ToArray();
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //	        					        void setDoorSpaceLimits()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Loops over all the overlap data containers. Finds a procedural exact coordinate/position for the door.
+            /// Adds door to both connected rooms. Required for node generation, later on.
+            /// </summary>
+            /// * @param pDirection: the direction (Top, Bottom, Left, Right) of the neighbour room.
+            /// * @param pNeighbourRoomArea: the area properties of the neighbour room.
+            /// * @param pDoorArea: the data object for the door overlap. Some values (e.g. RoomA and B) already assigned. 
             private void setDoorSpaceLimits(NeighbourRoomDirection pDirection, RoomArea pNeighbourRoomArea,
                 DoorArea pDoorArea)
             {
@@ -139,26 +189,26 @@ namespace RoomCreation
                 {
                     case NeighbourRoomDirection.Top:
                     case NeighbourRoomDirection.Bottom:
-                        if (parentRoom.RoomArea.leftSide >= pNeighbourRoomArea.leftSide)
-                            pDoorArea.point1.X = parentRoom.RoomArea.leftSide;
-                        else pDoorArea.point1.X = pNeighbourRoomArea.leftSide;
+                        if (parentRoom.RoomArea.left >= pNeighbourRoomArea.left)
+                            pDoorArea.point1.X = parentRoom.RoomArea.left;
+                        else pDoorArea.point1.X = pNeighbourRoomArea.left;
 
-                        if (parentRoom.RoomArea.rightSide >= pNeighbourRoomArea.rightSide)
-                            pDoorArea.point2.X = pNeighbourRoomArea.rightSide;
-                        else pDoorArea.point2.X = parentRoom.RoomArea.rightSide;
+                        if (parentRoom.RoomArea.right >= pNeighbourRoomArea.right)
+                            pDoorArea.point2.X = pNeighbourRoomArea.right;
+                        else pDoorArea.point2.X = parentRoom.RoomArea.right;
 
                         pDoorArea.point1.Y = pDoorArea.sharedWall;
                         pDoorArea.point2.Y = pDoorArea.sharedWall;
                         break;
                     case NeighbourRoomDirection.Left:
                     case NeighbourRoomDirection.Right:
-                        if (parentRoom.RoomArea.topSide >= pNeighbourRoomArea.topSide)
-                            pDoorArea.point1.Y = parentRoom.RoomArea.topSide;
-                        else pDoorArea.point1.Y = pNeighbourRoomArea.topSide;
+                        if (parentRoom.RoomArea.top >= pNeighbourRoomArea.top)
+                            pDoorArea.point1.Y = parentRoom.RoomArea.top;
+                        else pDoorArea.point1.Y = pNeighbourRoomArea.top;
 
-                        if (parentRoom.RoomArea.bottomSide <= pNeighbourRoomArea.bottomSide)
-                            pDoorArea.point2.Y = parentRoom.RoomArea.bottomSide;
-                        else pDoorArea.point2.Y = pNeighbourRoomArea.bottomSide;
+                        if (parentRoom.RoomArea.bot <= pNeighbourRoomArea.bot)
+                            pDoorArea.point2.Y = parentRoom.RoomArea.bot;
+                        else pDoorArea.point2.Y = pNeighbourRoomArea.bot;
 
                         pDoorArea.point1.X = pDoorArea.sharedWall;
                         pDoorArea.point2.X = pDoorArea.sharedWall;
@@ -166,18 +216,26 @@ namespace RoomCreation
                 }
             }
 
+            //------------------------------------------------------------------------------------------------------------------------
+            //	        					        void getSharedWall()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Helper method to quickly get the "shared wall" between rooms, based on the neighbour direction. Returns -1 if no valid value has been entered.
+            /// </summary>
+            /// * @param pDirection: the direction (Top, Bottom, Left, Right) of the neighbour room.
+            /// <returns>int</returns>
             private int getSharedWall(NeighbourRoomDirection pDirection)
             {
                 switch (pDirection)
                 {
                     case NeighbourRoomDirection.Top:
-                        return parentRoom.RoomArea.topSide;
+                        return parentRoom.RoomArea.top;
                     case NeighbourRoomDirection.Bottom:
-                        return parentRoom.RoomArea.bottomSide;
+                        return parentRoom.RoomArea.bot;
                     case NeighbourRoomDirection.Left:
-                        return parentRoom.RoomArea.leftSide;
+                        return parentRoom.RoomArea.left;
                     case NeighbourRoomDirection.Right:
-                        return parentRoom.RoomArea.rightSide;
+                        return parentRoom.RoomArea.right;
                 }
 
                 return -1;

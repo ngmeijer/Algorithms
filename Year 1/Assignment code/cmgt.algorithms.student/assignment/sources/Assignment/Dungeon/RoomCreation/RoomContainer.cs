@@ -7,10 +7,10 @@ using RoomCreation.DoorCreation;
 
 public struct RoomArea
 {
-    public int leftSide;
-    public int rightSide;
-    public int topSide;
-    public int bottomSide;
+    public int left;
+    public int right;
+    public int top;
+    public int bot;
 }
 
 /**
@@ -42,6 +42,13 @@ namespace RoomCreation
             initializeSubsystems();
         }
 
+        //------------------------------------------------------------------------------------------------------------------------
+        //									    void initializeSubsystems()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Initialize the different handlers for this room. R
+        /// esponsible for RoomCreationHandler, DoorCreationHandler, and RoomDebugInfo.
+        /// </summary>
         private void initializeSubsystems()
         {
             RoomCreator = new RoomCreationHandler(this, OriginalSize, RandomSplitValue);
@@ -53,20 +60,32 @@ namespace RoomCreation
                 {
                     ScreenPosition =
                     {
-                        x = (RoomArea.leftSide + 1) * AlgorithmsAssignment.SCALE,
-                        y = (RoomArea.topSide + 7) * AlgorithmsAssignment.SCALE
+                        x = (RoomArea.left + 1) * AlgorithmsAssignment.SCALE,
+                        y = (RoomArea.top + 7) * AlgorithmsAssignment.SCALE
                     }
                 };
         }
 
+        //------------------------------------------------------------------------------------------------------------------------
+        //									    int CalculateArea()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Determine the m2 (total surface) of this room, by performing width * height.
+        /// </summary>
         public int CalculateArea()
         {
-            int width = RoomArea.rightSide - RoomArea.leftSide;
-            int height = RoomArea.bottomSide - RoomArea.topSide;
+            int width = RoomArea.right - RoomArea.left;
+            int height = RoomArea.bot - RoomArea.top;
 
             return width * height;
         }
 
+        //------------------------------------------------------------------------------------------------------------------------
+        //									    void UpdateProperties()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Passes on a request for RoomDebugInfo to update the visual debug graphic on screen.
+        /// </summary>
         public void UpdateProperties()
         {
             debugInfo.UpdateDebugInformation(ID, RoomArea, CreatedDoors.Count, CreatedNodes.Count);
@@ -76,35 +95,21 @@ namespace RoomCreation
         //										            string ToString()
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Returns important info about this room in the console.
         /// </summary>
         /// <returns>String</returns>
         public override string ToString()
         {
             return String.Format("Room ID: {0}\nLeft side:{1}, right side:{2}, \ntop side:{3}, bottom side:{4}", ID,
-                RoomArea.leftSide, RoomArea.rightSide, RoomArea.topSide, RoomArea.bottomSide);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------
-        //										        void handleDestroy()
-        //------------------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>String</returns>
-        public override void HandleDestroy()
-        {
-            RemoveChild(debugInfo);
-            debugInfo.Destroy();
-            RoomCreator = null;
-            debugInfo = null;
-            DoorCreator = null;
-            Destroy();
+                RoomArea.left, RoomArea.right, RoomArea.top, RoomArea.bot);
         }
     }
 
+    /// <summary>
+    /// Necessary for generalising RoomContainer and Door, so we can place nodes more easily.
+    /// </summary>
     public abstract class DungeonComponent : GameObject
     {
-        public abstract void HandleDestroy();
+        
     }
 }

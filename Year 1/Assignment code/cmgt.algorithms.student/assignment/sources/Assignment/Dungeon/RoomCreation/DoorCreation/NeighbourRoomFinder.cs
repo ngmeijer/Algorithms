@@ -27,12 +27,12 @@ namespace RoomCreation
             //			                                List<Room> findNeighbourRooms()
             //------------------------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// todo// clean this **** up
-            ///
             /// Loops over all created rooms, and checks if they are valid neighbours (do they share a border (horizontal/vertical)?
-            /// And are they in range on the other axis? Refer to notes.
+            /// And are they in range on the other axis? Add room reference to the neighbour room's collection.
             /// </summary>
-            /// <returns>List<RoomContainer></returns>
+            /// * @param pParentRoom: a reference to the parent room.
+            /// * @param pFinishedRooms: all rooms that have been created.
+            /// <returns>Dictionary<RoomContainer,NeighbourRoomDirection></returns>
             public Dictionary<RoomContainer, NeighbourRoomDirection> findNeighbourRooms(RoomContainer pParentRoom,
                 List<RoomContainer> pFinishedRooms)
             {
@@ -43,30 +43,18 @@ namespace RoomCreation
                     if (otherRoom.ID == pParentRoom.ID) continue;
                     RoomArea other = otherRoom.RoomArea;
 
-                    //Checking IF rooms are neighbours.
-                    bool otherRoomLeftOfMain = checkIfOnExactBorder(other.rightSide, roomArea.leftSide) &&
-                                               (checkIfInsideAreaWithOffset(other.topSide, roomArea.topSide,
-                                                    roomArea.bottomSide) ||
-                                                checkIfInsideAreaWithOffset(other.bottomSide, roomArea.topSide,
-                                                    roomArea.bottomSide));
-
-                    bool otherRoomRightOfMain = checkIfOnExactBorder(other.leftSide, roomArea.rightSide) &&
-                                                (checkIfInsideAreaWithOffset(other.topSide, roomArea.topSide,
-                                                     roomArea.bottomSide) ||
-                                                 checkIfInsideAreaWithOffset(other.bottomSide, roomArea.topSide,
-                                                     roomArea.bottomSide));
-
-                    bool otherRoomAboveMain = checkIfOnExactBorder(other.bottomSide, roomArea.topSide) &&
-                                              (checkIfInsideAreaWithOffset(other.leftSide, roomArea.leftSide,
-                                                   roomArea.rightSide) ||
-                                               checkIfInsideAreaWithOffset(other.rightSide, roomArea.leftSide,
-                                                   roomArea.rightSide));
-
-                    bool otherRoomUnderMain = checkIfOnExactBorder(other.topSide, roomArea.bottomSide) &&
-                                              (checkIfInsideAreaWithOffset(other.leftSide, roomArea.leftSide,
-                                                   roomArea.rightSide) ||
-                                               checkIfInsideAreaWithOffset(other.rightSide, roomArea.leftSide,
-                                                   roomArea.rightSide));
+                    bool otherRoomLeftOfMain = checkIfOnExactBorder(other.right, roomArea.left) &&
+                                               (checkIfInsideAreaWithOffset(other.top, roomArea.top, roomArea.bot) ||
+                                                checkIfInsideAreaWithOffset(other.bot, roomArea.top, roomArea.bot));
+                    bool otherRoomRightOfMain = checkIfOnExactBorder(other.left, roomArea.right) &&
+                                                (checkIfInsideAreaWithOffset(other.top, roomArea.top, roomArea.bot) ||
+                                                 checkIfInsideAreaWithOffset(other.bot, roomArea.top, roomArea.bot));
+                    bool otherRoomAboveMain = checkIfOnExactBorder(other.bot, roomArea.top) &&
+                                              (checkIfInsideAreaWithOffset(other.left, roomArea.left, roomArea.right) ||
+                                               checkIfInsideAreaWithOffset(other.right, roomArea.left, roomArea.right));
+                    bool otherRoomUnderMain = checkIfOnExactBorder(other.top, roomArea.bot) &&
+                                              (checkIfInsideAreaWithOffset(other.left, roomArea.left, roomArea.right) ||
+                                               checkIfInsideAreaWithOffset(other.right, roomArea.left, roomArea.right));
 
                     if (otherRoomLeftOfMain)
                     {
@@ -97,7 +85,7 @@ namespace RoomCreation
             //			                                           bool checkIfOnExactBorder()
             //------------------------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// 
+            /// Checks if the given sides are on the exact same cell (for one axis only)
             /// </summary>
             /// <returns>Bool</returns>
             private bool checkIfOnExactBorder(int pOtherSide, int pMainSide)
@@ -107,7 +95,8 @@ namespace RoomCreation
             //			                                      bool checkIfInsideAreaWithOffset()
             //------------------------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// 
+            /// Checks if the given neighbour side is within the sides of the opposite axis of this room. Because for example,
+            /// rooms might often share the same horizontal axis, but vertically, they are entirely somewhere else on the screen.
             /// </summary>
             /// <returns>Bool</returns>
             private bool checkIfInsideAreaWithOffset(int pOtherSide, int pMainSide0, int pMainSide1)

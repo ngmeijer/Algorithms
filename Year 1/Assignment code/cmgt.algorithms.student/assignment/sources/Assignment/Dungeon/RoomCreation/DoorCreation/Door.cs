@@ -27,13 +27,16 @@ namespace DoorCreation
             location = pLocation;
             RoomContainerA = pRoomA;
             RoomContainerB = pRoomB;
-            if(AlgorithmsAssignment.ENABLE_DOOR_VISUAL_DEBUG) handleDebugTextInitalization();
+            if (AlgorithmsAssignment.ENABLE_DOOR_VISUAL_DEBUG) handleDebugTextInitalization();
         }
 
-        //TODO: Implement a toString method for debugging
-        //Return information about the type of object and it's data
-        //eg Door: (x,y)
 
+        //------------------------------------------------------------------------------------------------------------------------
+        //			                          void handleDebugTextInitalization()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Initialize an EasyDraw object, displaying the properties of this door. What rooms does it connect? What is its position?
+        /// </summary>
         private void handleDebugTextInitalization()
         {
             debugText = new EasyDraw(game.width, game.height);
@@ -46,13 +49,6 @@ namespace DoorCreation
                            $"\nMain:{RoomContainerA.ID}." +
                            $"\nOther:{RoomContainerB.ID}", location.X * AlgorithmsAssignment.SCALE,
                 location.Y * AlgorithmsAssignment.SCALE);
-        }
-
-        public override void HandleDestroy()
-        {
-            debugText.Destroy();
-            RemoveChild(debugText);
-            Destroy();
         }
     }
 }

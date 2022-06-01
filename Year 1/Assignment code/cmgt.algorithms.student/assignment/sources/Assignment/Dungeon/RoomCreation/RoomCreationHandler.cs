@@ -28,31 +28,32 @@ namespace RoomCreation
         }
 
         //------------------------------------------------------------------------------------------------------------------------
-        //										       void defineRoomArea()
+        //									    void defineRoomArea()
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Initiate a RoomArea copy, with the properties of the parent room.
+        /// -1 for the right & bottom side, otherwise there would be walls with a thickness of 2 cells.
         /// </summary>
-        /// <returns>String</returns>
+        /// <returns>void</returns>
         private void defineRoomArea()
         {
             roomArea = new RoomArea
             {
-                leftSide = originalSize.X,
-                rightSide = originalSize.X + originalSize.Width - 1,
-                topSide = originalSize.Y,
-                bottomSide = originalSize.Y + originalSize.Height - 1
+                left = originalSize.X,
+                right = originalSize.X + originalSize.Width - 1,
+                top = originalSize.Y,
+                bot = originalSize.Y + originalSize.Height - 1
             };
-
         }
 
         //------------------------------------------------------------------------------------------------------------------------
-        //								         Room[] defineRooms(AXIS pSplitAxis)
+        //								  RoomContainer[] defineRooms(AXIS pSplitAxis)
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Initializes the room instances and graphics. Based on the preferred splitAxis,
+        /// determine the horizontal/vertical measurements of the children rooms.
         /// </summary>
-        /// <returns>String</returns>
+        /// <returns>RoomContainer[]</returns>
         private RoomContainer[] defineRooms(AXIS pSplitAxis)
         {
             RoomContainer[] newRooms = new RoomContainer[2];
@@ -64,7 +65,7 @@ namespace RoomCreation
                     roomSizes[0].Width = (int) (originalSize.Width * randomSplitValue);
 
                     roomSizes[1].Width = originalSize.Width - roomSizes[0].Width + 1;
-                    roomSizes[1].X = roomArea.leftSide + roomSizes[0].Width - 1;
+                    roomSizes[1].X = roomArea.left + roomSizes[0].Width - 1;
                     break;
                 case AXIS.VERTICAL:
                     roomSizes[0].Height = (int) (originalSize.Height * randomSplitValue);
@@ -76,54 +77,55 @@ namespace RoomCreation
 
             for (int i = 0; i < newRooms.Length; i++)
             {
-                newRooms[i] = new RoomContainer(roomSizes[i]);
-                newRooms[i].x = parent.x * randomSplitValue;
-                newRooms[i].y = parent.y * randomSplitValue;
+                newRooms[i] = new RoomContainer(roomSizes[i])
+                {
+                    x = parent.x * randomSplitValue,
+                    y = parent.y * randomSplitValue
+                };
             }
 
             return newRooms;
         }
 
         //------------------------------------------------------------------------------------------------------------------------
-        //										    Rectangle[] defineSizes()
+        //								Rectangle[] initializeSizeContainers()
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Initialize two room graphics EasyDraw instances.
         /// </summary> 
-        /// <returns>String</returns>
+        /// <returns>Rectangle[]</returns>
         private Rectangle[] initializeSizeContainers()
         {
-            Rectangle[] roomSizes = new Rectangle[2];
-            roomSizes[0] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
-            roomSizes[1] = new Rectangle(roomArea.leftSide, roomArea.topSide, originalSize.Width, originalSize.Height);
+            Rectangle[] roomGraphics = new Rectangle[2];
+            roomGraphics[0] =
+                new Rectangle(roomArea.left, roomArea.top, originalSize.Width, originalSize.Height);
+            roomGraphics[1] =
+                new Rectangle(roomArea.left, roomArea.top, originalSize.Width, originalSize.Height);
 
-            return roomSizes;
+            return roomGraphics;
         }
 
         //------------------------------------------------------------------------------------------------------------------------
         //										         bool ShouldSplit()
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Checks if either the width or height of the original "parent" room still exceeds the minimum size,
+        /// when multiplied with the given random value.
         /// </summary>
-        /// <returns>String</returns>
-        public bool ShouldSplit(float pRandomSplitValue)
-        {
-            int minSize = AlgorithmsAssignment.MIN_ROOM_SIZE;
-            
-            if (originalSize.Width * pRandomSplitValue > minSize || originalSize.Height * pRandomSplitValue > minSize)
-                return true;
-
-            return false;
-        }
+        /// * @param float pRandomSplitValue: a random value, ranging from (with current settings) 0.35f to 0.65f.
+        /// <returns>bool</returns>
+        public bool ShouldSplit(float pRandomSplitValue) =>
+            originalSize.Width * pRandomSplitValue > AlgorithmsAssignment.MIN_ROOM_SIZE ||
+            originalSize.Height * pRandomSplitValue > AlgorithmsAssignment.MIN_ROOM_SIZE;
 
         //------------------------------------------------------------------------------------------------------------------------
         //								    Room[] Split(float pRandomMultiplication)
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Performs the splitting action.
         /// </summary>
-        /// <returns>String</returns>
+        /// * @param float pRandomSplitValue: a random value, ranging from (with current settings) 0.35f to 0.65f.
+        /// <returns>RoomContainer[]</returns>
         public RoomContainer[] Split(float pRandomMultiplication)
         {
             randomSplitValue = pRandomMultiplication;
@@ -137,17 +139,9 @@ namespace RoomCreation
         //										      AXIS checkLargerAxis()
         //------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// 
+        /// Compares the width with the height, returns the largest one as an enum value.
         /// </summary>
-        /// <returns>String</returns>
-        private AXIS checkLargerAxis()
-        {
-            AXIS axis = AXIS.VERTICAL;
-
-            if (originalSize.Width > originalSize.Height)
-                axis = AXIS.HORIZONTAL;
-
-            return axis;
-        }
+        /// <returns>AXIS</returns>
+        private AXIS checkLargerAxis() => originalSize.Width > originalSize.Height ? AXIS.HORIZONTAL : AXIS.VERTICAL;
     }
 }

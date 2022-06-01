@@ -35,7 +35,7 @@ class AlgorithmsAssignment : Game
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     
     public const int MIN_DOOR_SPACE = 5;
-    public const int DOOR_OFFSET = 2;
+    public const int DOOR_OFFSET = 5;
 
     public const bool ENABLE_ROOM_VISUAL_DEBUG = true;
     public const bool ENABLE_DOOR_VISUAL_DEBUG = true;
