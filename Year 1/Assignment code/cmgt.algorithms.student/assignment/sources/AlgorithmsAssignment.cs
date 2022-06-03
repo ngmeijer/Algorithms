@@ -29,16 +29,16 @@ class AlgorithmsAssignment : Game
     PathFinder _pathFinder = null;
 
     //common settings
-    public const int SCALE = 10; //Any scale other than 10 messes with my DebugInfo.
-    public const int MIN_ROOM_SIZE = 20; //TODO: use this setting in your dungeon generator
+    public const int SCALE = 27; //Any scale other than 10 messes with my DebugInfo.
+    public const int MIN_ROOM_SIZE = 10; //TODO: use this setting in your dungeon generator
     public const float MIN_RANDOM_MULTIPLIER = 0.35f;
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     
-    public const int MIN_DOOR_SPACE = 5;
-    public const int DOOR_OFFSET = 5;
+    public const int MIN_DOOR_SPACE = 1;
+    public const int DOOR_OFFSET = 1;
 
-    public const bool ENABLE_ROOM_VISUAL_DEBUG = true;
-    public const bool ENABLE_DOOR_VISUAL_DEBUG = true;
+    public const bool ENABLE_ROOM_VISUAL_DEBUG = false;
+    public const bool ENABLE_DOOR_VISUAL_DEBUG = false;
 
     public AlgorithmsAssignment() : base(1920, 1080, false, true, -1, -1, false)
     {
@@ -135,6 +135,7 @@ class AlgorithmsAssignment : Game
         //_graph = new LowLevelDungeonNodeGraph(_dungeon);
 
         if (_graph != null) _graph.Generate();
+        _sufficientDungeon.UpdateDebugInformation();
 
         /////////////////////////////////////////////////////////////
         //Assignment 2.1 Sufficient (Mandatory) OffGraphWayPointAgent
@@ -144,7 +145,7 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out the SampleNodeGraphAgent again, implement an OffGraphWayPointAgent class and uncomment it below
 
         //_agent = new SampleNodeGraphAgent(_graph);
-        //_agent = new OffGraphWayPointAgent(_graph);
+        _agent = new OffGraphWayPointAgent(_graph);
 
         ////////////////////////////////////////////////////////////
         //Assignment 2.2 Good (Optional) TiledView

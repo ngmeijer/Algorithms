@@ -10,7 +10,11 @@ using GXPEngine;
 class SampleNodeGraphAgent : NodeGraphAgent
 {
 	//Current target to move towards
-	private Node _target = null;
+	protected Node targetNode = null;
+	protected Node currentNode = null;
+	protected Queue<Node> nodePath = new Queue<Node>();
+	protected bool isMoving;
+	protected Node lastAddedNode = null;
 
 	public SampleNodeGraphAgent(NodeGraph pNodeGraph) : base(pNodeGraph)
 	{
@@ -22,6 +26,8 @@ class SampleNodeGraphAgent : NodeGraphAgent
 			List<Node> allNodes = pNodeGraph.nodes.Values.ToList();
 
 			Node randomNode = allNodes[Utils.Random(0, allNodes.Count)];
+			currentNode = randomNode;
+			lastAddedNode = currentNode;
 			// jumpToNode(pNodeGraph.nodes[Utils.Random(0, pNodeGraph.nodes.Count)]);
 			jumpToNode(randomNode);
 		}
@@ -32,18 +38,31 @@ class SampleNodeGraphAgent : NodeGraphAgent
 
 	protected virtual void onNodeClickHandler(Node pNode)
 	{
-		_target = pNode;
+		if(lastAddedNode != null)
+        {
+			if (!lastAddedNode.connections.Contains(pNode)) return;
+        }
+		nodePath.Enqueue(pNode);
+		lastAddedNode = pNode;
 	}
 
 	protected override void Update()
 	{
-		//no target? Don't walk
-		if (_target == null) return;
-
-		//Move towards the target node, if we reached it, clear the target
-		if (moveTowardsNode(_target))
+		if (nodePath.Count > 0)
 		{
-			_target = null;
+			if (targetNode == null)
+			{
+				targetNode = nodePath.Peek();
+			}
+		}
+		else return;
+
+		//Move towards the first node in the queue, if we reached it, clear the target and take the next first node in the queue until empty.
+		if (moveTowardsNode(targetNode))
+		{
+			currentNode = targetNode;
+			targetNode = null;
+			nodePath.Dequeue();
 		}
 	}
 }

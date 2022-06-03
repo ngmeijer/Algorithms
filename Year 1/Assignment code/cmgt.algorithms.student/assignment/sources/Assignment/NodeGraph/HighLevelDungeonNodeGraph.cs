@@ -18,8 +18,6 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
 
         //Seperating the creation and connecting process, because then I can be sure I'm not trying to connect to nodes that don't exist yet.
         connectNodes();
-
-        _dungeon.UpdateDebugInformation();
     }
 
     private void createNodes()
