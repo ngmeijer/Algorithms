@@ -14,6 +14,7 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
 
     protected override void generate()
     {
+        Console.WriteLine("\n\n\n\n\n\n");
         createNodes();
 
         //Seperating the creation and connecting process, because then I can be sure I'm not trying to connect to nodes that don't exist yet.
@@ -25,6 +26,7 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
         foreach (RoomContainer room in _dungeon.finishedRooms)
         {
             Node roomCenterNode = new Node(getRoomCenter(room));
+            Console.WriteLine($"Added ROOM node at position {roomCenterNode.location}");
 
             //First of all, a node for every single room.
             room.CreatedNodes.Add(room, roomCenterNode);
@@ -39,6 +41,7 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
                 {
                     doorNode = new Node(getDoorCenter(door.Value));
                     nodes.Add(door.Value, doorNode);
+                    Console.WriteLine($"Added DOOR node at position {doorNode.location}");
                 }
 
                 if (doorNode != null)

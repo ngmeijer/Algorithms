@@ -53,6 +53,7 @@ class SampleNodeGraphAgent : NodeGraphAgent
 			if (targetNode == null)
 			{
 				targetNode = nodePath.Peek();
+				Console.WriteLine($"New target node: {targetNode.location}");
 			}
 		}
 		else return;

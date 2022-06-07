@@ -58,21 +58,25 @@ namespace RoomCreation
 
                     if (otherRoomLeftOfMain)
                     {
+                        Console.WriteLine($"|| Room {pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Left);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Right);
                     }
                     else if (otherRoomRightOfMain)
                     {
+                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Right);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Left);
                     }
                     else if (otherRoomAboveMain)
                     {
+                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Top);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Bottom);
                     }
                     else if (otherRoomUnderMain)
                     {
+                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
                         pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Bottom);
                         otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Top);
                     }

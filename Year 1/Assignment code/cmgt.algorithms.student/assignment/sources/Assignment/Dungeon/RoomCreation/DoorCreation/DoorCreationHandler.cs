@@ -68,6 +68,7 @@ namespace RoomCreation
             {
                 parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
                 int sharedWall = getSharedWall(neighbourDirection);
+                Console.WriteLine($"\n||||||||||||Shared wall value of room {parentRoom.ID} & neighbour room {pOtherRoom.ID} is: {sharedWall}. DIrection: {neighbourDirection}");
 
                 DoorArea newArea = new DoorArea()
                 {
@@ -79,9 +80,13 @@ namespace RoomCreation
                     sharedWall = sharedWall
                 };
 
-                setDoorSpaceLimits(neighbourDirection, pOtherRoom.RoomArea, newArea);
-                if (checkIfDoorHasEnoughSpace(newArea) == false) return null;
-
+                setDoorSpaceLimits(neighbourDirection, pOtherRoom, newArea);
+                if (checkIfDoorHasEnoughSpace(newArea) == false)
+                {
+                    //Possible suggestion for a bottleneck fix: it double checks whether a door can be placed; once with one room as the "main room" and the other room as the "neighbour room", and once the other way around.
+                    Console.WriteLine($"\nRoom {parentRoom.ID} did not have a valid door position connecting with room {pOtherRoom.ID}");
+                    return null;
+                }
                 return newArea;
             }
 
@@ -167,6 +172,7 @@ namespace RoomCreation
                     overlap.Value.roomB.CreatedDoors.Add(overlap.Value.roomA, newDoor);
 
                     createdDoors.Add(newDoor);
+                    Console.WriteLine($"Room {parentRoom.ID} now has a door connecting with room {overlap.Value.roomB.ID} at position {newDoor.location}");
                 }
 
                 return createdDoors.ToArray();
@@ -182,19 +188,19 @@ namespace RoomCreation
             /// * @param pDirection: the direction (Top, Bottom, Left, Right) of the neighbour room.
             /// * @param pNeighbourRoomArea: the area properties of the neighbour room.
             /// * @param pDoorArea: the data object for the door overlap. Some values (e.g. RoomA and B) already assigned. 
-            private void setDoorSpaceLimits(NeighbourRoomDirection pDirection, RoomArea pNeighbourRoomArea,
+            private void setDoorSpaceLimits(NeighbourRoomDirection pDirection, RoomContainer pNeighbourRoom,
                 DoorArea pDoorArea)
             {
                 switch (pDirection)
                 {
                     case NeighbourRoomDirection.Top:
                     case NeighbourRoomDirection.Bottom:
-                        if (parentRoom.RoomArea.left >= pNeighbourRoomArea.left)
+                        if (parentRoom.RoomArea.left >= pNeighbourRoom.RoomArea.left)
                             pDoorArea.point1.X = parentRoom.RoomArea.left;
-                        else pDoorArea.point1.X = pNeighbourRoomArea.left;
+                        else pDoorArea.point1.X = pNeighbourRoom.RoomArea.left;
 
-                        if (parentRoom.RoomArea.right >= pNeighbourRoomArea.right)
-                            pDoorArea.point2.X = pNeighbourRoomArea.right;
+                        if (parentRoom.RoomArea.right >= pNeighbourRoom.RoomArea.right)
+                            pDoorArea.point2.X = pNeighbourRoom.RoomArea.right;
                         else pDoorArea.point2.X = parentRoom.RoomArea.right;
 
                         pDoorArea.point1.Y = pDoorArea.sharedWall;
@@ -202,18 +208,20 @@ namespace RoomCreation
                         break;
                     case NeighbourRoomDirection.Left:
                     case NeighbourRoomDirection.Right:
-                        if (parentRoom.RoomArea.top >= pNeighbourRoomArea.top)
+                        if (parentRoom.RoomArea.top >= pNeighbourRoom.RoomArea.top)
                             pDoorArea.point1.Y = parentRoom.RoomArea.top;
-                        else pDoorArea.point1.Y = pNeighbourRoomArea.top;
+                        else pDoorArea.point1.Y = pNeighbourRoom.RoomArea.top;
 
-                        if (parentRoom.RoomArea.bot <= pNeighbourRoomArea.bot)
+                        if (parentRoom.RoomArea.bot <= pNeighbourRoom.RoomArea.bot)
                             pDoorArea.point2.Y = parentRoom.RoomArea.bot;
-                        else pDoorArea.point2.Y = pNeighbourRoomArea.bot;
+                        else pDoorArea.point2.Y = pNeighbourRoom.RoomArea.bot;
 
                         pDoorArea.point1.X = pDoorArea.sharedWall;
                         pDoorArea.point2.X = pDoorArea.sharedWall;
                         break;
                 }
+
+                Console.WriteLine($"Room {parentRoom.ID} & neighbour room {pNeighbourRoom.ID} initial door space: point 1 ={pDoorArea.point1} | point 2 = {pDoorArea.point2} ");
             }
 
             //------------------------------------------------------------------------------------------------------------------------

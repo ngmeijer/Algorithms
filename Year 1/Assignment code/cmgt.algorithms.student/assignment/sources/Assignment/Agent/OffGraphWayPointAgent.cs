@@ -11,5 +11,5 @@
             if(!currentNode.connections.Contains(targetNode)) return;
 
         base.Update();
-    }
+    } 
 }

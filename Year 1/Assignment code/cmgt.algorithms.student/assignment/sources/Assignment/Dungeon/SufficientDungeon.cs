@@ -79,6 +79,8 @@ namespace Dungeon
                         AlgorithmsAssignment.MAX_RANDOM_MULTIPLIER);
 
                     RoomContainer currentFocusedRoom = roomsToSplit[roomIndex];
+
+                    Console.WriteLine($"Current splitting room: {currentFocusedRoom.ID}. Split value: {randomMultiplication}");
                     RoomContainer[] newRooms = currentFocusedRoom.RoomCreator.Split(randomMultiplication);
 
                     foreach (RoomContainer room in newRooms)
@@ -87,6 +89,7 @@ namespace Dungeon
                             roomsToSplit.Add(room);
                         else if (!finishedRooms.Contains(room))
                         {
+                            Console.WriteLine($"Room {roomID} could not be splitted any further.");
                             room.ID = roomID;
                             finishedRooms.Add(room);
                             roomID++;
