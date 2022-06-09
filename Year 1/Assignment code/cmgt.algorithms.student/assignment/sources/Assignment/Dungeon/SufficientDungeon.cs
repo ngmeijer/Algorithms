@@ -32,7 +32,7 @@ namespace Dungeon
                     $"The minimum room size ({AlgorithmsAssignment.MIN_ROOM_SIZE}) should not be larger than the minimum door space ({AlgorithmsAssignment.MIN_DOOR_SPACE})!!!");
 
             generateNewRooms();
-            removeRooms();
+            //removeRooms();
             generateDoors();
             
             #endregion

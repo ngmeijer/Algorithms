@@ -56,33 +56,49 @@ namespace RoomCreation
                                               (checkIfInsideAreaWithOffset(other.left, roomArea.left, roomArea.right) ||
                                                checkIfInsideAreaWithOffset(other.right, roomArea.left, roomArea.right));
 
-                    if (otherRoomLeftOfMain)
-                    {
-                        Console.WriteLine($"|| Room {pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
-                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Left);
-                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Right);
-                    }
-                    else if (otherRoomRightOfMain)
-                    {
-                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
-                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Right);
-                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Left);
-                    }
-                    else if (otherRoomAboveMain)
-                    {
-                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
-                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Top);
-                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Bottom);
-                    }
-                    else if (otherRoomUnderMain)
-                    {
-                        Console.WriteLine($"|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
-                        pParentRoom.ConnectedRooms.Add(otherRoom, NeighbourRoomDirection.Bottom);
-                        otherRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Top);
-                    }
+                    Console.WriteLine($"\n\n|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
+
+
+                    if (otherRoomLeftOfMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Left);
+                    else if (otherRoomRightOfMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Right);
+                    else if (otherRoomAboveMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Top);
+                    else if (otherRoomUnderMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Bottom);
                 }
 
                 return pParentRoom.ConnectedRooms;
+            }
+
+            //------------------------------------------------------------------------------------------------------------------------
+            //			                                void addRoomToNeighbourList()
+            //------------------------------------------------------------------------------------------------------------------------
+            /// <summary>
+            /// Adds the given rooms to eachother.
+            /// </summary>
+            /// * @param pParentRoom: a reference to the parent room.
+            /// * @param pNeighbourRoom: neighbour room to the pParentRoom.
+            /// * @param pDirection: direction of the neighbour room to the pParentRoom.
+
+            private void addRoomToNeighbourList(RoomContainer pParentRoom, RoomContainer pNeighbourRoom, NeighbourRoomDirection pDirection)
+            {
+                switch (pDirection)
+                {
+                    case NeighbourRoomDirection.Top:
+                        pParentRoom.ConnectedRooms.Add(pNeighbourRoom, NeighbourRoomDirection.Top);
+                        pNeighbourRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Bottom);
+                        break;
+                    case NeighbourRoomDirection.Bottom:
+                        pParentRoom.ConnectedRooms.Add(pNeighbourRoom, NeighbourRoomDirection.Bottom);
+                        pNeighbourRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Top);
+                        break;
+                    case NeighbourRoomDirection.Left:
+                        pParentRoom.ConnectedRooms.Add(pNeighbourRoom, NeighbourRoomDirection.Left);
+                        pNeighbourRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Right);
+                        break;
+                    case NeighbourRoomDirection.Right:
+                        pParentRoom.ConnectedRooms.Add(pNeighbourRoom, NeighbourRoomDirection.Right);
+                        pNeighbourRoom.ConnectedRooms.Add(pParentRoom, NeighbourRoomDirection.Left);
+                        break;
+                }
             }
 
             //------------------------------------------------------------------------------------------------------------------------

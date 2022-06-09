@@ -29,8 +29,8 @@ class AlgorithmsAssignment : Game
     PathFinder _pathFinder = null;
 
     //common settings
-    public const int SCALE = 10; //Any scale other than 10 messes with my DebugInfo.
-    public const int MIN_ROOM_SIZE = 25; //TODO: use this setting in your dungeon generator
+    public const int SCALE = 15; //Any scale other than 10 messes with my DebugInfo.
+    public const int MIN_ROOM_SIZE = 7; //TODO: use this setting in your dungeon generator
     public const float MIN_RANDOM_MULTIPLIER = 0.35f;
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     

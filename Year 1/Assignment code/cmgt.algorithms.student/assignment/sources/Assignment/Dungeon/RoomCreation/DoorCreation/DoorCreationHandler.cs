@@ -68,7 +68,7 @@ namespace RoomCreation
             {
                 parentRoom.ConnectedRooms.TryGetValue(pOtherRoom, out NeighbourRoomDirection neighbourDirection);
                 int sharedWall = getSharedWall(neighbourDirection);
-                Console.WriteLine($"\n||||||||||||Shared wall value of room {parentRoom.ID} & neighbour room {pOtherRoom.ID} is: {sharedWall}. DIrection: {neighbourDirection}");
+                Console.WriteLine($"Shared wall value of room {parentRoom.ID} & neighbour room {pOtherRoom.ID} is: {sharedWall}. DIrection: {neighbourDirection}");
 
                 DoorArea newArea = new DoorArea()
                 {
