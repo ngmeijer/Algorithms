@@ -58,7 +58,6 @@ namespace RoomCreation
 
                     Console.WriteLine($"\n\n|| Room { pParentRoom.ID} has {otherRoom.ID} as neighbour. ||");
 
-
                     if (otherRoomLeftOfMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Left);
                     else if (otherRoomRightOfMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Right);
                     else if (otherRoomAboveMain) addRoomToNeighbourList(pParentRoom, otherRoom, NeighbourRoomDirection.Top);
@@ -77,7 +76,6 @@ namespace RoomCreation
             /// * @param pParentRoom: a reference to the parent room.
             /// * @param pNeighbourRoom: neighbour room to the pParentRoom.
             /// * @param pDirection: direction of the neighbour room to the pParentRoom.
-
             private void addRoomToNeighbourList(RoomContainer pParentRoom, RoomContainer pNeighbourRoom, NeighbourRoomDirection pDirection)
             {
                 switch (pDirection)

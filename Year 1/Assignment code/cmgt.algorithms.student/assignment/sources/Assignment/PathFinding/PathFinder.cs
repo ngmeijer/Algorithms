@@ -62,6 +62,7 @@ abstract class PathFinder : Canvas
 		else
 		{
 			_lastCalculatedPath = generate(pFrom, pTo);
+			Console.WriteLine($"Path node count: {_lastCalculatedPath.Count}");
 		}
 
 		draw();
@@ -171,7 +172,12 @@ abstract class PathFinder : Canvas
 		{
 			if (_startNode != null && _endNode != null)
 			{
-				Generate(_startNode, _endNode);
+				List<Node> generatedPath = Generate(_startNode, _endNode);
+				foreach(Node node in generatedPath)
+                {
+					Console.WriteLine($"Node in path: {node.id}");
+                }
+				///TODO Assign path to agent here.
 			}
 		}
 	}
