@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 internal class RecursivePathFinder : PathFinder
 {
-    private List<Node> currentPath = new List<Node>();
-    private Dictionary<List<Node>, int> generatedPaths = new Dictionary<List<Node>, int>();
+    private List<Node> path = new List<Node>();
+    private List<Node> visitedNodes = new List<Node>();
+    private List<Node> toDo = new List<Node>();
+    private Node startNode;
+    private Node endNode;
+    private Node currentNode;
+    private Node lastNode;
 
     public RecursivePathFinder(NodeGraph pGraph) : base(pGraph)
     {
@@ -13,44 +18,36 @@ internal class RecursivePathFinder : PathFinder
 
     protected override List<Node> generate(Node pFrom, Node pTo)
     {
-        int maxIterations = 4;
-        int currentIteration = 0;
-        Node currentNode = pFrom;
-        currentPath.Add(pFrom);
+        startNode = pFrom;
+        endNode = pTo;
+        currentNode = startNode;
 
-        if (pFrom == pTo) return currentPath;
+        path.Add(currentNode);
+        visitedNodes.Add(currentNode);
 
-        while (currentIteration < maxIterations)
-        {
-            currentPath.Clear();
-            recursivelyLoopThroughChildren(currentNode, pTo);
-
-            generatedPaths.Add(currentPath, currentPath.Count);
-            currentIteration++;
-        }
-
-        List<Node> shortestPath = selectShortestPath();
-        return shortestPath;
-    }
-
-    private void recursivelyLoopThroughChildren(Node pCurrentNode, Node pTo)
-    {
-        foreach (Node childNode in pCurrentNode.connections)
-        {
-            if (currentPath.Contains(childNode)) continue;
-
-            currentPath.Add(childNode);
-
-            if(childNode == pTo) return;
-
-            recursivelyLoopThroughChildren(childNode, pTo);
-        }
-    }
-
-    private List<Node> selectShortestPath()
-    {
-        List<Node> path = null;
+        recursivelyLoopThroughChildren();
 
         return path;
+    }
+
+    private void recursivelyLoopThroughChildren()
+    {
+        if (currentNode == endNode) return;
+
+        foreach(Node child in currentNode.connections)
+        {
+            if (currentNode.alreadyVisited.Contains(child)) continue;
+
+            Console.WriteLine($"Visiting {child.id}");
+
+            currentNode.alreadyVisited.Add(child);
+            currentNode.parentNode = lastNode;
+            lastNode = currentNode;
+
+            path.Add(currentNode);
+            currentNode = child;
+
+            recursivelyLoopThroughChildren();
+        }
     }
 }

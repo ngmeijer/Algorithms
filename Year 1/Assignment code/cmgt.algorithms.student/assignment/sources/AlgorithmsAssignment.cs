@@ -224,12 +224,4 @@ class AlgorithmsAssignment : Game
         /////////////////////////////////////////////////
         //The end!
     }
-
-    private void Update()
-    {
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     _sufficientDungeon.Generate(MIN_ROOM_SIZE);
-        // }
-    }
 }
