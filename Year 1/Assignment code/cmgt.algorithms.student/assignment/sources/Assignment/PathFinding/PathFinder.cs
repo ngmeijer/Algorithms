@@ -19,6 +19,7 @@ abstract class PathFinder : Canvas
 	protected List<Node> _lastCalculatedPath = null;
 
 	protected NodeGraph _nodeGraph;
+	protected NodeGraphAgent _agent;
 
 	//some values for drawing the path
 	private Pen _outlinePen = new Pen(Color.Black, 4);
@@ -29,9 +30,11 @@ abstract class PathFinder : Canvas
 	private Brush _endNodeColor = Brushes.Red;
 	private Brush _pathNodeColor = Brushes.Yellow;
 
-	public PathFinder (NodeGraph pGraph) : base (pGraph.width, pGraph.height)
+	public PathFinder (NodeGraph pGraph, NodeGraphAgent pAgent) : base (pGraph.width, pGraph.height)
 	{
 		_nodeGraph = pGraph;
+		_agent = pAgent;
+
 		_nodeGraph.OnNodeShiftLeftClicked += (node) => { _startNode = node; draw(); };
 		_nodeGraph.OnNodeShiftRightClicked += (node) => { _endNode = node; draw(); };
 
@@ -173,14 +176,8 @@ abstract class PathFinder : Canvas
 			if (_startNode != null && _endNode != null)
 			{
 				List<Node> generatedPath = Generate(_startNode, _endNode);
-				foreach(Node node in generatedPath)
-                {
-					Console.WriteLine($"Node in path: {node.id}");
-                }
-				///TODO Assign path to agent here.
+				_agent.ReceiveNewPath(generatedPath);
 			}
 		}
 	}
-
-
 }

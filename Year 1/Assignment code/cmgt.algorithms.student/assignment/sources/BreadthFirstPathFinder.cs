@@ -2,7 +2,7 @@
 
 internal class BreadthFirstPathFinder : PathFinder
 {
-    public BreadthFirstPathFinder(NodeGraph pGraph) : base(pGraph)
+    public BreadthFirstPathFinder(NodeGraph pGraph, NodeGraphAgent pAgent) : base(pGraph, pAgent)
     {
     }
 

@@ -1,4 +1,5 @@
 ﻿using GXPEngine;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 /**
@@ -11,8 +12,9 @@ using System.Diagnostics;
 abstract class NodeGraphAgent : AnimationSprite
 {
 	protected const int REGULAR_SPEED = 1;
-	protected const int FAST_TRAVEL_SPEED = 10;
+	protected const int FAST_TRAVEL_SPEED = 3;
 	protected const int SPEED_UP_KEY = Key.LEFT_CTRL;
+	protected Queue<Node> nodePath = new Queue<Node>();
 
 	public NodeGraphAgent(NodeGraph pNodeGraph) : base("assets/orc.png", 4, 2, 7)
 	{
@@ -69,5 +71,8 @@ abstract class NodeGraphAgent : AnimationSprite
 		y = pNode.location.Y;
 	}
 
+	public void ReceiveNewPath(List<Node> pNewPath)
+	{
+		nodePath = new Queue<Node>(pNewPath);
+	}
 }
-
