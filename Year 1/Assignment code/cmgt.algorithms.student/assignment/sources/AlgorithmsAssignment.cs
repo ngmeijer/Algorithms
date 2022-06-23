@@ -30,7 +30,7 @@ class AlgorithmsAssignment : Game
 
     //common settings
     public const int SCALE = 30; //Any scale other than 10 messes with my DebugInfo.
-    public const int MIN_ROOM_SIZE = 9; //TODO: use this setting in your dungeon generator
+    public const int MIN_ROOM_SIZE = 10; //TODO: use this setting in your dungeon generator
     public const float MIN_RANDOM_MULTIPLIER = 0.35f;
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     
