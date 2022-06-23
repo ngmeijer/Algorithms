@@ -12,6 +12,8 @@ internal class RecursivePathFinder : PathFinder
     private Node endNode;
     private Node lastNode;
     private bool foundFinalNode;
+    private bool foundNextNode = false;
+    private int iterationCount = 0;
 
     public RecursivePathFinder(NodeGraph pGraph, NodeGraphAgent pAgent) : base(pGraph, pAgent)
     {
@@ -23,11 +25,10 @@ internal class RecursivePathFinder : PathFinder
         endNode = pTo;
 
         Console.WriteLine($"1.A Starting with node {startNode.id}");
-        recursivelyLoopThroughChildren(startNode);
+        lastNode = null;
+        recursivelyLoopThroughConnections(startNode);
 
-        //List<Node> shortestPath = getShortestPath();
-
-        Console.WriteLine("Nodes in path IN ORDER:");
+        Console.WriteLine("\n\n---------\nNodes in path:\n:");
         foreach (Node node in currentPath.nodes)
         {
             Console.WriteLine($"{node.id}");
@@ -36,53 +37,56 @@ internal class RecursivePathFinder : PathFinder
         return currentPath.nodes;
     }
 
-    private void findNewPath(Node pNode)
-    {
-        currentPath = new Path();
 
-        recursivelyLoopThroughChildren(pNode);
-    }
-
-    private void recursivelyLoopThroughChildren(Node pNode)
+    private void recursivelyLoopThroughConnections(Node pNode)
     {
-        if(pNode == endNode)
+        if (foundFinalNode) return;
+
+        foundNextNode = false;
+
+        iterationCount++;
+        if (pNode == endNode)
         {
-            Console.WriteLine($"|||||FOUND FINAL NODE {pNode.id}");
+            Console.WriteLine($"\n--------- FOUND FINAL NODE {pNode.id} -----------\n");
             foundFinalNode = true;
             currentPath.nodes.Add(pNode);
             visitedNodes.Add(pNode);
             return;
         }
 
-        if (visitedNodes.Contains(pNode))
-        {
-            Console.WriteLine($"        2.A Node {pNode.id} has already been visited. Returning to previous node.");
-            return;
-        }
+        Console.WriteLine($"Iteration count: {iterationCount}");
 
+        Console.WriteLine($"\n\n1.A Adding {pNode.id} to CurrentPath and to VisitedNodes.");
         currentPath.nodes.Add(pNode);
         visitedNodes.Add(pNode);
 
-        Console.WriteLine($"            3.A Moving down recursively to node {pNode}.");
-
-        Console.WriteLine($"            3.B Node {pNode.id} has connections to node:");
-        foreach (Node child in pNode.connections)
+        if (lastNode != null) Console.WriteLine($"1.B Last node: {lastNode.id}");
+        Console.WriteLine($"1.C   Looping over node {pNode.id}'s connections:");
+        bool visited = false;
+        foreach (Node connection in pNode.connections)
         {
-            Console.WriteLine($"                {child.id}.");
+            if (foundFinalNode) break;
+      
+            visited = visitedNodes.Contains(connection);
+            Console.WriteLine($"            Now checking {connection.id}. \n            Already visited?: {visited}");
+            if (visited)
+            {
+                Console.WriteLine($"        2.B Moving on to next connection of {pNode.id}.");
+                continue; 
+            }
+
+            lastNode = pNode;
+            foundNextNode = true;
+            if(!foundFinalNode) recursivelyLoopThroughConnections(connection);
         }
 
-        foreach(Node child in pNode.connections)
+        if (!foundNextNode && !foundFinalNode && lastNode != null)
         {
-            if (foundFinalNode) return;
-
-            Console.WriteLine($"            3.C Looping over connections of {pNode.id}. Current child being checked: {child.id}");
-
-            recursivelyLoopThroughChildren(child);
+            Console.WriteLine($"------- Recursive call from node {pNode.id} ended. No path found. Moving back to node {lastNode.id}. Removed {pNode.id} from CurrentPath. Removed {lastNode.id} from VisitedNodes.\n\n");
+            currentPath.nodes.Remove(pNode);
+            visitedNodes.Remove(lastNode);
+            recursivelyLoopThroughConnections(lastNode);
         }
-
-
-        Console.WriteLine($"        2.B Call from node {pNode.id} ended. No path found. Moving back up the tree.\n\n");
-        lastNode = pNode;
     }
 
     private List<Node> getShortestPath()

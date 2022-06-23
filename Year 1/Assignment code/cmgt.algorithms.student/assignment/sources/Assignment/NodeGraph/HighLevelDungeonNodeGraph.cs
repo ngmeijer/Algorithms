@@ -19,6 +19,15 @@ class HighLevelDungeonNodeGraph : SampleDungeonNodeGraph
 
         //Seperating the creation and connecting process, because then I can be sure I'm not trying to connect to nodes that don't exist yet.
         connectNodes();
+
+        foreach(KeyValuePair<DungeonComponent, Node> nodeValue in nodes)
+        {
+            Console.WriteLine($"Node {nodeValue.Value.id} has connections:");
+            foreach (Node node in nodeValue.Value.connections)
+            {
+                Console.WriteLine(node.id);
+            }
+        }
     }
 
     private void createNodes()

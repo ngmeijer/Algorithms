@@ -34,7 +34,7 @@ public class Node
 	{
 		location = pLocation;
 
-		//use an autoincrementing id as label
+		//use an autoincrementing id as label  
 		id = ""+lastID++;
 	}
 
