@@ -10,10 +10,11 @@ internal class RecursivePathFinder : PathFinder
     private Node startNode;
     private Node endNode;
     private Node lastNode;
+    private Node currentNode;
     private bool foundFinalNode;
     private bool foundNextNode = false;
-    private bool visited = false;
     private int iterationCount = 0;
+    private int indexOfCurrentNode;
 
     public RecursivePathFinder(NodeGraph pGraph, NodeGraphAgent pAgent) : base(pGraph, pAgent)
     {
@@ -44,7 +45,7 @@ internal class RecursivePathFinder : PathFinder
     private void findPath(Node pNode)
     {
         foundNextNode = false;
-        visited = false;
+        currentNode = pNode;
 
         //If final node is found, save path.
         if (pNode == endNode)
@@ -97,10 +98,14 @@ internal class RecursivePathFinder : PathFinder
         //If final node is found AND the algorithm has run less than X times, rerun the algorithm passing lastNode.
         if (foundFinalNode && iterationCount < AlgorithmsAssignment.MAX_PATH_ITERATION_COUNT)
         {
-            Console.WriteLine($"Last node after finding final node: {lastNode.id}");
             iterationCount++;
 
-            findPath(lastNode);
+            indexOfCurrentNode = currentNodesInPath.IndexOf(currentNode);
+            if (indexOfCurrentNode - 1 < 0) indexOfCurrentNode = 1;
+            Node tempLastNode = currentNodesInPath[indexOfCurrentNode - 1];
+            Console.WriteLine($"Last node after finding final node: {tempLastNode.id}");
+
+            findPath(tempLastNode);
             return;
         }
     }
