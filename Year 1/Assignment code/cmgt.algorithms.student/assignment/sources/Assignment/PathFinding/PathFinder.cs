@@ -17,6 +17,7 @@ abstract class PathFinder : Canvas
 	protected Node _startNode;							
 	protected Node _endNode;
 	protected List<Node> _lastCalculatedPath = null;
+	protected List<List<Node>> _allPaths = new List<List<Node>>();
 
 	protected NodeGraph _nodeGraph;
 	protected NodeGraphAgent _agent;
@@ -179,5 +180,28 @@ abstract class PathFinder : Canvas
 				_agent.ReceiveNewPath(generatedPath);
 			}
 		}
+	}
+
+	protected void savePath(List<Node> pCurrentPath)
+	{
+		List<Node> newPath = new List<Node>();
+		newPath = pCurrentPath;
+		_allPaths.Add(newPath);
+	}
+
+	protected List<Node> getShortestPath()
+	{
+		List<Node> currentShortestPath = null;
+		int lastNodeCount = int.MaxValue;
+
+		foreach (List<Node> path in _allPaths)
+		{
+			if (path.Count < lastNodeCount)
+			{
+				currentShortestPath = path;
+			}
+		}
+
+		return currentShortestPath;
 	}
 }

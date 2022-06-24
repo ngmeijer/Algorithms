@@ -37,6 +37,8 @@ class AlgorithmsAssignment : Game
     public const int MIN_DOOR_SPACE = 1;
     public const int DOOR_OFFSET = 1;
 
+    public const int MAX_PATH_ITERATION_COUNT = 5;
+
     public const bool ENABLE_ROOM_VISUAL_DEBUG = false;
     public const bool ENABLE_DOOR_VISUAL_DEBUG = false;
 

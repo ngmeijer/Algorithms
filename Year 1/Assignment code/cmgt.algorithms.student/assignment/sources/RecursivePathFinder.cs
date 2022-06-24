@@ -4,17 +4,16 @@ using System.Collections.Generic;
 
 internal class RecursivePathFinder : PathFinder
 {
-    private List<Path> allPaths = new List<Path>();
-    private Path currentPath = new Path();
     private List<Node> visitedNodes = new List<Node>();
     private List<Node> toDo = new List<Node>();
+    private List<Node> currentNodesInPath = new List<Node>();
     private Node startNode;
     private Node endNode;
     private Node lastNode;
     private bool foundFinalNode;
     private bool foundNextNode = false;
-    private int iterationCount = 0;
     private bool visited = false;
+    private int iterationCount = 0;
 
     public RecursivePathFinder(NodeGraph pGraph, NodeGraphAgent pAgent) : base(pGraph, pAgent)
     {
@@ -25,55 +24,54 @@ internal class RecursivePathFinder : PathFinder
         startNode = pFrom;
         endNode = pTo;
 
+        iterationCount = 0;
+
         Console.WriteLine($"1.A Starting with node {startNode.id}");
         lastNode = null;
+
         findPath(startNode);
 
-        Console.WriteLine("\n\n---------\nNodes in path:\n:");
-        foreach (Node node in currentPath.nodes)
+        List<Node> shortestPath = getShortestPath();
+        Console.WriteLine("\n\n---------\nNodes in path:\n");
+        foreach (Node node in shortestPath)
         {
             Console.WriteLine($"{node.id}");
         }
 
-        return currentPath.nodes;
+        return shortestPath;
     }
-
 
     private void findPath(Node pNode)
     {
-        if (foundFinalNode) return;
-        if (lastNode == pNode) return;
-
         foundNextNode = false;
         visited = false;
 
-        iterationCount++;
+        //If final node is found, save path.
         if (pNode == endNode)
         {
-            //Console.WriteLine($"\n--------- FOUND FINAL NODE {pNode.id} -----------\n");
-            foundFinalNode = true;
-            currentPath.nodes.Add(pNode);
+            Console.WriteLine($"\n--------- FOUND FINAL NODE {pNode.id} -----------\n");
+            currentNodesInPath.Add(pNode);
             visitedNodes.Add(pNode);
-            return;
+            foundFinalNode = true;
+
+            savePath(currentNodesInPath);
         }
 
-       //Console.WriteLine($"Iteration count: {iterationCount}");
+        //If final node is found AND the algorithm has run less than X times, rerun the algorithm passing lastNode.
+        moveToLastNode();
 
-       // Console.WriteLine($"\n\n1.A Adding {pNode.id} to CurrentPath and to VisitedNodes.");
-        currentPath.nodes.Add(pNode);
-        visitedNodes.Add(pNode);
+        //Adding node to path & already visited nodes.
+        if (!currentNodesInPath.Contains(pNode)) currentNodesInPath.Add(pNode);
+        if (!visitedNodes.Contains(pNode)) visitedNodes.Add(pNode);
 
-        if (lastNode != null) Console.WriteLine($"1.B Last node: {lastNode.id}");
-        //Console.WriteLine($"1.C   Looping over node {pNode.id}'s connections:");
+        //Assigning LastNode to the LAST node in CurrentNodesInPath , so when we have to retrace the next time the algorithm is run, it refers to this node.
         lastNode = pNode;
         loopOverConnections(pNode);
 
         if (!foundNextNode && !foundFinalNode && lastNode != null)
         {
-            //Console.WriteLine($"------- Recursive call from node {pNode.id} ended. No path found. Moving back to node {lastNode.id}. Removed {pNode.id} from CurrentPath. Removed {lastNode.id} from VisitedNodes.\n\n");
-            currentPath.nodes.Remove(pNode);
+            currentNodesInPath.Remove(pNode);
             visitedNodes.Remove(lastNode);
-            findPath(lastNode);
         }
     }
 
@@ -83,37 +81,27 @@ internal class RecursivePathFinder : PathFinder
         {
             if (foundFinalNode) break;
 
-            visited = visitedNodes.Contains(connection);
-            //Console.WriteLine($"            Now checking {connection.id}. \n            Already visited?: {visited}");
-            if (visited)
+            if (visitedNodes.Contains(connection) || pNode.alreadyVisited.Contains(connection))
             {
-                //Console.WriteLine($"        2.B Moving on to next connection of {pNode.id}.");
                 continue;
             }
 
+            pNode.alreadyVisited.Add(connection);
             foundNextNode = true;
-            if (!foundFinalNode) findPath(connection);
+            findPath(connection);
         }
     }
 
-    private List<Node> getShortestPath()
+    private void moveToLastNode()
     {
-        Path currentShortestPath = null;
-        int lastNodeCount = int.MaxValue;
-
-        foreach (Path path in allPaths)
+        //If final node is found AND the algorithm has run less than X times, rerun the algorithm passing lastNode.
+        if (foundFinalNode && iterationCount < AlgorithmsAssignment.MAX_PATH_ITERATION_COUNT)
         {
-            if(path.nodes.Count < lastNodeCount)
-            {
-                currentShortestPath = path;
-            }
+            Console.WriteLine($"Last node after finding final node: {lastNode.id}");
+            iterationCount++;
+
+            findPath(lastNode);
+            return;
         }
-
-        return currentShortestPath.nodes;
     }
-}
-
-public class Path
-{
-    public List<Node> nodes = new List<Node>();
 }
