@@ -47,6 +47,12 @@ internal class RecursivePathFinder : PathFinder
         foundNextNode = false;
         currentNode = pNode;
 
+        int indexOfCurrentNode = currentNodesInPath.IndexOf(currentNode);
+        if(indexOfCurrentNode > 0) lastNode = currentNodesInPath[indexOfCurrentNode - 1];
+
+        if (lastNode != null)
+            Console.WriteLine($"Current node: {currentNode.id}. Last node: {lastNode.id}");
+        else Console.WriteLine($"Last node was null at node {currentNode.id}");
         //If final node is found, save path.
         if (pNode == endNode)
         {
@@ -56,9 +62,14 @@ internal class RecursivePathFinder : PathFinder
             foundFinalNode = true;
 
             savePath(currentNodesInPath);
+            currentNodesInPath = new List<Node>(currentNodesInPath);
+            currentNodesInPath.Remove(pNode);
+            Console.WriteLine($"LAST NODE: {lastNode.id}. Moving up recursively to lastNode.");
+            findPath(lastNode);
+            return;
         }
 
-        //If final node is found AND the algorithm has run less than X times, rerun the algorithm passing lastNode.
+        //If final node is found AND the algorithm has run less than X times, rerun the algorithm..
         moveToLastNode();
 
         //Adding node to path & already visited nodes.
@@ -80,8 +91,6 @@ internal class RecursivePathFinder : PathFinder
     {
         foreach (Node connection in pNode.connections)
         {
-            if (foundFinalNode) break;
-
             if (visitedNodes.Contains(connection) || pNode.alreadyVisited.Contains(connection))
             {
                 continue;
@@ -103,7 +112,7 @@ internal class RecursivePathFinder : PathFinder
             indexOfCurrentNode = currentNodesInPath.IndexOf(currentNode);
             if (indexOfCurrentNode - 1 < 0) indexOfCurrentNode = 1;
             Node tempLastNode = currentNodesInPath[indexOfCurrentNode - 1];
-            Console.WriteLine($"Last node after finding final node: {tempLastNode.id}");
+            Console.WriteLine($"Retracing path after final node: {tempLastNode.id}");
 
             findPath(tempLastNode);
             return;

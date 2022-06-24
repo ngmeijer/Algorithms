@@ -182,14 +182,9 @@ abstract class PathFinder : Canvas
 		}
 	}
 
-	protected void savePath(List<Node> pCurrentPath)
-	{
-		List<Node> newPath = new List<Node>();
-		newPath = pCurrentPath;
-		_allPaths.Add(newPath);
-	}
+    protected void savePath(List<Node> pCurrentPath) => _allPaths.Add(pCurrentPath);
 
-	protected List<Node> getShortestPath()
+    protected List<Node> getShortestPath()
 	{
 		List<Node> currentShortestPath = null;
 		int lastNodeCount = int.MaxValue;
