@@ -30,6 +30,8 @@ internal class RecursivePathFinder : PathFinder
         Console.WriteLine($"1.A Starting with node {startNode.id}");
         lastNode = null;
 
+        currentNodesInPath.Add(startNode);
+        visitedNodes.Add(startNode);
         findPath(startNode);
 
         List<Node> shortestPath = getShortestPath();
@@ -45,12 +47,13 @@ internal class RecursivePathFinder : PathFinder
     private void findPath(Node pNode)
     {
         foundNextNode = false;
+        lastNode = currentNodesInPath[currentNodesInPath.Count - 1];
         currentNode = pNode;
 
         //If final node is found, save path.
-        if (pNode == endNode)
+        if (currentNode == endNode)
         {
-            Console.WriteLine($"\n--------- FOUND FINAL NODE {pNode.id} -----------\n");
+            Console.WriteLine($"\n--------- FOUND FINAL NODE {currentNode.id} -----------\n");
             currentNodesInPath.Add(pNode);
             visitedNodes.Add(pNode);
             foundFinalNode = true;
@@ -69,9 +72,7 @@ internal class RecursivePathFinder : PathFinder
         if (!currentNodesInPath.Contains(pNode)) currentNodesInPath.Add(pNode);
         if (!visitedNodes.Contains(pNode)) visitedNodes.Add(pNode);
 
-        //Assigning LastNode to the LAST node in CurrentNodesInPath , so when we have to retrace the next time the algorithm is run, it refers to this node.
-        lastNode = pNode;
-        loopOverConnections(pNode);
+        loopOverConnections(currentNode);
 
         if (!foundNextNode && !foundFinalNode && lastNode != null)
         {
