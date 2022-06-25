@@ -47,12 +47,6 @@ internal class RecursivePathFinder : PathFinder
         foundNextNode = false;
         currentNode = pNode;
 
-        int indexOfCurrentNode = currentNodesInPath.IndexOf(currentNode);
-        if(indexOfCurrentNode > 0) lastNode = currentNodesInPath[indexOfCurrentNode - 1];
-
-        if (lastNode != null)
-            Console.WriteLine($"Current node: {currentNode.id}. Last node: {lastNode.id}");
-        else Console.WriteLine($"Last node was null at node {currentNode.id}");
         //If final node is found, save path.
         if (pNode == endNode)
         {
@@ -63,14 +57,13 @@ internal class RecursivePathFinder : PathFinder
 
             savePath(currentNodesInPath);
             currentNodesInPath = new List<Node>(currentNodesInPath);
-            currentNodesInPath.Remove(pNode);
-            Console.WriteLine($"LAST NODE: {lastNode.id}. Moving up recursively to lastNode.");
-            findPath(lastNode);
-            return;
         }
 
-        //If final node is found AND the algorithm has run less than X times, rerun the algorithm..
-        moveToLastNode();
+        //If final node is found.
+        if (foundFinalNode)
+        {
+            moveToLastNode();
+        }
 
         //Adding node to path & already visited nodes.
         if (!currentNodesInPath.Contains(pNode)) currentNodesInPath.Add(pNode);
@@ -104,18 +97,24 @@ internal class RecursivePathFinder : PathFinder
 
     private void moveToLastNode()
     {
-        //If final node is found AND the algorithm has run less than X times, rerun the algorithm passing lastNode.
-        if (foundFinalNode && iterationCount < AlgorithmsAssignment.MAX_PATH_ITERATION_COUNT)
+        //If the algorithm has run less than X times, find previous node and call recursive.
+        if (iterationCount < AlgorithmsAssignment.MAX_PATH_ITERATION_COUNT)
         {
             iterationCount++;
 
-            indexOfCurrentNode = currentNodesInPath.IndexOf(currentNode);
-            if (indexOfCurrentNode - 1 < 0) indexOfCurrentNode = 1;
-            Node tempLastNode = currentNodesInPath[indexOfCurrentNode - 1];
-            Console.WriteLine($"Retracing path after final node: {tempLastNode.id}");
-
-            findPath(tempLastNode);
-            return;
+            
+            int currentNodeIndex = currentNodesInPath.IndexOf(currentNode);
+            Console.WriteLine(currentNodeIndex);
+            if (currentNodeIndex == -1)
+            {
+                Console.WriteLine($"Couldn't find node {currentNode.id} in currentNodesInPath.");
+                return;
+            }
+            else Console.WriteLine($"Found {currentNode.id} at index {currentNodeIndex}!");
+            Node previousNode = currentNodesInPath[currentNodeIndex - 1];
+            Console.WriteLine($"Current node: {currentNode.id}. Previous node: {previousNode.id}");
+            currentNodesInPath.Remove(currentNode);
+            findPath(previousNode);
         }
     }
 }
