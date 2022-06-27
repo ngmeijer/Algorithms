@@ -53,6 +53,7 @@ internal class RecursivePathFinder : PathFinder
         Console.WriteLine($"Adding {pNode.id} to path & visitedNodes.");
         lastNode = currentNodesInPath[currentNodesInPath.Count - 1];
         if (!currentNodesInPath.Contains(pNode)) currentNodesInPath.Add(pNode);
+        //
         if (!visitedNodes.Contains(pNode)) visitedNodes.Add(pNode);
 
         foundTargetNode = checkIfIsTargetNode(pNode);

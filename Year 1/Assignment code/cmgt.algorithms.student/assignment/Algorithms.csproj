@@ -153,6 +153,7 @@
     <Compile Include="sources\Program.cs" />
     <Compile Include="sources\Assignment\PathFinding\PathFinder.cs" />
     <Compile Include="sources\RecursivePathFinder.cs" />
+    <Compile Include="sources\RecursivePathFinder2.cs" />
     <Compile Include="sources\Util\Grid.cs" />
     <Compile Include="sources\Util\NodeLabelDrawer.cs" />
     <Compile Include="sources\Util\RectangleExtensions.cs" />
