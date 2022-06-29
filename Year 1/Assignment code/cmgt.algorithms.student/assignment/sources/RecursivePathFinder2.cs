@@ -79,13 +79,13 @@ internal class RecursivePathFinder2 : PathFinder
         //If a new possible node was found, increase recursion level.
         if (selectedNode != null)
         {
-            selectedNode.parentNode = pGivenNode;
+            selectedNode.cameFromNode = pGivenNode;
             findPath(selectedNode, pEndNode, pPath, pHistory, pDepth += 1);
         }
         //If all nodes have been visited, the path is a dead end. So, retrace to the last node in the pHistory list.
         else
         {
-            Console.WriteLine($"{indent(pDepth)}No unvisited connections for {pGivenNode.id}. \n{indent(pDepth)}Removing {pGivenNode.id} from path. \n{indent(pDepth)}Tracing back to {pGivenNode.parentNode.id}");
+            Console.WriteLine($"{indent(pDepth)}No unvisited connections for {pGivenNode.id}. \n{indent(pDepth)}Removing {pGivenNode.id} from path. \n{indent(pDepth)}Tracing back to {pGivenNode.cameFromNode.id}");
             pPath.Remove(pGivenNode);
 
             //Trace back to the previous node visited.

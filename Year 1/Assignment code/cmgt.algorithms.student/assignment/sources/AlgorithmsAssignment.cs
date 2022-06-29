@@ -44,6 +44,7 @@ class AlgorithmsAssignment : Game
 
     public AlgorithmsAssignment() : base(1600, 800, false, true, -1, -1, false)
     {
+        //Try the 2k resolution... (2560 x 1440) ;) combined with scale 10 & room size 5
         /////////////////////////////////////////////////////////////////////////////////////////
         ///	BASE SETUP - FEEL FREE TO SKIP
 
@@ -187,13 +188,13 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out the SamplePathFinder, implement a RecursivePathFinder and uncomment it below
 
         //_pathFinder = new SamplePathFinder(_graph);
-        _pathFinder = new RecursivePathFinder3(_graph, _agent); //DFS
+        //_pathFinder = new RecursivePathFinder3(_graph, _agent); //DFS
 
         //////////////////////////////////////////////////////////////////////////
         //Assignment 3.1 Sufficient (Mandatory) - BreadthFirst Pathfinding
         //
         //TODO: Comment out the RecursivePathFinder above, implement a BreadthFirstPathFinder and uncomment it below
-        //_pathFinder = new BreadthFirstPathFinder(_graph);
+        _pathFinder = new BreadthFirstPathFinder(_graph, _agent);
 
         //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
         //_agent = new PathFindingAgent(_graph, _pathFinder);

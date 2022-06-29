@@ -11,24 +11,38 @@ internal class BreadthFirstPathFinder : PathFinder
         List<Node> path = new List<Node>();
         Queue<Node> nodeQ = new Queue<Node>();
         List<Node> visitedNodes = new List<Node>();
-
+        
         nodeQ.Enqueue(pFrom);
+        bool foundPath = false;
 
         while (nodeQ.Count > 0)
         {
             Node currentNode = nodeQ.Peek();
             nodeQ.Dequeue();
-            foreach (Node childNode in currentNode.connections)
+            if (currentNode == pTo) {
+                foundPath = true;
+                break; }
+
+            foreach (Node connection in currentNode.connections)
             {
-                if (visitedNodes.Contains(childNode)) continue;
+                if (visitedNodes.Contains(connection)) continue;
 
-                visitedNodes.Add(childNode);
-                if (childNode == pTo)
-                {
-
-                    break;
-                }
+                nodeQ.Enqueue(connection);
+                visitedNodes.Add(connection);
+                connection.cameFromNode = currentNode;
             }
+        }
+
+        if (foundPath)
+        {
+            Node nodeBeingTraced = pTo;
+            while (nodeBeingTraced != pFrom)
+            {
+                path.Add(nodeBeingTraced);
+                nodeBeingTraced = nodeBeingTraced.cameFromNode;
+            }
+            path.Add(pFrom);
+            path.Reverse();
         }
 
         return path;
