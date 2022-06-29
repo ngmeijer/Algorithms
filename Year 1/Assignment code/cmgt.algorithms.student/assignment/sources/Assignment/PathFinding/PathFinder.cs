@@ -199,4 +199,6 @@ abstract class PathFinder : Canvas
 
 		return currentShortestPath;
 	}
+
+	protected static string indent(int pDepth = 0) => "".PadLeft(pDepth * 5);
 }

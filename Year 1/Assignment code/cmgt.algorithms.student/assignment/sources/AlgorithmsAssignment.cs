@@ -30,7 +30,7 @@ class AlgorithmsAssignment : Game
 
     //common settings
     public const int SCALE = 30; //Any scale other than 10 messes with my DebugInfo.
-    public const int MIN_ROOM_SIZE = 8; //TODO: use this setting in your dungeon generator
+    public const int MIN_ROOM_SIZE = 6; //TODO: use this setting in your dungeon generator
     public const float MIN_RANDOM_MULTIPLIER = 0.35f;
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     
@@ -187,7 +187,7 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out the SamplePathFinder, implement a RecursivePathFinder and uncomment it below
 
         //_pathFinder = new SamplePathFinder(_graph);
-        _pathFinder = new RecursivePathFinder2(_graph, _agent); //DFS
+        _pathFinder = new RecursivePathFinder3(_graph, _agent); //DFS
 
         //////////////////////////////////////////////////////////////////////////
         //Assignment 3.1 Sufficient (Mandatory) - BreadthFirst Pathfinding

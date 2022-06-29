@@ -21,19 +21,37 @@ internal class RecursivePathFinder2 : PathFinder
         //Begin with pFrom.
         findPath(pFrom, pTo, historyNodes, path, depth += 1);
 
+        Console.WriteLine($"Nodes in final path");
+        foreach (Node node in path)
+        {
+            Console.WriteLine($"Node {node.id}");
+        }
+
         return path;
     }
 
     private void findPath(Node pGivenNode, Node pEndNode, List<Node> pPath, List<Node> pHistory, int pDepth)
     {
         Console.WriteLine($"{indent(pDepth)}Investigating node {pGivenNode.id} at depth {pDepth}");
-        pPath.Add(pGivenNode);
+        if (!pPath.Contains(pGivenNode)) pPath.Add(pGivenNode);
+
+        Console.WriteLine($"{indent(pDepth)}Current nodes in pPath at depth {pDepth}");
+        string nodes = "";
+        foreach (Node node in pPath)
+        {
+            nodes += $"{node.id},";
+        }
+        Console.WriteLine($"{indent(pDepth)}{nodes}");
+
         if (pGivenNode == pEndNode)
         {
-            Console.WriteLine($"{indent(pDepth)}--------FOUND pEndNode at depth {pDepth}--------");
+            //Found path!
+            Console.WriteLine($"{indent(pDepth)}--------FOUND pEndNode {pGivenNode.id} at depth {pDepth}--------");
             return;
         }
 
+        //If this point is reached, we know pGivenNode is not the same as pEndNode.
+        //Loop over connections of pGivenNode
         loopOverConnections(pGivenNode, pEndNode, pPath, pHistory, pDepth);
     }
 
@@ -47,13 +65,12 @@ internal class RecursivePathFinder2 : PathFinder
             Console.WriteLine($"{indent(pDepth)}Checking out connection node {connection.id}");
             if (pHistory.Contains(connection)) Console.WriteLine($"{indent(pDepth)}Already visited node {connection.id}. Skipping.");
             else Console.WriteLine($"{indent(pDepth)}Selected {connection.id}. Adding to history");
-            ////Check if connection exists in pHistory AND if exists in pNode.alreadyVisited.
+            ////Check if connection exists in pHistory.
             ///If true, skip
             if (pHistory.Contains(connection)) continue;
 
-            //////If false, add to both history collections and run findPath(connection).
+            //////If false, add to history and run findPath(connection).
             pHistory.Add(connection);
-            pGivenNode.alreadyVisited.Contains(connection);
             selectedNode = connection;
             break;
             ///Do not try to visit the other connections. 
@@ -68,12 +85,11 @@ internal class RecursivePathFinder2 : PathFinder
         //If all nodes have been visited, the path is a dead end. So, retrace to the last node in the pHistory list.
         else
         {
-            Console.WriteLine($"{indent(pDepth)}No unvisited connections for {pGivenNode.id}. \nRemoving {pGivenNode.id} from path. \nTracing back to {pGivenNode.parentNode.id}");
+            Console.WriteLine($"{indent(pDepth)}No unvisited connections for {pGivenNode.id}. \n{indent(pDepth)}Removing {pGivenNode.id} from path. \n{indent(pDepth)}Tracing back to {pGivenNode.parentNode.id}");
             pPath.Remove(pGivenNode);
-            findPath(pGivenNode.parentNode, pEndNode, pPath, pHistory, pDepth--);
-            //Trace back to the previous node visited. Somehow figure out which one that is.
+
+            //Trace back to the previous node visited.
+            //findPath(pGivenNode.parentNode, pEndNode, pPath, pHistory, pDepth-=1);
         }
     }
-
-    private static string indent(int pDepth = 0) => "".PadLeft(pDepth * 5);
 }
