@@ -17,9 +17,8 @@ internal class RecursivePathFinder3 : PathFinder
         if (pFrom == pTo) return null;
 
         //Begin with pFrom.
-        askChildForPath(pFrom, pTo, historyNodes, path, depth += 1);
-
-        if(!path.Contains(pTo)) path.Clear();
+        dfs(pFrom, pTo, depth, 0, int.MaxValue);
+        retracePath(pTo, path);
 
         Console.WriteLine($"Nodes in final path");
         foreach (Node node in path)
@@ -30,33 +29,41 @@ internal class RecursivePathFinder3 : PathFinder
         return path;
     }
 
-    private bool askChildForPath(Node pNode, Node pEndNode, List<Node> pHistoryNodes, List<Node> pPath, int pDepth)
+    private void dfs(Node pNode, Node pEndNode, int pDepth, int pCurrentLength, int pShortestLength)
     {
-        pPath.Add(pNode);
-        pHistoryNodes.Add(pNode);
+        pDepth += 1;
+        pCurrentLength += 1;
 
-        Console.WriteLine($"{indent(pDepth)}Continuing path from {pNode.id}... depth: {pDepth}");
+        //1st base case
+        if (pCurrentLength > pShortestLength) return;
 
-        Console.WriteLine($"{indent(pDepth)}Nodes in path... depth {pDepth}");
-        foreach (Node node in pPath)
+        //2nd base case
+        if (pNode == pEndNode)
         {
-            Console.WriteLine($"{indent(pDepth)}Node {node.id}");
+            pShortestLength = pCurrentLength;
+            return;
         }
 
-        if (pNode == pEndNode) 
-        {
-            Console.WriteLine($"{indent(pDepth)}Path found! Depth: {pDepth}");
-            return true; 
-        }
+        pNode.visited = true;
 
-        foreach (Node connection in pNode.connections)
+        foreach(Node connection in pNode.connections)
         {
-            if (pHistoryNodes.Contains(connection)) continue;
-            if (askChildForPath(connection, pEndNode, pHistoryNodes, pPath, pDepth += 1)) return true;
-            else pPath.Remove(connection);
+            if (!connection.visited)
+            {
+                connection.cameFromNode = pNode;
+                dfs(connection, pEndNode, pDepth, pCurrentLength, pShortestLength);
+            }
         }
+    }
 
-        Console.WriteLine($"{indent(pDepth)}No path returned after asking {pNode.id}... depth: {pDepth}");
-        return false;
+    private void retracePath(Node pEndNode, List<Node> pPath)
+    {
+        Node currentNode = pEndNode;
+        while (currentNode != null)
+        {
+            pPath.Add(currentNode);
+            currentNode = currentNode.cameFromNode;
+        }
+        pPath.Reverse();
     }
 }

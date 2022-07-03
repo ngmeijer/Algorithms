@@ -16,6 +16,7 @@ public class Node
 	public readonly List<Node> connections = new List<Node>();
 	public List<Node> alreadyVisited = new List<Node>();
 	public Node cameFromNode;
+	public bool visited;
 
 	//node data
 	public readonly Point location;
