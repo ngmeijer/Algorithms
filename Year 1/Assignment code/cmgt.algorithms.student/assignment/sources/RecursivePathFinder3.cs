@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 internal class RecursivePathFinder3 : PathFinder
 {
+    private int shortestLength = int.MaxValue;
+
     public RecursivePathFinder3(NodeGraph pGraph, NodeGraphAgent pAgent) : base(pGraph, pAgent)
     {
     }
@@ -17,8 +19,8 @@ internal class RecursivePathFinder3 : PathFinder
         if (pFrom == pTo) return null;
 
         //Begin with pFrom.
-        dfs(pFrom, pTo, depth, 0, int.MaxValue);
-        retracePath(pTo, path);
+        dfs(pFrom, pTo, depth, 0);
+        path = retracePath(pTo);
 
         Console.WriteLine($"Nodes in final path");
         foreach (Node node in path)
@@ -29,41 +31,60 @@ internal class RecursivePathFinder3 : PathFinder
         return path;
     }
 
-    private void dfs(Node pNode, Node pEndNode, int pDepth, int pCurrentLength, int pShortestLength)
+    private void dfs(Node pNode, Node pEndNode, int pDepth, int pCurrentLength)
     {
         pDepth += 1;
         pCurrentLength += 1;
 
         //1st base case
-        if (pCurrentLength > pShortestLength) return;
+        if (pCurrentLength > shortestLength)
+        {
+            Console.WriteLine($"{indent(pDepth)}Current path is already longer than shortest path. Returning.");
+            return;
+        }
+
+        Console.WriteLine($"{indent(pDepth)}Current node - {pNode.id} -");
 
         //2nd base case
         if (pNode == pEndNode)
         {
-            pShortestLength = pCurrentLength;
+            Console.WriteLine($"{indent(pDepth)}Found path to node - {pNode.id} - Current length: {pCurrentLength}, shortest length: {shortestLength}");
+            shortestLength = pCurrentLength;
             return;
         }
 
         pNode.visited = true;
 
-        foreach(Node connection in pNode.connections)
+        Console.WriteLine($"{indent(pDepth)}Looping through connections of node - {pNode.id} -");
+        foreach (Node connection in pNode.connections)
         {
-            if (!connection.visited)
-            {
-                connection.cameFromNode = pNode;
-                dfs(connection, pEndNode, pDepth, pCurrentLength, pShortestLength);
-            }
+            Console.WriteLine($"{indent(pDepth)}Current connection of node {pNode.id} - {connection.id} -, already visited? {connection.visited}");
+            if (connection.visited) continue;
+            if (connection == pNode.cameFromNode) continue;
+
+            //Console.WriteLine($"{indent(pDepth)}Marking current node - {connection.id} - as visited");
+
+            Console.WriteLine($"{indent(pDepth)}Setting previous node of connection - {connection.id} - to node {pNode.id}");
+            connection.cameFromNode = pNode;
+
+            dfs(connection, pEndNode, pDepth, pCurrentLength);
         }
+
+        Console.WriteLine($"{indent(pDepth)}Tracing back from node {pNode.id}");
+        pCurrentLength -= 1;
     }
 
-    private void retracePath(Node pEndNode, List<Node> pPath)
+    private List<Node> retracePath(Node pEndNode)
     {
+        List<Node> newPath = new List<Node>();
         Node currentNode = pEndNode;
         while (currentNode != null)
         {
-            pPath.Add(currentNode);
+            newPath.Add(currentNode);
             currentNode = currentNode.cameFromNode;
         }
-        pPath.Reverse();
+        newPath.Reverse();
+
+        return newPath;
     }
 }

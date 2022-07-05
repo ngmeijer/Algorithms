@@ -30,7 +30,7 @@ class AlgorithmsAssignment : Game
 
     //common settings
     public const int SCALE = 30; //Any scale other than 10 messes with my DebugInfo.
-    public const int MIN_ROOM_SIZE = 7; //TODO: use this setting in your dungeon generator
+    public const int MIN_ROOM_SIZE = 5; //TODO: use this setting in your dungeon generator
     public const float MIN_RANDOM_MULTIPLIER = 0.35f;
     public const float MAX_RANDOM_MULTIPLIER = 0.65f;
     
@@ -44,7 +44,6 @@ class AlgorithmsAssignment : Game
 
     public AlgorithmsAssignment() : base(1600, 800, false, true, -1, -1, false)
     {
-        //Try the 2k resolution... (2560 x 1440) ;) combined with scale 10 & room size 5
         /////////////////////////////////////////////////////////////////////////////////////////
         ///	BASE SETUP - FEEL FREE TO SKIP
 
