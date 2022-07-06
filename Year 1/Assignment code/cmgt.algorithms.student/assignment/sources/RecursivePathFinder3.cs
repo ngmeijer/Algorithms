@@ -43,33 +43,34 @@ internal class RecursivePathFinder3 : PathFinder
             return;
         }
 
-        Console.WriteLine($"{indent(pDepth)}Current node - {pNode.id} -");
+        Console.WriteLine($"{indent(pDepth)}Current node {pNode.id}");
 
         //2nd base case
         if (pNode == pEndNode)
         {
-            Console.WriteLine($"{indent(pDepth)}Found path to node - {pNode.id} - Current length: {pCurrentLength}, shortest length: {shortestLength}");
+            Console.WriteLine($"{indent(pDepth)}FOUND PATH to node {pNode.id} Current length: {pCurrentLength}, shortest length: {shortestLength}");
             shortestLength = pCurrentLength;
             return;
         }
 
         pNode.visited = true;
 
-        Console.WriteLine($"{indent(pDepth)}Looping through connections of node - {pNode.id} -");
+        Console.WriteLine($"{indent(pDepth)}Looping through connections of node {pNode.id}");
         foreach (Node connection in pNode.connections)
         {
             Console.WriteLine($"{indent(pDepth)}Current connection of node {pNode.id} - {connection.id} -, already visited? {connection.visited}");
             if (connection.visited) continue;
-            if (connection == pNode.cameFromNode) continue;
-
-            //Console.WriteLine($"{indent(pDepth)}Marking current node - {connection.id} - as visited");
-
-            Console.WriteLine($"{indent(pDepth)}Setting previous node of connection - {connection.id} - to node {pNode.id}");
+            if (connection == pNode) continue;
+              
+            Console.WriteLine($"{indent(pDepth)}Setting previous node of connection {connection.id} to node {pNode.id}");
             connection.cameFromNode = pNode;
+
+            pNode.alreadyVisited.Add(connection);
 
             dfs(connection, pEndNode, pDepth, pCurrentLength);
         }
 
+        pNode.visited = false;
         Console.WriteLine($"{indent(pDepth)}Tracing back from node {pNode.id}");
         pCurrentLength -= 1;
     }
@@ -78,7 +79,7 @@ internal class RecursivePathFinder3 : PathFinder
     {
         List<Node> newPath = new List<Node>();
         Node currentNode = pEndNode;
-        while (currentNode != null)
+        while (currentNode != null) 
         {
             newPath.Add(currentNode);
             currentNode = currentNode.cameFromNode;
