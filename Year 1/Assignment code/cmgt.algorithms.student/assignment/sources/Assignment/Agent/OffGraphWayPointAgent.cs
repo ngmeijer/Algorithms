@@ -1,13 +1,10 @@
 ﻿using GXPEngine;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 class OffGraphWayPointAgent : NodeGraphAgent
 {
 	//Current target to move towards
-	protected Node targetNode = null;
-	protected Node currentNode = null;
 	protected bool isMoving;
 	protected Node lastAddedNode = null;
 

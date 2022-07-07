@@ -15,11 +15,10 @@ internal class RecursivePathFinder3 : PathFinder
         List<Node> path = new List<Node>();
         int depth = -1;
 
-        //Base case.
-        if (pFrom == pTo) return null;
+        if (pFrom == pTo) return path;
 
         //Begin with pFrom.
-        dfs(pFrom, pTo, depth, 0);
+        findPath(pFrom, pTo, depth, 0);
         path = retracePath(pTo);
 
         Console.WriteLine($"Nodes in final path");
@@ -31,7 +30,7 @@ internal class RecursivePathFinder3 : PathFinder
         return path;
     }
 
-    private void dfs(Node pNode, Node pEndNode, int pDepth, int pCurrentLength)
+    private void findPath(Node pNode, Node pEndNode, int pDepth, int pCurrentLength)
     {
         pDepth += 1;
         pCurrentLength += 1;
@@ -39,7 +38,7 @@ internal class RecursivePathFinder3 : PathFinder
         //1st base case
         if (pCurrentLength > shortestLength)
         {
-            Console.WriteLine($"{indent(pDepth)}Current path is already longer than shortest path. Returning.");
+            Console.WriteLine($"{indent(pDepth)}Current path (length {pCurrentLength}) is already longer than shortest path (length {shortestLength}). Returning.");
             return;
         }
 
@@ -59,20 +58,16 @@ internal class RecursivePathFinder3 : PathFinder
         foreach (Node connection in pNode.connections)
         {
             Console.WriteLine($"{indent(pDepth)}Current connection of node {pNode.id} - {connection.id} -, already visited? {connection.visited}");
-            if (connection.visited) continue;
-            if (connection == pNode) continue;
+            if (connection.visited || connection == pNode) continue;
               
             Console.WriteLine($"{indent(pDepth)}Setting previous node of connection {connection.id} to node {pNode.id}");
             connection.cameFromNode = pNode;
 
-            pNode.alreadyVisited.Add(connection);
-
-            dfs(connection, pEndNode, pDepth, pCurrentLength);
+            findPath(connection, pEndNode, pDepth, pCurrentLength);
         }
 
         pNode.visited = false;
         Console.WriteLine($"{indent(pDepth)}Tracing back from node {pNode.id}");
-        pCurrentLength -= 1;
     }
 
     private List<Node> retracePath(Node pEndNode)

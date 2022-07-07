@@ -15,6 +15,8 @@ abstract class NodeGraphAgent : AnimationSprite
 	protected const int FAST_TRAVEL_SPEED = 10;
 	protected const int SPEED_UP_KEY = Key.LEFT_CTRL;
 	protected Queue<Node> nodePath = new Queue<Node>();
+	protected Node currentNode = null;
+	protected Node targetNode = null;
 
 	public NodeGraphAgent(NodeGraph pNodeGraph) : base("assets/orc.png", 4, 2, 7)
 	{

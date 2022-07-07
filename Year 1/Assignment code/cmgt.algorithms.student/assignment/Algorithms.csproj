@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sources\Assignment\Agent\OffGraphWayPointAgent.cs" />
+    <Compile Include="sources\Assignment\Agent\PathFindingAgent.cs" />
     <Compile Include="sources\Assignment\Dungeon\RoomCreation\DoorCreation\Door.cs" />
     <Compile Include="sources\Assignment\Dungeon\RoomCreation\DoorCreation\DoorCreationHandler.cs" />
     <Compile Include="sources\Assignment\Dungeon\BaseDungeon.cs" />

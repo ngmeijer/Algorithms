@@ -147,7 +147,7 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out the SampleNodeGraphAgent again, implement an OffGraphWayPointAgent class and uncomment it below
 
         //_agent = new SampleNodeGraphAgent(_graph);
-        _agent = new OffGraphWayPointAgent(_graph);
+        //_agent = new OffGraphWayPointAgent(_graph);
 
         ////////////////////////////////////////////////////////////
         //Assignment 2.2 Good (Optional) TiledView
@@ -196,7 +196,7 @@ class AlgorithmsAssignment : Game
         //_pathFinder = new BreadthFirstPathFinder(_graph, _agent);
 
         //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
-        //_agent = new PathFindingAgent(_graph, _pathFinder);
+        _agent = new PathFindingAgent(_graph, _pathFinder);
 
         /////////////////////////////////////////////////
         //Assignment 3.2 Good & 3.3 Excellent (Optional)
