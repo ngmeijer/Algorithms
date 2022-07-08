@@ -44,6 +44,11 @@ internal class PathFindingAgent : NodeGraphAgent
             currentNode = targetNode;
             targetNode = null;
             nodePath.Dequeue();
+            if(nodePath.Count == 0)
+            {
+                //Notify.
+                pathFinder.ClearPath();
+            }
         }
     }
 }

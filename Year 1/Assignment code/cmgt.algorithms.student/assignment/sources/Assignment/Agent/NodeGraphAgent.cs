@@ -14,7 +14,7 @@ abstract class NodeGraphAgent : AnimationSprite
 	protected const int REGULAR_SPEED = 2;
 	protected const int FAST_TRAVEL_SPEED = 10;
 	protected const int SPEED_UP_KEY = Key.LEFT_CTRL;
-	protected Queue<Node> nodePath = new Queue<Node>();
+	public Queue<Node> nodePath = new Queue<Node>();
 	protected Node currentNode = null;
 	protected Node targetNode = null;
 
@@ -75,6 +75,7 @@ abstract class NodeGraphAgent : AnimationSprite
 
 	public void ReceiveNewPath(List<Node> pNewPath)
 	{
+		nodePath = null;
 		nodePath = new Queue<Node>(pNewPath);
 	}
 }

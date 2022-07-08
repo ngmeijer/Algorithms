@@ -166,10 +166,7 @@ abstract class PathFinder : Canvas
 	{
 		if (Input.GetKeyDown(Key.C))
 		{
-			//clear everything
-			graphics.Clear(Color.Transparent);
-			_startNode = _endNode = null;
-			_lastCalculatedPath = null;
+			ClearPath();
 		}
 
 		if (Input.GetKeyDown(Key.G))
@@ -198,6 +195,20 @@ abstract class PathFinder : Canvas
 		}
 
 		return currentShortestPath;
+	}
+
+	public void ClearPath()
+    {
+		Console.WriteLine("clearing path");
+		foreach (Node node in _lastCalculatedPath)
+        {
+			node.cameFromNode = null;
+			node.visited = false;
+        }
+
+	    graphics.Clear(Color.Transparent);
+		_startNode = _endNode = null;
+		_lastCalculatedPath = null;
 	}
 
 	protected static string indent(int pDepth = 0) => "".PadLeft(pDepth * 5);
