@@ -211,5 +211,26 @@ abstract class PathFinder : Canvas
 		_lastCalculatedPath = null;
 	}
 
+	//------------------------------------------------------------------------------------------------------------------------
+	//									    List<Node> retracePath()
+	//------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// Starting at the end node, go back to the "cameFromNode" variable of the current node until it's null.
+	/// This will eventually give a reversed list (end node is the first element), so we have to reverse-reverse and return it.
+	/// </summary>
+	protected List<Node> retracePath(Node pEndNode)
+	{
+		List<Node> newPath = new List<Node>();
+		Node currentNode = pEndNode;
+		while (currentNode != null)
+		{
+			newPath.Add(currentNode);
+			currentNode = currentNode.cameFromNode;
+		}
+		newPath.Reverse();
+
+		return newPath;
+	}
+
 	protected static string indent(int pDepth = 0) => "".PadLeft(pDepth * 5);
 }

@@ -9,6 +9,7 @@ internal class RecursivePathFinder3 : PathFinder
     {
     }
 
+
     protected override List<Node> generate(Node pFrom, Node pTo)
     {
         List<Node> historyNodes = new List<Node>();
@@ -22,15 +23,17 @@ internal class RecursivePathFinder3 : PathFinder
         findPath(pFrom, pTo, depth, 0);
         path = retracePath(pTo);
 
-        Console.WriteLine($"Nodes in final path");
-        foreach (Node node in path)
-        {
-            Console.WriteLine($"Node {node.id}");
-        }
-
         return path;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //									    void findPath()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// Recursive pathfinding algorithm (Depth First Search).
+    /// Is the current path longer than the existing shortest path? No point in wasting more resources to trying to find a path, so stop the search.
+    /// Did we find the end node? Set the shortest path variable to the current length and return.
+    /// When returning (or if the findPath function reaches the last line, we retrace to the last node. We also set the current node back to "unvisited", so future shortest paths aren't blocked off. Repeated visits relative from the same node are prevented because from the current standpoint, the connection has already been visited (and is set back to unvisited before retracing), but seeing the node has already passed in the foreach loop, we won't visit it again from this node.
+    /// </summary>
     private void findPath(Node pNode, Node pEndNode, int pDepth, int pCurrentLength)
     {
         pDepth += 1;
@@ -71,17 +74,24 @@ internal class RecursivePathFinder3 : PathFinder
         Console.WriteLine($"{indent(pDepth)}Tracing back from node {pNode.id}");
     }
 
-    private List<Node> retracePath(Node pEndNode)
-    {
-        List<Node> newPath = new List<Node>();
-        Node currentNode = pEndNode;
-        while (currentNode != null) 
-        {
-            newPath.Add(currentNode);
-            currentNode = currentNode.cameFromNode;
-        }
-        newPath.Reverse();
-
-        return newPath;
-    }
+    //To see how many lines of code I actually have without white space/comments/Console.WriteLine's. (spoiler: it's 16)
+    //private void findPath(Node pNode, Node pEndNode, int pDepth, int pCurrentLength)
+    //{
+    //    pDepth += 1;
+    //    pCurrentLength += 1;
+    //    if (pCurrentLength > shortestLength) return;
+    //    if (pNode == pEndNode)
+    //    {
+    //        shortestLength = pCurrentLength;
+    //        return;
+    //    }
+    //    pNode.visited = true;
+    //    foreach (Node connection in pNode.connections)
+    //    {
+    //        if (connection.visited || connection == pNode) continue;
+    //        connection.cameFromNode = pNode;
+    //        findPath(connection, pEndNode, pDepth, pCurrentLength);
+    //    }
+    //    pNode.visited = false;
+    //}
 }
