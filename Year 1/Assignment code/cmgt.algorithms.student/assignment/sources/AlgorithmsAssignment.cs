@@ -187,13 +187,13 @@ class AlgorithmsAssignment : Game
         //TODO: Comment out the SamplePathFinder, implement a RecursivePathFinder and uncomment it below
 
         //_pathFinder = new SamplePathFinder(_graph);
-        _pathFinder = new RecursivePathFinder3(_graph, _agent);
+        //_pathFinder = new RecursivePathFinder3(_graph, _agent);
 
         //////////////////////////////////////////////////////////////////////////
         //Assignment 3.1 Sufficient (Mandatory) - BreadthFirst Pathfinding
         //
         //TODO: Comment out the RecursivePathFinder above, implement a BreadthFirstPathFinder and uncomment it below
-        //_pathFinder = new BreadthFirstPathFinder(_graph, _agent);
+        _pathFinder = new BreadthFirstPathFinder(_graph, _agent);
 
         //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
         _agent = new PathFindingAgent(_graph, _pathFinder);

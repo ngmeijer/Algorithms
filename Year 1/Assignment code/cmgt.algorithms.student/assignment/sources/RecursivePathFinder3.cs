@@ -12,16 +12,14 @@ internal class RecursivePathFinder3 : PathFinder
 
     protected override List<Node> generate(Node pFrom, Node pTo)
     {
-        List<Node> historyNodes = new List<Node>();
         List<Node> path = new List<Node>();
         int depth = -1;
         shortestLength = int.MaxValue;
 
         if (pFrom == pTo) return path;
 
-        //Begin with pFrom.
         findPath(pFrom, pTo, depth, 0);
-        path = retracePath(pTo);
+        path = retracePath(pTo, pFrom);
 
         return path;
     }

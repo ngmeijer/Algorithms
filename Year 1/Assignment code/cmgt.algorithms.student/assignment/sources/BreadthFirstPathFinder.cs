@@ -16,19 +16,17 @@ internal class BreadthFirstPathFinder : PathFinder
 
         findPath(pTo, nodeQ, visitedNodes);
 
-        Node nodeBeingTraced = pTo;
-        while (nodeBeingTraced != pFrom)
-        {
-            path.Add(nodeBeingTraced);
-            nodeBeingTraced = nodeBeingTraced.cameFromNode;
-        }
-        path.Add(pFrom);
-        path.Reverse();
-
+        path = retracePath(pTo, pFrom);
 
         return path;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //									    void findPath()
+    //------------------------------------------------------------------------------------------------------------------------
+    /// Breath first search pathfinding algorithm. Kind of like a circle, getting bigger and bigger in all directions until the target node has been found.
+    /// Never visits a node twice (so no backtracking). Keeps track of the path by setting a node-instance owned variable.
+    /// </summary>
     private void findPath(Node pTo, Queue<Node> nodeQ, List<Node> visitedNodes)
     {
         while (nodeQ.Count > 0)
